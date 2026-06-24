@@ -88,9 +88,9 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
   <!-- COURT VIEW -->
   <div id="v-court" class="view active">
     <div class="ttabs" id="ct">
-      <button class="tt on" onclick="setF('monthly',this,'ct')">Monthly</button>
+      <button class="tt" onclick="setF('monthly',this,'ct')">Monthly</button>
       <button class="tt" onclick="setF('yearly',this,'ct')">Yearly</button>
-      <button class="tt" onclick="setF('alltime',this,'ct')">All Time</button>
+      <button class="tt on" onclick="setF('alltime',this,'ct')">All Time</button>
     </div>
     <div class="pnav" id="cpnav">
       <button class="pb" id="cprev" onclick="chP(-1,'c')">‹</button>
@@ -256,7 +256,7 @@ const HISTORICAL = [
 let D = {sessions:[]};
 let sha = null;
 let pending = {};
-let cFilter='monthly', cOff=0;
+let cFilter='alltime', cOff=0;
 let sFilter='monthly', sOff=0;
 let av='court';
 let mz=null;
