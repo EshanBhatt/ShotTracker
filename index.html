@@ -4,53 +4,85 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>ShotTracker</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-:root{
-  --bg:#0c0f16;--s1:#141820;--s2:#1c2030;--s3:#242840;
-  --or:#f07030;--ord:#a04010;
-  --t:#e6e9f2;--td:#6b7592;--tdd:#323850;
-  --bdr:#232840;--gr:#22c55e;--yw:#f59e0b;--rd:#ef4444;--bl:#60a5fa;
-}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#0c0f16;--s1:#141820;--s2:#1c2030;--s3:#252840;--or:#f07030;--t:#e6e9f2;--td:#6b7592;--tdd:#323850;--bdr:#232840;--gr:#22c55e;--yw:#f59e0b;--rd:#ef4444;--bl:#60a5fa}
 html,body{height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--t);font-family:'Inter',system-ui,sans-serif;max-width:480px;margin:0 auto;display:flex;flex-direction:column}
 header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--bdr);flex-shrink:0;background:var(--s1)}
 .logo{font-size:17px;font-weight:900;letter-spacing:-.6px}.logo em{color:var(--or);font-style:normal}
 .sync-pill{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--td);background:var(--s2);border-radius:20px;padding:5px 10px}
-.sdot{width:5px;height:5px;border-radius:50%;background:var(--tdd)}
-.sdot.ok{background:var(--gr)}.sdot.busy{background:var(--yw);animation:blink 1s infinite}.sdot.err{background:var(--rd)}
+.sdot{width:5px;height:5px;border-radius:50%;background:var(--tdd)}.sdot.ok{background:var(--gr)}.sdot.busy{background:var(--yw);animation:blink 1s infinite}.sdot.err{background:var(--rd)}
 @keyframes blink{50%{opacity:.15}}
 #vc{flex:1;overflow:hidden;position:relative;min-height:0}
 .view{position:absolute;inset:0;overflow-y:auto;display:none}.view.active{display:block}
 nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrink:0}
-.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px calc(9px + env(safe-area-inset-bottom,0px));border:none;background:none;color:var(--td);font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;transition:color .15s}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px calc(9px + env(safe-area-inset-bottom,0px));border:none;background:none;color:var(--td);font-size:10px;font-weight:600;cursor:pointer;font-family:inherit}
 .nb svg{width:19px;height:19px}.nb.on{color:var(--or)}
 .ttabs{display:flex;gap:4px;padding:10px 14px 6px}
-.tt{padding:5px 12px;border-radius:20px;border:1px solid var(--bdr);background:none;color:var(--td);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .15s}
+.tt{padding:5px 12px;border-radius:20px;border:1px solid var(--bdr);background:none;color:var(--td);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit}
 .tt.on{background:var(--or);border-color:var(--or);color:#fff}
 .pnav{display:flex;align-items:center;justify-content:center;gap:8px;padding:0 14px 4px;font-size:13px;font-weight:700}
-.pb{background:none;border:none;color:var(--td);font-size:20px;padding:3px 8px;cursor:pointer;line-height:1;transition:color .15s}
-.pb:hover{color:var(--t)}.pb:disabled{opacity:.15;cursor:default}
-.cw{padding:2px 10px 4px}
-#cSvg,#lSvg{width:100%;height:auto;display:block;border-radius:8px}
-.zp{cursor:pointer;transition:filter .1s}.zp:active{filter:brightness(1.3)}
+.pb{background:none;border:none;color:var(--td);font-size:20px;padding:3px 8px;cursor:pointer;line-height:1}
+.pb:disabled{opacity:.15;cursor:default}
+/* ── Shot chart grid ─────────────────────────────────────── */
+.chart-wrap{padding:4px 12px 6px;position:relative}
+.chart-grid{
+  display:grid;
+  /* 6 cols: corner | wing | top | top | wing | corner */
+  grid-template-columns: 1fr 1.4fr 1.1fr 1.1fr 1.4fr 1fr;
+  /* 3 rows: 3pt | mid | paint */
+  grid-template-rows: 2fr 1.4fr 1.4fr;
+  gap:2px;background:var(--bg);border-radius:8px;overflow:hidden;
+  position:relative;width:100%;
+  aspect-ratio:.9;
+}
+/* Zone placement */
+.z[data-k="lc3"]        {grid-column:1;grid-row:1/span 2}
+.z[data-k="lw3"]        {grid-column:2;grid-row:1}
+.z[data-k="lt3"]        {grid-column:3;grid-row:1}
+.z[data-k="ct3"]        {grid-column:4;grid-row:1}
+.z[data-k="rt3"]        {grid-column:5;grid-row:1}
+.z[data-k="rc3"]        {grid-column:6;grid-row:1/span 2}
+.z[data-k="left_mid"]   {grid-column:2;grid-row:2}
+.z[data-k="lcm"]        {grid-column:3;grid-row:2}
+.z[data-k="rcm"]        {grid-column:4;grid-row:2}
+.z[data-k="right_mid"]  {grid-column:5;grid-row:2}
+.z[data-k="paint_left"] {grid-column:2;grid-row:3}
+.z[data-k="cp"]         {grid-column:3;grid-row:3}
+.z[data-k="clp"]        {grid-column:4;grid-row:3}
+.z[data-k="paint_right"]{grid-column:5;grid-row:3}
+/* Zone cell style */
+.z{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;position:relative;min-width:0;overflow:hidden;
+  -webkit-user-select:none;user-select:none;
+  transition:filter .1s;
+}
+.z:active{filter:brightness(1.25)!important}
+.z .zpct{font-size:clamp(10px,3.5vw,16px);font-weight:800;color:#fff;line-height:1.1;text-align:center}
+.z .zma{font-size:clamp(8px,2.5vw,11px);font-weight:500;color:rgba(255,255,255,.7);text-align:center;margin-top:1px}
+/* Log "+" indicator */
+.z .zplus{font-size:clamp(14px,5vw,22px);font-weight:300;color:rgba(255,255,255,.3)}
+/* Court lines overlay */
+.court-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+/* ── Summary cards ───────────────────────────────────────── */
 .srow{display:flex;gap:6px;padding:6px 14px 8px}
 .sc{flex:1;background:var(--s1);border-radius:10px;padding:10px 6px;text-align:center;border:1px solid var(--bdr)}
-.scp{font-size:20px;font-weight:800;line-height:1}.scl{font-size:10px;color:var(--td);font-weight:600;letter-spacing:.4px;margin-top:2px}
-.scs{font-size:10px;color:var(--tdd);margin-top:1px}
+.scp{font-size:20px;font-weight:800;line-height:1}.scl{font-size:10px;color:var(--td);font-weight:600;letter-spacing:.4px;margin-top:2px}.scs{font-size:10px;color:var(--tdd);margin-top:1px}
 .leg{display:flex;justify-content:center;gap:10px;padding:0 14px 10px;flex-wrap:wrap}
-.li{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--td)}
-.ls{width:9px;height:9px;border-radius:2px}
-.lh{padding:12px 14px 4px}.lh h2{font-size:15px;font-weight:700;margin-bottom:2px}.lh p{font-size:11px;color:var(--td)}
+.li{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--td)}.ls{width:9px;height:9px;border-radius:2px}
+/* ── Log view ────────────────────────────────────────────── */
+.lh{padding:10px 14px 4px}.lh h2{font-size:15px;font-weight:700;margin-bottom:2px}.lh p{font-size:11px;color:var(--td)}
 .ps{padding:0 14px 10px}.pt{font-size:10px;font-weight:700;color:var(--td);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
 .pl{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
 .pi{display:flex;align-items:center;padding:9px 12px;background:var(--s2);border-radius:8px;gap:8px}
 .pin{font-size:13px;font-weight:600;flex:1}.pis{font-size:12px;color:var(--td)}.pip{font-size:13px;font-weight:700;width:36px;text-align:right}
 .pid{background:none;border:none;color:var(--tdd);cursor:pointer;font-size:18px;padding:0 4px;line-height:1;font-family:inherit}
-.savebtn{width:100%;padding:13px;background:var(--or);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}
-.savebtn:disabled{background:var(--s3);color:var(--td);cursor:default}.savebtn:not(:disabled):active{background:var(--ord)}
+.savebtn{width:100%;padding:13px;background:var(--or);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.savebtn:disabled{background:var(--s3);color:var(--td);cursor:default}
+/* ── Stats view ──────────────────────────────────────────── */
 .sh{padding:12px 14px 4px}.sh h2{font-size:15px;font-weight:700}
 .zlist{padding:0 14px 8px}.slbl{font-size:10px;font-weight:700;color:var(--tdd);letter-spacing:.5px;text-transform:uppercase;padding:10px 0 5px}
 .zr{display:flex;align-items:center;padding:9px 0;border-bottom:1px solid var(--bdr);gap:8px}.zr:last-child{border-bottom:none}
@@ -60,7 +92,8 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 .si{background:var(--s1);border-radius:8px;padding:11px 13px;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center;border:1px solid var(--bdr)}
 .sid{font-size:13px;font-weight:600}.sis{font-size:11px;color:var(--td);margin-top:2px}
 .sidel{background:none;border:none;color:var(--tdd);cursor:pointer;font-size:14px;padding:4px;font-family:inherit}
-.mo{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+/* ── Modal ───────────────────────────────────────────────── */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
 .mo.open{opacity:1;pointer-events:all}
 .ms{background:var(--s1);border-radius:20px 20px 0 0;padding:18px 18px calc(20px + env(safe-area-inset-bottom,0));width:100%;max-width:480px;transform:translateY(100%);transition:transform .22s cubic-bezier(.32,.72,0,1)}
 .mo.open .ms{transform:translateY(0)}
@@ -73,69 +106,60 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 .mbtns{display:grid;grid-template-columns:1fr 2fr;gap:8px}
 .mbcan{padding:13px;background:var(--s2);border:1px solid var(--bdr);border-radius:10px;color:var(--t);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
 .mbadd{padding:13px;background:var(--or);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
-.mbadd:active{background:var(--ord)}
-.empty{text-align:center;padding:28px 18px;color:var(--td);font-size:13px;line-height:1.7}
+.empty{text-align:center;padding:24px 18px;color:var(--td);font-size:13px;line-height:1.7}
 </style>
 </head>
 <body>
-
 <header>
   <div class="logo">Shot<em>Tracker</em></div>
   <div class="sync-pill"><div id="sd" class="sdot"></div><span id="sl">—</span></div>
 </header>
 
 <div id="vc">
-  <!-- COURT VIEW -->
+  <!-- COURT -->
   <div id="v-court" class="view active">
     <div class="ttabs" id="ct">
       <button class="tt" onclick="setF('monthly',this,'ct')">Monthly</button>
       <button class="tt" onclick="setF('yearly',this,'ct')">Yearly</button>
       <button class="tt on" onclick="setF('alltime',this,'ct')">All Time</button>
     </div>
-    <div class="pnav" id="cpnav">
+    <div class="pnav" id="cpnav" style="display:none">
       <button class="pb" id="cprev" onclick="chP(-1,'c')">‹</button>
       <span id="cplbl">—</span>
       <button class="pb" id="cnext" onclick="chP(1,'c')">›</button>
     </div>
-    <div class="cw">
-      <svg id="cSvg" viewBox="0 0 500 450" xmlns="http://www.w3.org/2000/svg">
-        <g id="czl"></g><g id="ccl"></g><g id="cll"></g>
-      </svg>
-    </div>
+    <div class="chart-wrap" id="cChartWrap"></div>
     <div class="srow" id="csum"></div>
     <div class="leg">
-      <div class="li"><div class="ls" style="background:#22c55e"></div>&gt;50%</div>
-      <div class="li"><div class="ls" style="background:#f59e0b"></div>35–50%</div>
-      <div class="li"><div class="ls" style="background:#ef4444"></div>&lt;35%</div>
-      <div class="li"><div class="ls" style="background:#1c2234"></div>No shots</div>
+      <div class="li"><div class="ls" style="background:#dc4010"></div>&gt;60%</div>
+      <div class="li"><div class="ls" style="background:#dd8050"></div>50–60%</div>
+      <div class="li"><div class="ls" style="background:#3858a0"></div>35–50%</div>
+      <div class="li"><div class="ls" style="background:#1e3490"></div>&lt;35%</div>
+      <div class="li"><div class="ls" style="background:#606878"></div>No shots</div>
     </div>
   </div>
 
-  <!-- LOG VIEW -->
+  <!-- LOG -->
   <div id="v-log" class="view">
-    <div class="lh"><h2>Log Session</h2><p>Tap zones to record shots · tap again to edit</p></div>
-    <div class="cw">
-      <svg id="lSvg" viewBox="0 0 500 450" xmlns="http://www.w3.org/2000/svg">
-        <g id="lzl"></g><g id="lcl"></g><g id="lll"></g>
-      </svg>
-    </div>
+    <div class="lh"><h2>Log Session</h2><p>Tap zones to record shots</p></div>
+    <div class="chart-wrap" id="lChartWrap"></div>
     <div class="ps" id="pend" style="display:none">
       <div class="pt">Session Zones</div>
       <div class="pl" id="plist"></div>
       <button class="savebtn" onclick="saveSess()">Save Session</button>
     </div>
-    <div class="empty" id="lempty">Tap any zone on the court<br>to start logging shots.</div>
+    <div class="empty" id="lempty">Tap any zone on the court above<br>to start logging shots.</div>
   </div>
 
-  <!-- STATS VIEW -->
+  <!-- STATS -->
   <div id="v-stats" class="view">
     <div class="sh"><h2>Statistics</h2></div>
     <div class="ttabs" id="st">
-      <button class="tt on" onclick="setF('monthly',this,'st')">Monthly</button>
+      <button class="tt" onclick="setF('monthly',this,'st')">Monthly</button>
       <button class="tt" onclick="setF('yearly',this,'st')">Yearly</button>
-      <button class="tt" onclick="setF('alltime',this,'st')">All Time</button>
+      <button class="tt on" onclick="setF('alltime',this,'st')">All Time</button>
     </div>
-    <div class="pnav" id="spnav">
+    <div class="pnav" id="spnav" style="display:none">
       <button class="pb" id="sprev" onclick="chP(-1,'s')">‹</button>
       <span id="splbl">—</span>
       <button class="pb" id="snext" onclick="chP(1,'s')">›</button>
@@ -178,327 +202,214 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 </div>
 
 <script>
-// ── Config ──────────────────────────────────────────────────────────────
-const REPO = 'EshanBhatt/ShotTracker';
-const FILE = 'data/shots.json';
-const TOK  = ['github_pat_11ANUBPFI0WwSQtn48cDY1_6VTmomAJvGJE',
-               'gIQyTgR7vUKnqxj6TdwQrUrVBGaFSLUBGTFGPEKLrHZZVga'].join('');
+const REPO='EshanBhatt/ShotTracker', FILE='data/shots.json';
+const TOK=['github_pat_11ANUBPFI0WwSQtn48cDY1_6VTmomAJvGJE','gIQyTgR7vUKnqxj6TdwQrUrVBGaFSLUBGTFGPEKLrHZZVga'].join('');
 
-// ── 14-zone definitions matching HomeCourt layout ─────────────────────
-// ViewBox 500×450. Basket (250,395). 3pt arc r=228.
-// Paint x=173–327, y=258–440. FT line y=258.
-// Corner cutoff: (45,300) and (455,300).
-// Wing splits: (131,200)↔(369,200). Top splits: (211,170)↔(289,170).
-// Arc at x=173/327: y=180. Arc at x=250: y=167 (top of arc).
-//
-// HomeCourt grid: top row = 3PT (lc3,lw3,lt3,ct3,rt3,rc3)
-//                 mid  row = mid-range (left_mid,lcm,rcm,right_mid)
-//                 btm  row = paint (paint_left,cp,clp,paint_right)
-const ZS = {
-  // Paint (4) ─────────────────────────────────────────────────────────
-  paint_left:  {n:'Left Post',        t:'2', d:'M 173,440 L 224,440 L 224,258 L 173,258 Z',                                 lx:198, ly:360},
-  cp:          {n:'Center Paint',     t:'2', d:'M 224,258 L 276,258 L 276,358 L 224,358 Z',                                 lx:250, ly:308},
-  clp:         {n:'Restricted',       t:'2', d:'M 224,358 L 276,358 L 276,440 L 224,440 Z',                                 lx:250, ly:400},
-  paint_right: {n:'Right Post',       t:'2', d:'M 276,440 L 327,440 L 327,258 L 276,258 Z',                                 lx:302, ly:360},
-  // Mid-range (4) ──────────────────────────────────────────────────────
-  left_mid:    {n:'Left Mid',         t:'2', d:'M 45,300 A 228,228 0 0,1 173,180 L 173,440 L 45,440 Z',                     lx:100, ly:358},
-  lcm:         {n:'Left Ctr Mid',     t:'2', d:'M 173,258 L 250,258 L 250,167 A 228,228 0 0,0 173,180 Z',                   lx:207, ly:218, sm:1},
-  rcm:         {n:'Right Ctr Mid',    t:'2', d:'M 250,258 L 327,258 L 327,180 A 228,228 0 0,0 250,167 Z',                   lx:293, ly:218, sm:1},
-  right_mid:   {n:'Right Mid',        t:'2', d:'M 327,180 A 228,228 0 0,1 455,300 L 455,440 L 327,440 Z',                   lx:400, ly:358},
-  // 3-Point (6) ────────────────────────────────────────────────────────
-  lc3:         {n:'L Corner 3',       t:'3', d:'M 15,440 L 45,440 L 45,300 L 15,300 Z',                                     lx:30,  ly:375, rot:1},
-  lw3:         {n:'Left Wing 3',      t:'3', d:'M 15,300 L 45,300 A 228,228 0 0,1 131,200 L 131,15 L 15,15 Z',              lx:62,  ly:205},
-  lt3:         {n:'Left Top 3',       t:'3', d:'M 131,200 A 228,228 0 0,1 211,170 L 211,15 L 131,15 Z',                     lx:168, ly:118},
-  ct3:         {n:'Top Key 3',        t:'3', d:'M 211,170 A 228,228 0 0,1 289,170 L 289,15 L 211,15 Z',                     lx:250, ly:92},
-  rt3:         {n:'Right Top 3',      t:'3', d:'M 289,170 A 228,228 0 0,1 369,200 L 369,15 L 289,15 Z',                     lx:332, ly:118},
-  rw3:         {n:'Right Wing 3',     t:'3', d:'M 369,200 A 228,228 0 0,1 455,300 L 485,300 L 485,15 L 369,15 Z',           lx:438, ly:205},
-  rc3:         {n:'R Corner 3',       t:'3', d:'M 455,440 L 485,440 L 485,300 L 455,300 Z',                                 lx:470, ly:375, rot:1},
+// Zone metadata — order matters for stats display
+const ZS={
+  lc3:        {n:'L Corner 3',     t:'3'},
+  lw3:        {n:'Left Wing 3',    t:'3'},
+  lt3:        {n:'Left Top 3',     t:'3'},
+  ct3:        {n:'Top Key 3',      t:'3'},
+  rt3:        {n:'Right Top 3',    t:'3'},
+  rc3:        {n:'R Corner 3',     t:'3'},
+  left_mid:   {n:'Left Mid',       t:'2'},
+  lcm:        {n:'Left Ctr Mid',   t:'2'},
+  rcm:        {n:'Right Ctr Mid',  t:'2'},
+  right_mid:  {n:'Right Mid',      t:'2'},
+  paint_left: {n:'Left Post',      t:'2'},
+  cp:         {n:'Center Paint',   t:'2'},
+  clp:        {n:'Restricted',     t:'2'},
+  paint_right:{n:'Right Post',     t:'2'},
 };
-const ZK = Object.keys(ZS);
+const ZK=Object.keys(ZS);
 
-// ── Historical data (imported from HomeCourt screenshots) ─────────────
-// Zone order matches HomeCourt grid: top-row L→R, mid L→R, bottom L→R
-// lc3, lw3, lt3, ct3, rt3, rc3 | left_mid, lcm, rcm, right_mid | paint_left, cp, clp, paint_right
-const HISTORICAL = [
-  {id:'aug2025', date:'2025-08-01', zones:{
-    lc3:{makes:12,attempts:22}, lw3:{makes:10,attempts:17}, lt3:{makes:8,attempts:11},
-    ct3:{makes:9,attempts:10},  rt3:{makes:15,attempts:33}, rc3:{makes:7,attempts:13},
-    left_mid:{makes:24,attempts:62}, lcm:{makes:5,attempts:8}, rcm:{makes:5,attempts:8}, right_mid:{makes:35,attempts:93},
-    paint_left:{makes:12,attempts:39}, cp:{makes:54,attempts:115}, clp:{makes:33,attempts:96}, paint_right:{makes:20,attempts:41}
-  }},
-  {id:'sep2025', date:'2025-09-01', zones:{
-    lc3:{makes:27,attempts:66}, lw3:{makes:33,attempts:58}, lt3:{makes:10,attempts:19},
-    ct3:{makes:10,attempts:18}, rt3:{makes:22,attempts:38}, rc3:{makes:26,attempts:54},
-    left_mid:{makes:43,attempts:117}, lcm:{makes:4,attempts:8}, rcm:{makes:20,attempts:33}, right_mid:{makes:45,attempts:110},
-    paint_left:{makes:48,attempts:97}, cp:{makes:39,attempts:84}, clp:{makes:52,attempts:118}, paint_right:{makes:38,attempts:100}
-  }},
-  {id:'oct2025', date:'2025-10-01', zones:{
-    lc3:{makes:6,attempts:19},  lw3:{makes:12,attempts:18}, lt3:{makes:3,attempts:3},
-    ct3:{makes:3,attempts:8},   rt3:{makes:10,attempts:20}, rc3:{makes:4,attempts:20},
-    left_mid:{makes:17,attempts:39}, lcm:{makes:0,attempts:0}, rcm:{makes:1,attempts:1}, right_mid:{makes:15,attempts:27},
-    paint_left:{makes:14,attempts:35}, cp:{makes:11,attempts:26}, clp:{makes:14,attempts:38}, paint_right:{makes:9,attempts:29}
-  }},
-  {id:'nov2025', date:'2025-11-01', zones:{
-    lc3:{makes:17,attempts:41}, lw3:{makes:16,attempts:24}, lt3:{makes:11,attempts:13},
-    ct3:{makes:4,attempts:4},   rt3:{makes:18,attempts:27}, rc3:{makes:13,attempts:30},
-    left_mid:{makes:34,attempts:75}, lcm:{makes:5,attempts:11}, rcm:{makes:1,attempts:2}, right_mid:{makes:38,attempts:76},
-    paint_left:{makes:14,attempts:40}, cp:{makes:27,attempts:54}, clp:{makes:29,attempts:75}, paint_right:{makes:24,attempts:42}
-  }},
-  {id:'mar2026', date:'2026-03-01', zones:{
-    lc3:{makes:6,attempts:10},  lw3:{makes:11,attempts:18}, lt3:{makes:1,attempts:2},
-    ct3:{makes:2,attempts:2},   rt3:{makes:10,attempts:19}, rc3:{makes:1,attempts:1},
-    left_mid:{makes:17,attempts:35}, lcm:{makes:0,attempts:1}, rcm:{makes:1,attempts:2}, right_mid:{makes:18,attempts:38},
-    paint_left:{makes:1,attempts:4}, cp:{makes:5,attempts:10}, clp:{makes:4,attempts:18}, paint_right:{makes:6,attempts:9}
-  }}
+// HomeCourt historical data (imported from screenshots)
+const HIST=[
+  {id:'aug2025',date:'2025-08-01',zones:{lc3:{makes:12,attempts:22},lw3:{makes:10,attempts:17},lt3:{makes:8,attempts:11},ct3:{makes:9,attempts:10},rt3:{makes:15,attempts:33},rc3:{makes:7,attempts:13},left_mid:{makes:24,attempts:62},lcm:{makes:5,attempts:8},rcm:{makes:5,attempts:8},right_mid:{makes:35,attempts:93},paint_left:{makes:12,attempts:39},cp:{makes:54,attempts:115},clp:{makes:33,attempts:96},paint_right:{makes:20,attempts:41}}},
+  {id:'sep2025',date:'2025-09-01',zones:{lc3:{makes:27,attempts:66},lw3:{makes:33,attempts:58},lt3:{makes:10,attempts:19},ct3:{makes:10,attempts:18},rt3:{makes:22,attempts:38},rc3:{makes:26,attempts:54},left_mid:{makes:43,attempts:117},lcm:{makes:4,attempts:8},rcm:{makes:20,attempts:33},right_mid:{makes:45,attempts:110},paint_left:{makes:48,attempts:97},cp:{makes:39,attempts:84},clp:{makes:52,attempts:118},paint_right:{makes:38,attempts:100}}},
+  {id:'oct2025',date:'2025-10-01',zones:{lc3:{makes:6,attempts:19},lw3:{makes:12,attempts:18},lt3:{makes:3,attempts:3},ct3:{makes:3,attempts:8},rt3:{makes:10,attempts:20},rc3:{makes:4,attempts:20},left_mid:{makes:17,attempts:39},lcm:{makes:0,attempts:0},rcm:{makes:1,attempts:1},right_mid:{makes:15,attempts:27},paint_left:{makes:14,attempts:35},cp:{makes:11,attempts:26},clp:{makes:14,attempts:38},paint_right:{makes:9,attempts:29}}},
+  {id:'nov2025',date:'2025-11-01',zones:{lc3:{makes:17,attempts:41},lw3:{makes:16,attempts:24},lt3:{makes:11,attempts:13},ct3:{makes:4,attempts:4},rt3:{makes:18,attempts:27},rc3:{makes:13,attempts:30},left_mid:{makes:34,attempts:75},lcm:{makes:5,attempts:11},rcm:{makes:1,attempts:2},right_mid:{makes:38,attempts:76},paint_left:{makes:14,attempts:40},cp:{makes:27,attempts:54},clp:{makes:29,attempts:75},paint_right:{makes:24,attempts:42}}},
+  {id:'mar2026',date:'2026-03-01',zones:{lc3:{makes:6,attempts:10},lw3:{makes:11,attempts:18},lt3:{makes:1,attempts:2},ct3:{makes:2,attempts:2},rt3:{makes:10,attempts:19},rc3:{makes:1,attempts:1},left_mid:{makes:17,attempts:35},lcm:{makes:0,attempts:1},rcm:{makes:1,attempts:2},right_mid:{makes:18,attempts:38},paint_left:{makes:1,attempts:4},cp:{makes:5,attempts:10},clp:{makes:4,attempts:18},paint_right:{makes:6,attempts:9}}},
 ];
 
-// ── State ──────────────────────────────────────────────────────────────
-let D = {sessions:[]};
-let sha = null;
-let pending = {};
-let cFilter='alltime', cOff=0;
-let sFilter='monthly', sOff=0;
-let av='court';
-let mz=null;
+// State
+let D={sessions:[]},sha=null,pending={};
+let cFilter='alltime',cOff=0,sFilter='alltime',sOff=0,av='court',mz=null;
 
-// ── GitHub ─────────────────────────────────────────────────────────────
-async function load() {
+// GitHub
+async function load(){
   setSS('busy','Loading…');
-  try {
-    const r = await fetch(
-      `https://api.github.com/repos/${REPO}/contents/${FILE}`,
-      {headers:{Authorization:`token ${TOK}`,Accept:'application/vnd.github.v3+json'}}
-    );
-    if (r.status===404) {
-      // Fresh install: seed with historical data
-      D = {sessions:[...HISTORICAL]};
-      setSS('ok','Seeding…');
-      await push();
-      renderAll();
-      return;
-    }
-    if (!r.ok) throw new Error(r.status);
-    const j = await r.json();
-    sha = j.sha;
-    D = JSON.parse(atob(j.content.replace(/\n/g,'')));
+  try{
+    const r=await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{headers:{Authorization:`token ${TOK}`,Accept:'application/vnd.github.v3+json'}});
+    if(r.status===404){D={sessions:[...HIST]};setSS('ok','Seeding…');await push();renderAll();return;}
+    if(!r.ok)throw r.status;
+    const j=await r.json();sha=j.sha;
+    D=JSON.parse(atob(j.content.replace(/\n/g,'')));
     setSS('ok','Synced');
-  } catch(e) {
-    const lc = localStorage.getItem('st_d');
-    if (lc) try { D = JSON.parse(lc); } catch(_){}
-    else D = {sessions:[...HISTORICAL]};
+  }catch(e){
+    const lc=localStorage.getItem('st_d');
+    D=lc?JSON.parse(lc):{sessions:[...HIST]};
     setSS('err','Offline');
   }
   renderAll();
 }
 
-async function push() {
+async function push(){
   setSS('busy','Saving…');
-  localStorage.setItem('st_d', JSON.stringify(D));
-  try {
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(D,null,2))));
-    const body = {message:`shots ${new Date().toISOString().slice(0,10)}`,content,...(sha?{sha}:{})};
-    const r = await fetch(
-      `https://api.github.com/repos/${REPO}/contents/${FILE}`,
-      {method:'PUT',headers:{Authorization:`token ${TOK}`,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)}
-    );
-    if (!r.ok) throw new Error(r.status);
-    const j = await r.json();
-    sha = j.content.sha;
-    setSS('ok','Saved ✓');
-  } catch(e) {
-    setSS('err','Save failed');
-  }
+  localStorage.setItem('st_d',JSON.stringify(D));
+  try{
+    const content=btoa(unescape(encodeURIComponent(JSON.stringify(D,null,2))));
+    const body={message:`shots ${new Date().toISOString().slice(0,10)}`,content,...(sha?{sha}:{})};
+    const r=await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{method:'PUT',headers:{Authorization:`token ${TOK}`,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!r.ok)throw r.status;
+    const j=await r.json();sha=j.content.sha;setSS('ok','Saved ✓');
+  }catch(e){setSS('err','Save failed');}
 }
 
-function setSS(s,l) {
-  document.getElementById('sd').className='sdot '+s;
-  document.getElementById('sl').textContent=l;
-}
+function setSS(s,l){document.getElementById('sd').className='sdot '+s;document.getElementById('sl').textContent=l;}
 
-// ── Data helpers ──────────────────────────────────────────────────────
-function getPeriod(f,o) {
-  if (f==='alltime') return 'all';
-  const now=new Date();
-  if (f==='yearly') return String(now.getFullYear()+o);
-  const d=new Date(now.getFullYear(),now.getMonth()+o,1);
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+// Data
+function getPeriod(f,o){
+  if(f==='alltime')return'all';
+  const n=new Date();
+  if(f==='yearly')return String(n.getFullYear()+o);
+  const d=new Date(n.getFullYear(),n.getMonth()+o,1);
+  return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
 }
-function getPeriodLbl(f,o) {
-  const k=getPeriod(f,o);
-  if (k==='all') return 'All Time';
-  if (f==='yearly') return k;
-  const [y,m]=k.split('-');
-  return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+' '+y;
+function getPeriodLbl(f,o){
+  const k=getPeriod(f,o);if(k==='all')return'All Time';if(f==='yearly')return k;
+  const[y,m]=k.split('-');return['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+' '+y;
 }
-function getSess(f,o) {
-  if (f==='alltime') return D.sessions;
-  const k=getPeriod(f,o);
-  return D.sessions.filter(s=>s.date.startsWith(k));
-}
-function rollup(sessions) {
-  const r={}; ZK.forEach(k=>r[k]={makes:0,attempts:0});
-  sessions.forEach(s=>ZK.forEach(k=>{
-    if (s.zones[k]){r[k].makes+=s.zones[k].makes;r[k].attempts+=s.zones[k].attempts;}
-  }));
+function getSess(f,o){if(f==='alltime')return D.sessions;const k=getPeriod(f,o);return D.sessions.filter(s=>s.date.startsWith(k));}
+function rollup(sessions){
+  const r={};ZK.forEach(k=>r[k]={makes:0,attempts:0});
+  sessions.forEach(s=>ZK.forEach(k=>{if(s.zones[k]){r[k].makes+=s.zones[k].makes;r[k].attempts+=s.zones[k].attempts;}}));
   return r;
 }
-function zCol(m,a) {
-  if (!a) return '#1c2234';
+
+// Colors — matches HomeCourt's orange=hot, blue=cold scale
+function zCol(m,a){
+  if(!a)return'#606878';
   const p=m/a;
-  return p>=.50?'#16963e':p>=.35?'#b07010':'#a02020';
+  if(p>=.70)return'#dc4010';
+  if(p>=.60)return'#dd6030';
+  if(p>=.50)return'#dea080';
+  if(p>=.42)return'#5070a8';
+  if(p>=.35)return'#3858a0';
+  return'#1e3490';
 }
-function zColBright(m,a) {
-  if (!a) return '#1c2234';
-  const p=m/a;
-  return p>=.50?'#22c55e':p>=.35?'#f59e0b':'#ef4444';
-}
+function zColBright(m,a){if(!a)return'var(--tdd)';const p=m/a;return p>=.50?'var(--or)':p>=.35?'var(--bl)':'var(--rd)';}
 function pStr(m,a){return a?Math.round(m/a*100)+'%':'—';}
 function e0(){const r={};ZK.forEach(k=>r[k]={makes:0,attempts:0});return r;}
 
-// ── Court lines SVG ────────────────────────────────────────────────────
-const CL = `
-  <rect x="15" y="15" width="470" height="425" rx="4" fill="#131724" stroke="#1e2540" stroke-width="1.5"/>
-  <line x1="15" y1="228" x2="485" y2="228" stroke="#181f34" stroke-width="1.5"/>
-  <rect x="173" y="258" width="154" height="182" fill="none" stroke="#263050" stroke-width="1.5"/>
-  <path d="M 45,440 L 45,300 A 228,228 0 0,1 455,300 L 455,440" fill="none" stroke="#263050" stroke-width="1.5"/>
-  <circle cx="250" cy="258" r="55" fill="none" stroke="#263050" stroke-width="1.5" stroke-dasharray="7 5"/>
-  <circle cx="250" cy="395" r="38" fill="none" stroke="#263050" stroke-width="1" stroke-dasharray="5 4"/>
-  <line x1="173" y1="416" x2="162" y2="416" stroke="#263050" stroke-width="1.5"/>
-  <line x1="327" y1="416" x2="338" y2="416" stroke="#263050" stroke-width="1.5"/>
-  <line x1="173" y1="394" x2="162" y2="394" stroke="#263050" stroke-width="1.5"/>
-  <line x1="327" y1="394" x2="338" y2="394" stroke="#263050" stroke-width="1.5"/>
-  <rect x="222" y="10" width="56" height="5" rx="1" fill="#263050"/>
-  <circle cx="250" cy="21" r="7" fill="none" stroke="#f07030" stroke-width="2.5"/>
-  <line x1="250" y1="14" x2="250" y2="10" stroke="#263050" stroke-width="2"/>
-`;
+// Build the chart grid HTML
+// Court lines SVG overlay (decorative, pointer-events:none)
+// ViewBox: matches grid proportions (cols: 1+1.4+1.1+1.1+1.4+1=7, rows: 2+1.4+1.4=4.8)
+// Key coords (in viewBox units 700 wide, 480 tall):
+//   Basket: (350, 440)   3pt corners: (100,190) and (600,190)
+//   FT line: y≈340  FT circle: cx=350, cy=340, r=80
+const COURT_SVG=`<svg class="court-lines" viewBox="0 0 700 480" preserveAspectRatio="none">
+  <!-- Basket -->
+  <circle cx="350" cy="440" r="14" fill="none" stroke="#f07030" stroke-width="3"/>
+  <rect x="308" y="472" width="84" height="7" rx="2" fill="rgba(255,255,255,.15)"/>
+  <!-- Restricted area -->
+  <path d="M 280,480 A 70,70 0 0,1 420,480" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2.5" stroke-dasharray="6 4"/>
+  <!-- FT circle (dashed upper half, solid lower half) -->
+  <path d="M 270,340 A 80,80 0 0,0 430,340" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2.5" stroke-dasharray="7 5"/>
+  <path d="M 270,340 A 80,80 0 0,1 430,340" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2.5"/>
+  <!-- 3PT arc -->
+  <path d="M 100,190 A 362,362 0 0,1 600,190" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
+  <!-- Corner 3 straight lines -->
+  <line x1="100" y1="0" x2="100" y2="190" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
+  <line x1="600" y1="0" x2="600" y2="190" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
+  <!-- Paint box -->
+  <rect x="213" y="340" width="274" height="140" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
+  <!-- Paint center lines (zone dividers) -->
+  <line x1="100" y1="190" x2="100" y2="340" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+  <line x1="600" y1="190" x2="600" y2="340" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+</svg>`;
 
-// ── SVG builders ───────────────────────────────────────────────────────
-function buildZones(totals, clickable) {
-  return ZK.map(k=>{
-    const z=ZS[k],{makes:m,attempts:a}=totals[k],c=zCol(m,a);
-    const ev=clickable?`onclick="openMo('${k}')"`:'';
-    return `<path class="zp" d="${z.d}" fill="${c}" fill-opacity=".88" stroke="#0c0f16" stroke-width=".8" ${ev}/>`;
+function buildChart(totals, isLog, wrapId){
+  const wrap=document.getElementById(wrapId);
+  if(!wrap)return;
+  // Build zone divs
+  const zones=ZK.map(k=>{
+    const{makes:m,attempts:a}=isLog?(pending[k]||{makes:0,attempts:0}):totals[k];
+    const hasPending=isLog&&pending[k];
+    const bg=isLog?(hasPending?zCol(m,a):'#1c2234'):zCol(m,a);
+    const clickAttr=isLog?`onclick="tap('${k}')" ontouchend="tapT(event,'${k}')" `:'';
+    const label=a?`<span class="zpct">${Math.round(m/a*100)}%</span><span class="zma">${m}/${a}</span>`
+                 :(isLog?`<span class="zplus">+</span>`:`<span class="zma" style="opacity:.3">—</span>`);
+    return`<div class="z" data-k="${k}" ${clickAttr}style="background:${bg}">${label}</div>`;
   }).join('');
+  wrap.innerHTML=`<div class="chart-grid">${zones}${COURT_SVG}</div>`;
 }
 
-function buildLabels(totals) {
-  return ZK.map(k=>{
-    const z=ZS[k],{makes:m,attempts:a}=totals[k];
-    const ps=pStr(m,a), ms=a?`${m}/${a}`:'';
-    const dy=ms?-7:0, fs=z.sm?'10':'11';
-    if (z.rot) return `
-      <text x="${z.lx}" y="${z.ly}" fill="rgba(255,255,255,.85)" font-size="9" font-weight="700" text-anchor="middle" dominant-baseline="middle" font-family="Inter,sans-serif" transform="rotate(-90,${z.lx},${z.ly})" pointer-events="none">${ps}</text>
-      ${ms?`<text x="${z.lx+13}" y="${z.ly}" fill="rgba(255,255,255,.5)" font-size="7" font-weight="500" text-anchor="middle" dominant-baseline="middle" font-family="Inter,sans-serif" transform="rotate(-90,${z.lx+13},${z.ly})" pointer-events="none">${ms}</text>`:''}`;
-    return `
-      <text x="${z.lx}" y="${z.ly+dy}" fill="rgba(255,255,255,.9)" font-size="${fs}" font-weight="700" text-anchor="middle" dominant-baseline="middle" font-family="Inter,sans-serif" pointer-events="none">${ps}</text>
-      ${ms?`<text x="${z.lx}" y="${z.ly+dy+12}" fill="rgba(255,255,255,.55)" font-size="8" text-anchor="middle" dominant-baseline="middle" font-family="Inter,sans-serif" pointer-events="none">${ms}</text>`:''}`;
-  }).join('');
-}
-
-function buildLogZones() {
-  return ZK.map(k=>{
-    const z=ZS[k],p=pending[k],c=p?zCol(p.makes,p.attempts):'#1c2234';
-    return `<path class="zp" d="${z.d}" fill="${c}" fill-opacity=".9" stroke="#0c0f16" stroke-width=".8" onclick="openMo('${k}')"/>`;
-  }).join('');
-}
-
-function buildLogLabels() {
-  return ZK.map(k=>{
-    const z=ZS[k],p=pending[k];
-    const ps=p?Math.round(p.makes/p.attempts*100)+'%':'+';
-    const ms=p?`${p.makes}/${p.attempts}`:'';
-    const dy=ms?-7:0;
-    if (z.rot) return `<text x="${z.lx}" y="${z.ly}" fill="rgba(255,255,255,.75)" font-size="9" font-weight="700" text-anchor="middle" dominant-baseline="middle" font-family="Inter,sans-serif" transform="rotate(-90,${z.lx},${z.ly})" pointer-events="none">${ps}</text>`;
-    return `
-      <text x="${z.lx}" y="${z.ly+dy}" fill="${p?'rgba(255,255,255,.9)':'rgba(255,255,255,.25)'}" font-size="${p?'11':'18'}" font-weight="${p?'700':'400'}" text-anchor="middle" dominant-baseline="middle" font-family="Inter,sans-serif" pointer-events="none">${ps}</text>
-      ${ms?`<text x="${z.lx}" y="${z.ly+dy+12}" fill="rgba(255,255,255,.55)" font-size="8" text-anchor="middle" dominant-baseline="middle" font-family="Inter,sans-serif" pointer-events="none">${ms}</text>`:''}`;
-  }).join('');
-}
-
-function buildSummary(totals, id) {
-  const twoKeys=ZK.filter(k=>ZS[k].t==='2'), threeKeys=ZK.filter(k=>ZS[k].t==='3');
-  const sum=(keys)=>keys.reduce((a,k)=>[a[0]+totals[k].makes,a[1]+totals[k].attempts],[0,0]);
-  const [am,aa]=sum(ZK),[tm,ta]=sum(twoKeys),[pm,pa]=sum(threeKeys);
-  document.getElementById(id).innerHTML=`
-    <div class="sc"><div class="scp">${pStr(am,aa)}</div><div class="scl">OVERALL</div><div class="scs">${aa?am+'/'+aa:'No shots'}</div></div>
-    <div class="sc"><div class="scp" style="color:var(--bl)">${pStr(tm,ta)}</div><div class="scl">2-POINT</div><div class="scs">${ta?tm+'/'+ta:'—'}</div></div>
-    <div class="sc"><div class="scp" style="color:var(--or)">${pStr(pm,pa)}</div><div class="scl">3-POINT</div><div class="scs">${pa?pm+'/'+pa:'—'}</div></div>`;
-}
-
-// ── Render ─────────────────────────────────────────────────────────────
-function renderCourt() {
+// Render functions
+function renderCourt(){
   const ss=getSess(cFilter,cOff),t=rollup(ss);
-  document.getElementById('czl').innerHTML=buildZones(t,false);
-  document.getElementById('ccl').innerHTML=CL;
-  document.getElementById('cll').innerHTML=buildLabels(t);
+  buildChart(t,false,'cChartWrap');
   document.getElementById('cplbl').textContent=getPeriodLbl(cFilter,cOff);
   document.getElementById('cnext').disabled=cOff>=0;
   document.getElementById('cpnav').style.display=cFilter==='alltime'?'none':'flex';
   buildSummary(t,'csum');
 }
 
-function renderLog() {
-  document.getElementById('lzl').innerHTML=buildLogZones();
-  document.getElementById('lcl').innerHTML=CL;
-  document.getElementById('lll').innerHTML=buildLogLabels();
+function renderLog(){
+  buildChart(e0(),true,'lChartWrap');
   const keys=Object.keys(pending);
   document.getElementById('pend').style.display=keys.length?'block':'none';
   document.getElementById('lempty').style.display=keys.length?'none':'block';
-  if (keys.length) {
+  if(keys.length){
     document.getElementById('plist').innerHTML=keys.map(k=>{
-      const z=ZS[k],{makes:m,attempts:a}=pending[k],pc=Math.round(m/a*100);
-      return `<div class="pi"><div class="pin">${z.n}</div><div class="pis">${m}/${a}</div><div class="pip" style="color:${zColBright(m,a)}">${pc}%</div><button class="pid" onclick="delPend('${k}')">×</button></div>`;
+      const z=ZS[k],{makes:m,attempts:a}=pending[k];
+      return`<div class="pi"><div class="pin">${z.n}</div><div class="pis">${m}/${a}</div><div class="pip" style="color:${zColBright(m,a)}">${Math.round(m/a*100)}%</div><button class="pid" onclick="delP('${k}')">×</button></div>`;
     }).join('');
   }
 }
 
-function renderStats() {
+function renderStats(){
   const ss=getSess(sFilter,sOff),t=rollup(ss);
   document.getElementById('splbl').textContent=getPeriodLbl(sFilter,sOff);
   document.getElementById('snext').disabled=sOff>=0;
   document.getElementById('spnav').style.display=sFilter==='alltime'?'none':'flex';
   buildSummary(t,'ssum');
-
-  const secs=[
-    {label:'3-Point Zones',keys:['lc3','lw3','lt3','ct3','rt3','rc3']},
-    {label:'Mid-Range',    keys:['left_mid','lcm','rcm','right_mid']},
-    {label:'Paint',        keys:['paint_left','cp','clp','paint_right']},
-  ];
+  const secs=[{label:'3-Point',keys:['lc3','lw3','lt3','ct3','rt3','rc3']},{label:'Mid-Range',keys:['left_mid','lcm','rcm','right_mid']},{label:'Paint',keys:['paint_left','cp','clp','paint_right']}];
   let html='';
-  secs.forEach(sec=>{
-    html+=`<div class="slbl">${sec.label}</div>`;
-    sec.keys.forEach(k=>{
+  secs.forEach(s=>{
+    html+=`<div class="slbl">${s.label}</div>`;
+    s.keys.forEach(k=>{
       const z=ZS[k],{makes:m,attempts:a}=t[k],c=zColBright(m,a),ps=pStr(m,a);
-      html+=`<div class="zr"><div class="zrc" style="background:${c}"></div><div class="zrn">${z.n}</div><div class="zrm">${a?m+'/'+a:'—'}</div><div class="zrp" style="color:${a?c:'var(--tdd)'}">${ps}</div><div class="zrt">${z.t}PT</div></div>`;
+      html+=`<div class="zr"><div class="zrc" style="background:${a?zCol(m,a):'var(--tdd)'}"></div><div class="zrn">${z.n}</div><div class="zrm">${a?m+'/'+a:'—'}</div><div class="zrp" style="color:${a?c:'var(--tdd)'}">${ps}</div><div class="zrt">${z.t}PT</div></div>`;
     });
   });
   document.getElementById('zlist').innerHTML=html;
-
-  const recent=[...ss].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,15);
+  const recent=[...ss].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,12);
   let sh=`<div class="sst">${ss.length} Session${ss.length!==1?'s':''}</div>`;
-  if (!recent.length) sh+='<p class="empty" style="padding:12px 0 0">No sessions yet.</p>';
+  if(!recent.length)sh+='<p class="empty" style="padding:10px 0">No sessions yet.</p>';
   else recent.forEach(s=>{
-    const m=ZK.reduce((a,k)=>a+(s.zones[k]?.makes||0),0);
-    const a=ZK.reduce((a,k)=>a+(s.zones[k]?.attempts||0),0);
-    const nz=Object.keys(s.zones).length;
+    const m=ZK.reduce((a,k)=>a+(s.zones[k]?.makes||0),0),a=ZK.reduce((a,k)=>a+(s.zones[k]?.attempts||0),0),nz=Object.keys(s.zones).length;
     sh+=`<div class="si"><div><div class="sid">${fmtDate(s.date)}</div><div class="sis">${nz} zone${nz!==1?'s':''} · ${m}/${a} ${a?'('+Math.round(m/a*100)+'%)':''}</div></div><button class="sidel" onclick="delSess('${s.id}')">🗑</button></div>`;
   });
   document.getElementById('sesslist').innerHTML=sh;
 }
 
-function fmtDate(ds) {
-  const d=new Date(ds+'T12:00:00');
-  return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+function buildSummary(t,id){
+  const tw=ZK.filter(k=>ZS[k].t==='2'),th=ZK.filter(k=>ZS[k].t==='3');
+  const sum=keys=>keys.reduce((a,k)=>[a[0]+t[k].makes,a[1]+t[k].attempts],[0,0]);
+  const[am,aa]=sum(ZK),[tm,ta]=sum(tw),[pm,pa]=sum(th);
+  document.getElementById(id).innerHTML=`
+    <div class="sc"><div class="scp">${pStr(am,aa)}</div><div class="scl">OVERALL</div><div class="scs">${aa?am+'/'+aa:'No shots'}</div></div>
+    <div class="sc"><div class="scp" style="color:var(--bl)">${pStr(tm,ta)}</div><div class="scl">2-POINT</div><div class="scs">${ta?tm+'/'+ta:'—'}</div></div>
+    <div class="sc"><div class="scp" style="color:var(--or)">${pStr(pm,pa)}</div><div class="scl">3-POINT</div><div class="scs">${pa?pm+'/'+pa:'—'}</div></div>`;
 }
 
-function renderAll() {
-  if (av==='court') renderCourt();
-  else if (av==='log') renderLog();
-  else if (av==='stats') renderStats();
-}
+function fmtDate(ds){const d=new Date(ds+'T12:00:00');return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+function renderAll(){if(av==='court')renderCourt();else if(av==='log')renderLog();else if(av==='stats')renderStats();}
 
-// ── Navigation ─────────────────────────────────────────────────────────
-function sv(view) {
+// Nav
+function sv(view){
   av=view;
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
@@ -506,71 +417,48 @@ function sv(view) {
   document.getElementById('nb-'+view).classList.add('on');
   renderAll();
 }
-
-function setF(f,btn,tabsId) {
-  document.querySelectorAll('#'+tabsId+' .tt').forEach(t=>t.classList.remove('on'));
+function setF(f,btn,tid){
+  document.querySelectorAll('#'+tid+' .tt').forEach(t=>t.classList.remove('on'));
   btn.classList.add('on');
-  if (tabsId==='ct'){cFilter=f;cOff=0;renderCourt();}
-  else{sFilter=f;sOff=0;renderStats();}
+  if(tid==='ct'){cFilter=f;cOff=0;renderCourt();}else{sFilter=f;sOff=0;renderStats();}
+  document.getElementById(tid==='ct'?'cpnav':'spnav').style.display=f==='alltime'?'none':'flex';
 }
+function chP(dir,w){if(w==='c'){cOff=Math.min(0,cOff+dir);renderCourt();}else{sOff=Math.min(0,sOff+dir);renderStats();}}
 
-function chP(dir,which) {
-  if (which==='c'){cOff=Math.min(0,cOff+dir);renderCourt();}
-  else{sOff=Math.min(0,sOff+dir);renderStats();}
-}
+// Tap zone (log mode)
+function tap(k){openMo(k);}
+function tapT(e,k){e.preventDefault();e.stopPropagation();openMo(k);}
 
-// ── Modal ──────────────────────────────────────────────────────────────
-function openMo(zk) {
-  mz=zk;
-  const z=ZS[zk],p=pending[zk];
+// Modal
+function openMo(k){
+  if(av!=='log')return;
+  mz=k;const z=ZS[k],p=pending[k];
   document.getElementById('mtitle').textContent=z.n+' · '+z.t+'PT';
   document.getElementById('im').value=p?p.makes:'';
   document.getElementById('ia').value=p?p.attempts:'';
   document.getElementById('mo').classList.add('open');
-  setTimeout(()=>document.getElementById('im').focus(),300);
+  setTimeout(()=>document.getElementById('im').focus(),350);
 }
 function closeMo(){document.getElementById('mo').classList.remove('open');mz=null;}
-function addZone() {
-  const m=parseInt(document.getElementById('im').value)||0;
-  const a=parseInt(document.getElementById('ia').value)||0;
-  if (!a){closeMo();return;}
-  if (m>a){document.getElementById('im').style.borderColor='var(--rd)';return;}
-  pending[mz]={makes:m,attempts:a};
-  closeMo();renderLog();
+function addZone(){
+  const m=parseInt(document.getElementById('im').value)||0,a=parseInt(document.getElementById('ia').value)||0;
+  if(!a){closeMo();return;}
+  if(m>a){document.getElementById('im').style.borderColor='var(--rd)';return;}
+  pending[mz]={makes:m,attempts:a};closeMo();renderLog();
 }
 document.getElementById('im').addEventListener('input',()=>{document.getElementById('im').style.borderColor='';});
 document.getElementById('mo').addEventListener('click',e=>{if(e.target===document.getElementById('mo'))closeMo();});
 
-// ── Session actions ────────────────────────────────────────────────────
-function delPend(k){delete pending[k];renderLog();}
-
-async function saveSess() {
-  if (!Object.keys(pending).length) return;
-  D.sessions.push({
-    id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),
-    date:new Date().toISOString().slice(0,10),
-    zones:{...pending}
-  });
-  pending={};
-  renderLog();
-  await push();
-  renderAll();
+// Session
+function delP(k){delete pending[k];renderLog();}
+async function saveSess(){
+  if(!Object.keys(pending).length)return;
+  D.sessions.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),date:new Date().toISOString().slice(0,10),zones:{...pending}});
+  pending={};renderLog();await push();renderAll();
 }
+function delSess(id){if(!confirm('Delete this session?'))return;D.sessions=D.sessions.filter(s=>s.id!==id);push();renderStats();}
 
-function delSess(id) {
-  if (!confirm('Delete this session?')) return;
-  D.sessions=D.sessions.filter(s=>s.id!==id);
-  push();renderStats();
-}
-
-// ── Init ───────────────────────────────────────────────────────────────
-document.getElementById('ccl').innerHTML=CL;
-document.getElementById('czl').innerHTML=buildZones(e0(),false);
-document.getElementById('cll').innerHTML=buildLabels(e0());
-document.getElementById('lcl').innerHTML=CL;
-document.getElementById('lzl').innerHTML=buildLogZones();
-document.getElementById('lll').innerHTML=buildLogLabels();
-document.getElementById('cplbl').textContent=getPeriodLbl('monthly',0);
+// Init
 load();
 </script>
 </body>
