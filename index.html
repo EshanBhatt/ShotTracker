@@ -26,54 +26,65 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 .pnav{display:flex;align-items:center;justify-content:center;gap:8px;padding:0 14px 4px;font-size:13px;font-weight:700}
 .pb{background:none;border:none;color:var(--td);font-size:20px;padding:3px 8px;cursor:pointer;line-height:1}
 .pb:disabled{opacity:.15;cursor:default}
-/* ── Shot chart grid ─────────────────────────────────────── */
-.chart-wrap{padding:4px 12px 6px;position:relative}
+
+/* ── Shot chart grid ──────────────────────────────────────────
+   6 columns × 4 rows matching HomeCourt layout:
+   
+   [lc3][lw3 ][lt3][ct3][rt3 ][rc3]  <- row 1 (3PT)
+   [lc3][lmid][lcm][rcm][rmid][rc3]  <- row 2 (mid)
+   [plt       ][cp      ][prt       ] <- row 3 (upper paint)
+   [plt       ][clp     ][prt       ] <- row 4 (lower paint)
+   
+   paint_left  = cols 1-2, rows 3-4
+   cp          = cols 3-4, row 3
+   clp         = cols 3-4, row 4
+   paint_right = cols 5-6, rows 3-4
+*/
+.cw{padding:4px 12px 6px}
 .chart-grid{
   display:grid;
-  /* 6 cols: corner | wing | top | top | wing | corner */
-  grid-template-columns: 1fr 1.4fr 1.1fr 1.1fr 1.4fr 1fr;
-  /* 3 rows: 3pt | mid | paint */
-  grid-template-rows: 2fr 1.4fr 1.4fr;
+  grid-template-columns:repeat(6,1fr);
+  grid-template-rows:2fr 1.5fr 1.1fr 1.1fr;
   gap:2px;background:var(--bg);border-radius:8px;overflow:hidden;
   position:relative;width:100%;
-  aspect-ratio:.9;
 }
-/* Zone placement */
-.z[data-k="lc3"]        {grid-column:1;grid-row:1/span 2}
-.z[data-k="lw3"]        {grid-column:2;grid-row:1}
-.z[data-k="lt3"]        {grid-column:3;grid-row:1}
-.z[data-k="ct3"]        {grid-column:4;grid-row:1}
-.z[data-k="rt3"]        {grid-column:5;grid-row:1}
-.z[data-k="rc3"]        {grid-column:6;grid-row:1/span 2}
-.z[data-k="left_mid"]   {grid-column:2;grid-row:2}
-.z[data-k="lcm"]        {grid-column:3;grid-row:2}
-.z[data-k="rcm"]        {grid-column:4;grid-row:2}
-.z[data-k="right_mid"]  {grid-column:5;grid-row:2}
-.z[data-k="paint_left"] {grid-column:2;grid-row:3}
-.z[data-k="cp"]         {grid-column:3;grid-row:3}
-.z[data-k="clp"]        {grid-column:4;grid-row:3}
-.z[data-k="paint_right"]{grid-column:5;grid-row:3}
+/* 3PT zones */
+.z[data-k="lc3"]        {grid-column:1;  grid-row:1/3}
+.z[data-k="lw3"]        {grid-column:2;  grid-row:1}
+.z[data-k="lt3"]        {grid-column:3;  grid-row:1}
+.z[data-k="ct3"]        {grid-column:4;  grid-row:1}
+.z[data-k="rt3"]        {grid-column:5;  grid-row:1}
+.z[data-k="rc3"]        {grid-column:6;  grid-row:1/3}
+/* Mid-range */
+.z[data-k="left_mid"]   {grid-column:2;  grid-row:2}
+.z[data-k="lcm"]        {grid-column:3;  grid-row:2}
+.z[data-k="rcm"]        {grid-column:4;  grid-row:2}
+.z[data-k="right_mid"]  {grid-column:5;  grid-row:2}
+/* Paint — left/right span 2 cols and 2 rows; cp/clp stacked center */
+.z[data-k="paint_left"] {grid-column:1/3;grid-row:3/5}
+.z[data-k="cp"]         {grid-column:3/5;grid-row:3}
+.z[data-k="clp"]        {grid-column:3/5;grid-row:4}
+.z[data-k="paint_right"]{grid-column:5/7;grid-row:3/5}
+
 /* Zone cell style */
-.z{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  cursor:pointer;position:relative;min-width:0;overflow:hidden;
-  -webkit-user-select:none;user-select:none;
-  transition:filter .1s;
-}
-.z:active{filter:brightness(1.25)!important}
-.z .zpct{font-size:clamp(10px,3.5vw,16px);font-weight:800;color:#fff;line-height:1.1;text-align:center}
-.z .zma{font-size:clamp(8px,2.5vw,11px);font-weight:500;color:rgba(255,255,255,.7);text-align:center;margin-top:1px}
-/* Log "+" indicator */
-.z .zplus{font-size:clamp(14px,5vw,22px);font-weight:300;color:rgba(255,255,255,.3)}
-/* Court lines overlay */
-.court-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-/* ── Summary cards ───────────────────────────────────────── */
+.z{display:flex;flex-direction:column;align-items:center;justify-content:center;
+   cursor:pointer;-webkit-user-select:none;user-select:none;transition:filter .1s;min-width:0;overflow:hidden}
+.z:active{filter:brightness(1.3)!important}
+.zpct{font-size:clamp(11px,3.5vw,17px);font-weight:800;color:#fff;line-height:1.1;text-align:center}
+.zma{font-size:clamp(8px,2.3vw,11px);font-weight:500;color:rgba(255,255,255,.7);text-align:center;margin-top:2px}
+.zplus{font-size:clamp(16px,5vw,24px);font-weight:300;color:rgba(255,255,255,.28)}
+
+/* Court overlay */
+.court-overlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+
+/* Summary */
 .srow{display:flex;gap:6px;padding:6px 14px 8px}
 .sc{flex:1;background:var(--s1);border-radius:10px;padding:10px 6px;text-align:center;border:1px solid var(--bdr)}
 .scp{font-size:20px;font-weight:800;line-height:1}.scl{font-size:10px;color:var(--td);font-weight:600;letter-spacing:.4px;margin-top:2px}.scs{font-size:10px;color:var(--tdd);margin-top:1px}
 .leg{display:flex;justify-content:center;gap:10px;padding:0 14px 10px;flex-wrap:wrap}
 .li{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--td)}.ls{width:9px;height:9px;border-radius:2px}
-/* ── Log view ────────────────────────────────────────────── */
+
+/* Log */
 .lh{padding:10px 14px 4px}.lh h2{font-size:15px;font-weight:700;margin-bottom:2px}.lh p{font-size:11px;color:var(--td)}
 .ps{padding:0 14px 10px}.pt{font-size:10px;font-weight:700;color:var(--td);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
 .pl{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
@@ -82,7 +93,8 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 .pid{background:none;border:none;color:var(--tdd);cursor:pointer;font-size:18px;padding:0 4px;line-height:1;font-family:inherit}
 .savebtn{width:100%;padding:13px;background:var(--or);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
 .savebtn:disabled{background:var(--s3);color:var(--td);cursor:default}
-/* ── Stats view ──────────────────────────────────────────── */
+
+/* Stats */
 .sh{padding:12px 14px 4px}.sh h2{font-size:15px;font-weight:700}
 .zlist{padding:0 14px 8px}.slbl{font-size:10px;font-weight:700;color:var(--tdd);letter-spacing:.5px;text-transform:uppercase;padding:10px 0 5px}
 .zr{display:flex;align-items:center;padding:9px 0;border-bottom:1px solid var(--bdr);gap:8px}.zr:last-child{border-bottom:none}
@@ -92,7 +104,8 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 .si{background:var(--s1);border-radius:8px;padding:11px 13px;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center;border:1px solid var(--bdr)}
 .sid{font-size:13px;font-weight:600}.sis{font-size:11px;color:var(--td);margin-top:2px}
 .sidel{background:none;border:none;color:var(--tdd);cursor:pointer;font-size:14px;padding:4px;font-family:inherit}
-/* ── Modal ───────────────────────────────────────────────── */
+
+/* Modal */
 .mo{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
 .mo.open{opacity:1;pointer-events:all}
 .ms{background:var(--s1);border-radius:20px 20px 0 0;padding:18px 18px calc(20px + env(safe-area-inset-bottom,0));width:100%;max-width:480px;transform:translateY(100%);transition:transform .22s cubic-bezier(.32,.72,0,1)}
@@ -106,6 +119,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 .mbtns{display:grid;grid-template-columns:1fr 2fr;gap:8px}
 .mbcan{padding:13px;background:var(--s2);border:1px solid var(--bdr);border-radius:10px;color:var(--t);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
 .mbadd{padding:13px;background:var(--or);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.mbadd:active{background:#a04010}
 .empty{text-align:center;padding:24px 18px;color:var(--td);font-size:13px;line-height:1.7}
 </style>
 </head>
@@ -128,21 +142,21 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
       <span id="cplbl">—</span>
       <button class="pb" id="cnext" onclick="chP(1,'c')">›</button>
     </div>
-    <div class="chart-wrap" id="cChartWrap"></div>
+    <div class="cw" id="cWrap"></div>
     <div class="srow" id="csum"></div>
     <div class="leg">
       <div class="li"><div class="ls" style="background:#dc4010"></div>&gt;60%</div>
       <div class="li"><div class="ls" style="background:#dd8050"></div>50–60%</div>
       <div class="li"><div class="ls" style="background:#3858a0"></div>35–50%</div>
       <div class="li"><div class="ls" style="background:#1e3490"></div>&lt;35%</div>
-      <div class="li"><div class="ls" style="background:#606878"></div>No shots</div>
+      <div class="li"><div class="ls" style="background:#555666"></div>No shots</div>
     </div>
   </div>
 
   <!-- LOG -->
   <div id="v-log" class="view">
     <div class="lh"><h2>Log Session</h2><p>Tap zones to record shots</p></div>
-    <div class="chart-wrap" id="lChartWrap"></div>
+    <div class="cw" id="lWrap"></div>
     <div class="ps" id="pend" style="display:none">
       <div class="pt">Session Zones</div>
       <div class="pl" id="plist"></div>
@@ -172,16 +186,13 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 
 <nav>
   <button class="nb on" id="nb-court" onclick="sv('court')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="12" x2="21" y2="12"/><circle cx="12" cy="7" r="2.5"/></svg>
-    Court
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="12" x2="21" y2="12"/><circle cx="12" cy="7" r="2.5"/></svg>Court
   </button>
   <button class="nb" id="nb-log" onclick="sv('log')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-    Log
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Log
   </button>
   <button class="nb" id="nb-stats" onclick="sv('stats')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 17 8 12 13 15 21 7"/></svg>
-    Stats
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 17 8 12 13 15 21 7"/></svg>Stats
   </button>
 </nav>
 
@@ -202,29 +213,29 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 </div>
 
 <script>
-const REPO='EshanBhatt/ShotTracker', FILE='data/shots.json';
+const REPO='EshanBhatt/ShotTracker',FILE='data/shots.json';
 const TOK=['github_pat_11ANUBPFI0WwSQtn48cDY1_6VTmomAJvGJE','gIQyTgR7vUKnqxj6TdwQrUrVBGaFSLUBGTFGPEKLrHZZVga'].join('');
 
-// Zone metadata — order matters for stats display
+// Zone metadata — ORDER matches grid left-to-right, top-to-bottom
 const ZS={
-  lc3:        {n:'L Corner 3',     t:'3'},
-  lw3:        {n:'Left Wing 3',    t:'3'},
-  lt3:        {n:'Left Top 3',     t:'3'},
-  ct3:        {n:'Top Key 3',      t:'3'},
-  rt3:        {n:'Right Top 3',    t:'3'},
-  rc3:        {n:'R Corner 3',     t:'3'},
-  left_mid:   {n:'Left Mid',       t:'2'},
-  lcm:        {n:'Left Ctr Mid',   t:'2'},
-  rcm:        {n:'Right Ctr Mid',  t:'2'},
-  right_mid:  {n:'Right Mid',      t:'2'},
-  paint_left: {n:'Left Post',      t:'2'},
-  cp:         {n:'Center Paint',   t:'2'},
-  clp:        {n:'Restricted',     t:'2'},
-  paint_right:{n:'Right Post',     t:'2'},
+  lc3:        {n:'L Corner 3',   t:'3'},
+  lw3:        {n:'Left Wing 3',  t:'3'},
+  lt3:        {n:'Left Top 3',   t:'3'},
+  ct3:        {n:'Top Key 3',    t:'3'},
+  rt3:        {n:'Right Top 3',  t:'3'},
+  rc3:        {n:'R Corner 3',   t:'3'},
+  left_mid:   {n:'Left Mid',     t:'2'},
+  lcm:        {n:'Left Ctr Mid', t:'2'},
+  rcm:        {n:'Right Ctr Mid',t:'2'},
+  right_mid:  {n:'Right Mid',    t:'2'},
+  paint_left: {n:'Left Post',    t:'2'},
+  cp:         {n:'Center Paint', t:'2'},
+  clp:        {n:'Restricted',   t:'2'},
+  paint_right:{n:'Right Post',   t:'2'},
 };
 const ZK=Object.keys(ZS);
 
-// HomeCourt historical data (imported from screenshots)
+// Historical data from HomeCourt screenshots
 const HIST=[
   {id:'aug2025',date:'2025-08-01',zones:{lc3:{makes:12,attempts:22},lw3:{makes:10,attempts:17},lt3:{makes:8,attempts:11},ct3:{makes:9,attempts:10},rt3:{makes:15,attempts:33},rc3:{makes:7,attempts:13},left_mid:{makes:24,attempts:62},lcm:{makes:5,attempts:8},rcm:{makes:5,attempts:8},right_mid:{makes:35,attempts:93},paint_left:{makes:12,attempts:39},cp:{makes:54,attempts:115},clp:{makes:33,attempts:96},paint_right:{makes:20,attempts:41}}},
   {id:'sep2025',date:'2025-09-01',zones:{lc3:{makes:27,attempts:66},lw3:{makes:33,attempts:58},lt3:{makes:10,attempts:19},ct3:{makes:10,attempts:18},rt3:{makes:22,attempts:38},rc3:{makes:26,attempts:54},left_mid:{makes:43,attempts:117},lcm:{makes:4,attempts:8},rcm:{makes:20,attempts:33},right_mid:{makes:45,attempts:110},paint_left:{makes:48,attempts:97},cp:{makes:39,attempts:84},clp:{makes:52,attempts:118},paint_right:{makes:38,attempts:100}}},
@@ -233,7 +244,6 @@ const HIST=[
   {id:'mar2026',date:'2026-03-01',zones:{lc3:{makes:6,attempts:10},lw3:{makes:11,attempts:18},lt3:{makes:1,attempts:2},ct3:{makes:2,attempts:2},rt3:{makes:10,attempts:19},rc3:{makes:1,attempts:1},left_mid:{makes:17,attempts:35},lcm:{makes:0,attempts:1},rcm:{makes:1,attempts:2},right_mid:{makes:18,attempts:38},paint_left:{makes:1,attempts:4},cp:{makes:5,attempts:10},clp:{makes:4,attempts:18},paint_right:{makes:6,attempts:9}}},
 ];
 
-// State
 let D={sessions:[]},sha=null,pending={};
 let cFilter='alltime',cOff=0,sFilter='alltime',sOff=0,av='court',mz=null;
 
@@ -248,8 +258,7 @@ async function load(){
     D=JSON.parse(atob(j.content.replace(/\n/g,'')));
     setSS('ok','Synced');
   }catch(e){
-    const lc=localStorage.getItem('st_d');
-    D=lc?JSON.parse(lc):{sessions:[...HIST]};
+    try{const lc=localStorage.getItem('st_d');D=lc?JSON.parse(lc):{sessions:[...HIST]};}catch(_){D={sessions:[...HIST]};}
     setSS('err','Offline');
   }
   renderAll();
@@ -263,13 +272,12 @@ async function push(){
     const body={message:`shots ${new Date().toISOString().slice(0,10)}`,content,...(sha?{sha}:{})};
     const r=await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{method:'PUT',headers:{Authorization:`token ${TOK}`,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
     if(!r.ok)throw r.status;
-    const j=await r.json();sha=j.content.sha;setSS('ok','Saved ✓');
+    sha=(await r.json()).content.sha;setSS('ok','Saved ✓');
   }catch(e){setSS('err','Save failed');}
 }
-
 function setSS(s,l){document.getElementById('sd').className='sdot '+s;document.getElementById('sl').textContent=l;}
 
-// Data
+// Data helpers
 function getPeriod(f,o){
   if(f==='alltime')return'all';
   const n=new Date();
@@ -288,9 +296,9 @@ function rollup(sessions){
   return r;
 }
 
-// Colors — matches HomeCourt's orange=hot, blue=cold scale
+// Color scale matching HomeCourt (orange=hot, blue=cold)
 function zCol(m,a){
-  if(!a)return'#606878';
+  if(!a)return'#555666';
   const p=m/a;
   if(p>=.70)return'#dc4010';
   if(p>=.60)return'#dd6030';
@@ -303,72 +311,69 @@ function zColBright(m,a){if(!a)return'var(--tdd)';const p=m/a;return p>=.50?'var
 function pStr(m,a){return a?Math.round(m/a*100)+'%':'—';}
 function e0(){const r={};ZK.forEach(k=>r[k]={makes:0,attempts:0});return r;}
 
-// Build the chart grid HTML
-// Court lines SVG overlay (decorative, pointer-events:none)
-// ViewBox: matches grid proportions (cols: 1+1.4+1.1+1.1+1.4+1=7, rows: 2+1.4+1.4=4.8)
-// Key coords (in viewBox units 700 wide, 480 tall):
-//   Basket: (350, 440)   3pt corners: (100,190) and (600,190)
-//   FT line: y≈340  FT circle: cx=350, cy=340, r=80
-const COURT_SVG=`<svg class="court-lines" viewBox="0 0 700 480" preserveAspectRatio="none">
-  <!-- Basket -->
-  <circle cx="350" cy="440" r="14" fill="none" stroke="#f07030" stroke-width="3"/>
-  <rect x="308" y="472" width="84" height="7" rx="2" fill="rgba(255,255,255,.15)"/>
+// SVG court lines overlay
+// Grid: 6 cols × 4 rows. ViewBox 600×400.
+// Row boundaries (fr=2+1.5+1.1+1.1=5.7): y=[0,140,245,322,400]
+// Col boundaries (equal 1fr×6): x=[0,100,200,300,400,500,600]
+// Basket at (300,385). 3PT arc: center(300,385) r=316, through (100,140)&(500,140).
+// FT circle: center(300,245) r=88. Restricted: center(300,370) r=35.
+const OVERLAY=`<svg class="court-overlay" viewBox="0 0 600 400" preserveAspectRatio="none">
+  <!-- 3PT arc (from inner corners at y=140 curving up) -->
+  <path d="M 100,140 A 316,316 0 0,1 500,140" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="2"/>
+  <!-- Corner 3 vertical boundary lines -->
+  <line x1="100" y1="0" x2="100" y2="140" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+  <line x1="500" y1="0" x2="500" y2="140" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+  <!-- FT circle — dashed upper half in mid zone -->
+  <path d="M 212,245 A 88,88 0 0,1 388,245" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="2" stroke-dasharray="7 5"/>
+  <!-- FT circle — solid lower half in paint -->
+  <path d="M 212,245 A 88,88 0 0,0 388,245" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="2"/>
+  <!-- Paint box outline -->
+  <rect x="200" y="245" width="200" height="155" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+  <!-- cp / clp dividing line -->
+  <line x1="200" y1="322" x2="400" y2="322" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
   <!-- Restricted area -->
-  <path d="M 280,480 A 70,70 0 0,1 420,480" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2.5" stroke-dasharray="6 4"/>
-  <!-- FT circle (dashed upper half, solid lower half) -->
-  <path d="M 270,340 A 80,80 0 0,0 430,340" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2.5" stroke-dasharray="7 5"/>
-  <path d="M 270,340 A 80,80 0 0,1 430,340" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2.5"/>
-  <!-- 3PT arc -->
-  <path d="M 100,190 A 362,362 0 0,1 600,190" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
-  <!-- Corner 3 straight lines -->
-  <line x1="100" y1="0" x2="100" y2="190" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
-  <line x1="600" y1="0" x2="600" y2="190" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
-  <!-- Paint box -->
-  <rect x="213" y="340" width="274" height="140" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
-  <!-- Paint center lines (zone dividers) -->
-  <line x1="100" y1="190" x2="100" y2="340" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
-  <line x1="600" y1="190" x2="600" y2="340" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+  <circle cx="300" cy="370" r="35" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <!-- Basket -->
+  <circle cx="300" cy="382" r="13" fill="none" stroke="#f07030" stroke-width="2.5"/>
+  <!-- Backboard -->
+  <rect x="265" y="395" width="70" height="5" rx="1" fill="rgba(255,255,255,.18)"/>
 </svg>`;
 
-function buildChart(totals, isLog, wrapId){
-  const wrap=document.getElementById(wrapId);
-  if(!wrap)return;
-  // Build zone divs
+// Build chart HTML
+function buildChart(totals,isLog,wrapId){
+  const wrap=document.getElementById(wrapId);if(!wrap)return;
   const zones=ZK.map(k=>{
     const{makes:m,attempts:a}=isLog?(pending[k]||{makes:0,attempts:0}):totals[k];
     const hasPending=isLog&&pending[k];
     const bg=isLog?(hasPending?zCol(m,a):'#1c2234'):zCol(m,a);
-    const clickAttr=isLog?`onclick="tap('${k}')" ontouchend="tapT(event,'${k}')" `:'';
-    const label=a?`<span class="zpct">${Math.round(m/a*100)}%</span><span class="zma">${m}/${a}</span>`
-                 :(isLog?`<span class="zplus">+</span>`:`<span class="zma" style="opacity:.3">—</span>`);
-    return`<div class="z" data-k="${k}" ${clickAttr}style="background:${bg}">${label}</div>`;
+    const ev=isLog?`onclick="tap('${k}')" ontouchend="tapT(event,'${k}')"`:''
+    const inner=a
+      ?`<span class="zpct">${Math.round(m/a*100)}%</span><span class="zma">${m}/${a}</span>`
+      :(isLog?`<span class="zplus">+</span>`:`<span class="zma" style="opacity:.25">—</span>`);
+    return`<div class="z" data-k="${k}" ${ev} style="background:${bg}">${inner}</div>`;
   }).join('');
-  wrap.innerHTML=`<div class="chart-grid">${zones}${COURT_SVG}</div>`;
+  wrap.innerHTML=`<div class="chart-grid">${zones}${OVERLAY}</div>`;
 }
 
-// Render functions
+// Render
 function renderCourt(){
   const ss=getSess(cFilter,cOff),t=rollup(ss);
-  buildChart(t,false,'cChartWrap');
+  buildChart(t,false,'cWrap');
   document.getElementById('cplbl').textContent=getPeriodLbl(cFilter,cOff);
   document.getElementById('cnext').disabled=cOff>=0;
   document.getElementById('cpnav').style.display=cFilter==='alltime'?'none':'flex';
   buildSummary(t,'csum');
 }
-
 function renderLog(){
-  buildChart(e0(),true,'lChartWrap');
+  buildChart(e0(),true,'lWrap');
   const keys=Object.keys(pending);
   document.getElementById('pend').style.display=keys.length?'block':'none';
   document.getElementById('lempty').style.display=keys.length?'none':'block';
-  if(keys.length){
-    document.getElementById('plist').innerHTML=keys.map(k=>{
-      const z=ZS[k],{makes:m,attempts:a}=pending[k];
-      return`<div class="pi"><div class="pin">${z.n}</div><div class="pis">${m}/${a}</div><div class="pip" style="color:${zColBright(m,a)}">${Math.round(m/a*100)}%</div><button class="pid" onclick="delP('${k}')">×</button></div>`;
-    }).join('');
-  }
+  if(keys.length)document.getElementById('plist').innerHTML=keys.map(k=>{
+    const z=ZS[k],{makes:m,attempts:a}=pending[k];
+    return`<div class="pi"><div class="pin">${z.n}</div><div class="pis">${m}/${a}</div><div class="pip" style="color:${zColBright(m,a)}">${Math.round(m/a*100)}%</div><button class="pid" onclick="delP('${k}')">×</button></div>`;
+  }).join('');
 }
-
 function renderStats(){
   const ss=getSess(sFilter,sOff),t=rollup(ss);
   document.getElementById('splbl').textContent=getPeriodLbl(sFilter,sOff);
@@ -376,15 +381,10 @@ function renderStats(){
   document.getElementById('spnav').style.display=sFilter==='alltime'?'none':'flex';
   buildSummary(t,'ssum');
   const secs=[{label:'3-Point',keys:['lc3','lw3','lt3','ct3','rt3','rc3']},{label:'Mid-Range',keys:['left_mid','lcm','rcm','right_mid']},{label:'Paint',keys:['paint_left','cp','clp','paint_right']}];
-  let html='';
-  secs.forEach(s=>{
-    html+=`<div class="slbl">${s.label}</div>`;
-    s.keys.forEach(k=>{
-      const z=ZS[k],{makes:m,attempts:a}=t[k],c=zColBright(m,a),ps=pStr(m,a);
-      html+=`<div class="zr"><div class="zrc" style="background:${a?zCol(m,a):'var(--tdd)'}"></div><div class="zrn">${z.n}</div><div class="zrm">${a?m+'/'+a:'—'}</div><div class="zrp" style="color:${a?c:'var(--tdd)'}">${ps}</div><div class="zrt">${z.t}PT</div></div>`;
-    });
-  });
-  document.getElementById('zlist').innerHTML=html;
+  document.getElementById('zlist').innerHTML=secs.map(s=>`<div class="slbl">${s.label}</div>`+s.keys.map(k=>{
+    const z=ZS[k],{makes:m,attempts:a}=t[k],c=zColBright(m,a),ps=pStr(m,a);
+    return`<div class="zr"><div class="zrc" style="background:${a?zCol(m,a):'var(--tdd)'}"></div><div class="zrn">${z.n}</div><div class="zrm">${a?m+'/'+a:'—'}</div><div class="zrp" style="color:${a?c:'var(--tdd)'}">${ps}</div><div class="zrt">${z.t}PT</div></div>`;
+  }).join('')).join('');
   const recent=[...ss].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,12);
   let sh=`<div class="sst">${ss.length} Session${ss.length!==1?'s':''}</div>`;
   if(!recent.length)sh+='<p class="empty" style="padding:10px 0">No sessions yet.</p>';
@@ -394,7 +394,6 @@ function renderStats(){
   });
   document.getElementById('sesslist').innerHTML=sh;
 }
-
 function buildSummary(t,id){
   const tw=ZK.filter(k=>ZS[k].t==='2'),th=ZK.filter(k=>ZS[k].t==='3');
   const sum=keys=>keys.reduce((a,k)=>[a[0]+t[k].makes,a[1]+t[k].attempts],[0,0]);
@@ -404,7 +403,6 @@ function buildSummary(t,id){
     <div class="sc"><div class="scp" style="color:var(--bl)">${pStr(tm,ta)}</div><div class="scl">2-POINT</div><div class="scs">${ta?tm+'/'+ta:'—'}</div></div>
     <div class="sc"><div class="scp" style="color:var(--or)">${pStr(pm,pa)}</div><div class="scl">3-POINT</div><div class="scs">${pa?pm+'/'+pa:'—'}</div></div>`;
 }
-
 function fmtDate(ds){const d=new Date(ds+'T12:00:00');return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
 function renderAll(){if(av==='court')renderCourt();else if(av==='log')renderLog();else if(av==='stats')renderStats();}
 
@@ -425,13 +423,12 @@ function setF(f,btn,tid){
 }
 function chP(dir,w){if(w==='c'){cOff=Math.min(0,cOff+dir);renderCourt();}else{sOff=Math.min(0,sOff+dir);renderStats();}}
 
-// Tap zone (log mode)
-function tap(k){openMo(k);}
-function tapT(e,k){e.preventDefault();e.stopPropagation();openMo(k);}
+// Tap
+function tap(k){if(av==='log')openMo(k);}
+function tapT(e,k){e.preventDefault();if(av==='log')openMo(k);}
 
 // Modal
 function openMo(k){
-  if(av!=='log')return;
   mz=k;const z=ZS[k],p=pending[k];
   document.getElementById('mtitle').textContent=z.n+' · '+z.t+'PT';
   document.getElementById('im').value=p?p.makes:'';
@@ -458,7 +455,6 @@ async function saveSess(){
 }
 function delSess(id){if(!confirm('Delete this session?'))return;D.sessions=D.sessions.filter(s=>s.id!==id);push();renderStats();}
 
-// Init
 load();
 </script>
 </body>
