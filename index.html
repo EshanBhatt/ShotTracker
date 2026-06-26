@@ -27,62 +27,64 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 .pb{background:none;border:none;color:var(--td);font-size:20px;padding:3px 8px;cursor:pointer;line-height:1}
 .pb:disabled{opacity:.15;cursor:default}
 
-/* ── Shot chart ───────────────────────────────────────────────
-   Basket at TOP. Layout top→bottom:
-
-   ROW 1 (TOP, near basket):
-     [paint_left (wide)][clp (restricted)][paint_right (wide)]
+/* ═══════════════════════════════════════════════════════
+   GRID LAYOUT — HOOP AT TOP, 3PT AT BOTTOM
+   
+   6 cols × 4 rows:
+   
+   ROW 1 ▲ HOOP END:
+     [paint_left ·cols1-2·][  clp(Restricted) ·cols3-4·][paint_right ·cols5-6·]
 
    ROW 2:
-     [paint_left (wide)][cp (center paint)][paint_right (wide)]
+     [paint_left ·cols1-2·][  cp(Center Paint) ·cols3-4·][paint_right ·cols5-6·]
 
-   ROW 3 (mid-range):
-     [lc3][left_mid][lcm][rcm][right_mid][rc3]
+   ROW 3 — MID RANGE:
+     [lc3·col1][left_mid·col2][lcm·col3][rcm·col4][right_mid·col5][rc3·col6]
 
-   ROW 4 (BOTTOM, 3PT behind arc):
-     [lc3][lw3][lt3][ct3][rt3][rw3][rc3]
+   ROW 4 ▼ 3PT END:
+     [lc3·col1][lw3·col2][  ct3(Top of Key) ·cols3-4·][rw3·col5][rc3·col6]
 
-   lc3/rc3 span rows 3–4 (corners behind the arc, at the sides)
-   paint_left/right span rows 1–2
-   clp = row 1 center (closest to basket)
-   cp  = row 2 center (FT area)
-*/
+   lc3 / rc3 span rows 3-4   (corner 3s on the sides)
+   paint_left / right span rows 1-2
+═══════════════════════════════════════════════════════ */
 .cw{padding:4px 12px 6px}
 .chart-grid{
   display:grid;
   grid-template-columns:repeat(6,1fr);
-  grid-template-rows:1.1fr 1.1fr 1.5fr 2fr;
+  grid-template-rows:2fr 1.5fr 1.1fr 1.1fr;
   gap:2px;background:var(--bg);border-radius:8px;overflow:hidden;
   position:relative;width:100%;
 }
-/* Paint — top section, basket end */
-.z[data-k="clp"]        {grid-column:3/5;grid-row:1}    /* restricted, closest to hoop */
-.z[data-k="cp"]         {grid-column:3/5;grid-row:2}    /* center paint / FT area */
-.z[data-k="paint_left"] {grid-column:1/3;grid-row:1/3}  /* left post, spans paint rows */
-.z[data-k="paint_right"]{grid-column:5/7;grid-row:1/3}  /* right post */
-/* Mid-range — row 3 */
-.z[data-k="left_mid"]   {grid-column:2;  grid-row:3}
-.z[data-k="lcm"]        {grid-column:3;  grid-row:3}
-.z[data-k="rcm"]        {grid-column:4;  grid-row:3}
-.z[data-k="right_mid"]  {grid-column:5;  grid-row:3}
-/* 3PT — bottom section */
-.z[data-k="lc3"]        {grid-column:1;  grid-row:3/5}  /* left corner, spans mid+3pt rows */
-.z[data-k="lw3"]        {grid-column:2;  grid-row:4}
-.z[data-k="lt3"]        {grid-column:3;  grid-row:4}
-.z[data-k="ct3"]        {grid-column:4;  grid-row:4}
-.z[data-k="rt3"]        {grid-column:5;  grid-row:4}
-.z[data-k="rc3"]        {grid-column:6;  grid-row:3/5}  /* right corner */
 
-/* Zone cell */
+/* Paint — TOP (hoop end) */
+.z[data-k="lc3"]        {grid-column:1;  grid-row:1/3}
+.z[data-k="lw3"]        {grid-column:2;  grid-row:1}
+.z[data-k="ct3"]        {grid-column:3/5;grid-row:1}
+.z[data-k="rw3"]        {grid-column:5;  grid-row:1}
+.z[data-k="rc3"]        {grid-column:6;  grid-row:1/3}
+
+/* Mid-range — ROW 2 */
+.z[data-k="left_mid"]   {grid-column:2;  grid-row:2}
+.z[data-k="lcm"]        {grid-column:3;  grid-row:2}
+.z[data-k="rcm"]        {grid-column:4;  grid-row:2}
+.z[data-k="right_mid"]  {grid-column:5;  grid-row:2}
+
+/* Paint — BOTTOM */
+.z[data-k="paint_left"] {grid-column:1/3;grid-row:3/5}
+.z[data-k="cp"]         {grid-column:3/5;grid-row:3}
+.z[data-k="clp"]        {grid-column:3/5;grid-row:4}
+.z[data-k="paint_right"]{grid-column:5/7;grid-row:3/5}
+
+/* Zone style */
 .z{display:flex;flex-direction:column;align-items:center;justify-content:center;
-   cursor:pointer;-webkit-user-select:none;user-select:none;transition:filter .1s;min-width:0;overflow:hidden}
+   cursor:pointer;-webkit-user-select:none;user-select:none;min-width:0;overflow:hidden;transition:filter .1s}
 .z:active{filter:brightness(1.3)!important}
 .zpct{font-size:clamp(11px,3.5vw,17px);font-weight:800;color:#fff;line-height:1.1;text-align:center}
 .zma{font-size:clamp(8px,2.3vw,11px);font-weight:500;color:rgba(255,255,255,.7);text-align:center;margin-top:2px}
 .zplus{font-size:clamp(16px,5vw,24px);font-weight:300;color:rgba(255,255,255,.28)}
 .court-overlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 
-/* Summary / Stats / Log / Modal — unchanged */
+/* ── rest of styles ── */
 .srow{display:flex;gap:6px;padding:6px 14px 8px}
 .sc{flex:1;background:var(--s1);border-radius:10px;padding:10px 6px;text-align:center;border:1px solid var(--bdr)}
 .scp{font-size:20px;font-weight:800;line-height:1}.scl{font-size:10px;color:var(--td);font-weight:600;letter-spacing:.4px;margin-top:2px}.scs{font-size:10px;color:var(--tdd);margin-top:1px}
@@ -103,8 +105,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 .zrm{font-size:11px;color:var(--td)}.zrp{font-size:14px;font-weight:700;width:40px;text-align:right}.zrt{font-size:10px;color:var(--tdd);width:26px;text-align:right}
 .ss{padding:0 14px 24px}.sst{font-size:10px;font-weight:700;color:var(--tdd);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
 .si{background:var(--s1);border-radius:8px;padding:11px 13px;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center;border:1px solid var(--bdr)}
-.sid{font-size:13px;font-weight:600}.sis{font-size:11px;color:var(--td);margin-top:2px}
-.sidel{background:none;border:none;color:var(--tdd);cursor:pointer;font-size:14px;padding:4px;font-family:inherit}
+.sid{font-size:13px;font-weight:600}.sis{font-size:11px;color:var(--td);margin-top:2px}.sidel{background:none;border:none;color:var(--tdd);cursor:pointer;font-size:14px;padding:4px;font-family:inherit}
 .mo{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
 .mo.open{opacity:1;pointer-events:all}
 .ms{background:var(--s1);border-radius:20px 20px 0 0;padding:18px 18px calc(20px + env(safe-area-inset-bottom,0));width:100%;max-width:480px;transform:translateY(100%);transition:transform .22s cubic-bezier(.32,.72,0,1)}
@@ -207,33 +208,50 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 const REPO='EshanBhatt/ShotTracker',FILE='data/shots.json';
 const TOK=['github_pat_11ANUBPFI0WwSQtn48cDY1_6VTmomAJvGJE','gIQyTgR7vUKnqxj6TdwQrUrVBGaFSLUBGTFGPEKLrHZZVga'].join('');
 
+// 13 zones. Names reflect basketball positions (from player's POV facing basket).
+// Paint = top of chart (near hoop). 3PT = bottom of chart (far from hoop).
 const ZS={
-  // Paint (top, near basket)
-  clp:        {n:'Restricted',     t:'2'},
-  cp:         {n:'Center Paint',   t:'2'},
-  paint_left: {n:'Left Post',      t:'2'},
-  paint_right:{n:'Right Post',     t:'2'},
-  // Mid-range
-  left_mid:   {n:'Left Mid',       t:'2'},
-  lcm:        {n:'Left Ctr Mid',   t:'2'},
-  rcm:        {n:'Right Ctr Mid',  t:'2'},
-  right_mid:  {n:'Right Mid',      t:'2'},
-  // 3PT (bottom, behind arc)
-  lc3:        {n:'L Corner 3',     t:'3'},
-  lw3:        {n:'Left Wing 3',    t:'3'},
-  lt3:        {n:'Left Top 3',     t:'3'},
-  ct3:        {n:'Top Key 3',      t:'3'},
-  rt3:        {n:'Right Top 3',    t:'3'},
-  rc3:        {n:'R Corner 3',     t:'3'},
+  // ▲ HOOP END — paint
+  clp:        {n:'Restricted',    t:'2'},  // closest to basket, top center
+  cp:         {n:'Center Paint',  t:'2'},  // FT area
+  paint_left: {n:'Left Post',     t:'2'},
+  paint_right:{n:'Right Post',    t:'2'},
+  // MID-RANGE
+  left_mid:   {n:'Left Mid',      t:'2'},
+  lcm:        {n:'Left Elbow',    t:'2'},
+  rcm:        {n:'Right Elbow',   t:'2'},
+  right_mid:  {n:'Right Mid',     t:'2'},
+  // ▼ 3PT END — behind arc
+  lc3:        {n:'Left Corner 3', t:'3'},
+  lw3:        {n:'Left Wing 3',   t:'3'},
+  ct3:        {n:'Top of Key 3',  t:'3'},  // bottom center, wide
+  rw3:        {n:'Right Wing 3',  t:'3'},
+  rc3:        {n:'Right Corner 3',t:'3'},
 };
 const ZK=Object.keys(ZS);
 
+// Historical data (lw3 includes merged lt3; rw3 = former rt3)
 const HIST=[
-  {id:'aug2025',date:'2025-08-01',zones:{lc3:{makes:12,attempts:22},lw3:{makes:10,attempts:17},lt3:{makes:8,attempts:11},ct3:{makes:9,attempts:10},rt3:{makes:15,attempts:33},rc3:{makes:7,attempts:13},left_mid:{makes:24,attempts:62},lcm:{makes:5,attempts:8},rcm:{makes:5,attempts:8},right_mid:{makes:35,attempts:93},paint_left:{makes:12,attempts:39},cp:{makes:54,attempts:115},clp:{makes:33,attempts:96},paint_right:{makes:20,attempts:41}}},
-  {id:'sep2025',date:'2025-09-01',zones:{lc3:{makes:27,attempts:66},lw3:{makes:33,attempts:58},lt3:{makes:10,attempts:19},ct3:{makes:10,attempts:18},rt3:{makes:22,attempts:38},rc3:{makes:26,attempts:54},left_mid:{makes:43,attempts:117},lcm:{makes:4,attempts:8},rcm:{makes:20,attempts:33},right_mid:{makes:45,attempts:110},paint_left:{makes:48,attempts:97},cp:{makes:39,attempts:84},clp:{makes:52,attempts:118},paint_right:{makes:38,attempts:100}}},
-  {id:'oct2025',date:'2025-10-01',zones:{lc3:{makes:6,attempts:19},lw3:{makes:12,attempts:18},lt3:{makes:3,attempts:3},ct3:{makes:3,attempts:8},rt3:{makes:10,attempts:20},rc3:{makes:4,attempts:20},left_mid:{makes:17,attempts:39},lcm:{makes:0,attempts:0},rcm:{makes:1,attempts:1},right_mid:{makes:15,attempts:27},paint_left:{makes:14,attempts:35},cp:{makes:11,attempts:26},clp:{makes:14,attempts:38},paint_right:{makes:9,attempts:29}}},
-  {id:'nov2025',date:'2025-11-01',zones:{lc3:{makes:17,attempts:41},lw3:{makes:16,attempts:24},lt3:{makes:11,attempts:13},ct3:{makes:4,attempts:4},rt3:{makes:18,attempts:27},rc3:{makes:13,attempts:30},left_mid:{makes:34,attempts:75},lcm:{makes:5,attempts:11},rcm:{makes:1,attempts:2},right_mid:{makes:38,attempts:76},paint_left:{makes:14,attempts:40},cp:{makes:27,attempts:54},clp:{makes:29,attempts:75},paint_right:{makes:24,attempts:42}}},
-  {id:'mar2026',date:'2026-03-01',zones:{lc3:{makes:6,attempts:10},lw3:{makes:11,attempts:18},lt3:{makes:1,attempts:2},ct3:{makes:2,attempts:2},rt3:{makes:10,attempts:19},rc3:{makes:1,attempts:1},left_mid:{makes:17,attempts:35},lcm:{makes:0,attempts:1},rcm:{makes:1,attempts:2},right_mid:{makes:18,attempts:38},paint_left:{makes:1,attempts:4},cp:{makes:5,attempts:10},clp:{makes:4,attempts:18},paint_right:{makes:6,attempts:9}}},
+  {id:'aug2025',date:'2025-08-01',zones:{
+    clp:{makes:33,attempts:96},cp:{makes:54,attempts:115},paint_left:{makes:12,attempts:39},paint_right:{makes:20,attempts:41},
+    left_mid:{makes:24,attempts:62},lcm:{makes:5,attempts:8},rcm:{makes:5,attempts:8},right_mid:{makes:35,attempts:93},
+    lc3:{makes:12,attempts:22},lw3:{makes:18,attempts:28},ct3:{makes:9,attempts:10},rw3:{makes:15,attempts:33},rc3:{makes:7,attempts:13}}},
+  {id:'sep2025',date:'2025-09-01',zones:{
+    clp:{makes:52,attempts:118},cp:{makes:39,attempts:84},paint_left:{makes:48,attempts:97},paint_right:{makes:38,attempts:100},
+    left_mid:{makes:43,attempts:117},lcm:{makes:4,attempts:8},rcm:{makes:20,attempts:33},right_mid:{makes:45,attempts:110},
+    lc3:{makes:27,attempts:66},lw3:{makes:43,attempts:77},ct3:{makes:10,attempts:18},rw3:{makes:22,attempts:38},rc3:{makes:26,attempts:54}}},
+  {id:'oct2025',date:'2025-10-01',zones:{
+    clp:{makes:14,attempts:38},cp:{makes:11,attempts:26},paint_left:{makes:14,attempts:35},paint_right:{makes:9,attempts:29},
+    left_mid:{makes:17,attempts:39},lcm:{makes:0,attempts:0},rcm:{makes:1,attempts:1},right_mid:{makes:15,attempts:27},
+    lc3:{makes:6,attempts:19},lw3:{makes:15,attempts:21},ct3:{makes:3,attempts:8},rw3:{makes:10,attempts:20},rc3:{makes:4,attempts:20}}},
+  {id:'nov2025',date:'2025-11-01',zones:{
+    clp:{makes:29,attempts:75},cp:{makes:27,attempts:54},paint_left:{makes:14,attempts:40},paint_right:{makes:24,attempts:42},
+    left_mid:{makes:34,attempts:75},lcm:{makes:5,attempts:11},rcm:{makes:1,attempts:2},right_mid:{makes:38,attempts:76},
+    lc3:{makes:17,attempts:41},lw3:{makes:27,attempts:37},ct3:{makes:4,attempts:4},rw3:{makes:18,attempts:27},rc3:{makes:13,attempts:30}}},
+  {id:'mar2026',date:'2026-03-01',zones:{
+    clp:{makes:4,attempts:18},cp:{makes:5,attempts:10},paint_left:{makes:1,attempts:4},paint_right:{makes:6,attempts:9},
+    left_mid:{makes:17,attempts:35},lcm:{makes:0,attempts:1},rcm:{makes:1,attempts:2},right_mid:{makes:18,attempts:38},
+    lc3:{makes:6,attempts:10},lw3:{makes:12,attempts:20},ct3:{makes:2,attempts:2},rw3:{makes:10,attempts:19},rc3:{makes:1,attempts:1}}},
 ];
 
 let D={sessions:[]},sha=null,pending={};
@@ -277,37 +295,42 @@ function zColBright(m,a){if(!a)return'var(--tdd)';const p=m/a;return p>=.50?'var
 function pStr(m,a){return a?Math.round(m/a*100)+'%':'—';}
 function e0(){const r={};ZK.forEach(k=>r[k]={makes:0,attempts:0});return r;}
 
-// SVG court lines — basket at TOP
-// ViewBox 600×400. Grid rows: 1.1+1.1+1.5+2 = 5.7fr → y=[0,77,154,259,400]
-// Basket at (300,15). 3PT arc curves downward from row 3/4 boundary.
-// 3PT arc: center(300,15), r=315, from (100,259) to (500,259) via bottom (300,330).
-// FT circle: center(300,154) [row 2/3 boundary], r=56.
+// ── Court lines SVG ─────────────────────────────────────────
+// ViewBox 600×400. Grid rows: 1.1+1.1+1.5+2=5.7fr → y=[0,77,154,259,400]
+// Hoop at TOP (y≈18). 3PT arc at BOTTOM curving downward.
+// Corner straight lines: x=100 and x=500, from y=0 (baseline/top) to y=259 (arc junction).
+// 3PT arc: center(300,18), r=315 → from (100,259) curves down to (300,333) → (500,259).
+//   Path: M 100,259 A 315,315 0 0,1 500,259  (short arc, CW sweep, bulges to y=333)
+// FT circle: center(300,154), r=55.
+//   Upper (inside paint, dashed): M 245,154 A 55,55 0 0,0 355,154
+//   Lower (in mid-range, solid):  M 245,154 A 55,55 0 0,1 355,154
 const OVERLAY=`<svg class="court-overlay" viewBox="0 0 600 400" preserveAspectRatio="none">
-  <!-- Basket at top center -->
-  <circle cx="300" cy="18" r="13" fill="none" stroke="#f07030" stroke-width="2.5"/>
-  <rect x="265" y="0" width="70" height="5" rx="1" fill="rgba(255,255,255,.2)"/>
-  <!-- Restricted area (small circle near basket) -->
-  <circle cx="300" cy="28" r="26" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <!-- 3PT arc curves UP from corners at y=140 to peak at y=69 -->
+  <path d="M 100,140 A 316,316 0 0,1 500,140" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
+  <!-- Corner 3 straight lines (y=0 top to y=140 arc junction) -->
+  <line x1="100" y1="0" x2="100" y2="140" stroke="rgba(255,255,255,.18)" stroke-width="1.5"/>
+  <line x1="500" y1="0" x2="500" y2="140" stroke="rgba(255,255,255,.18)" stroke-width="1.5"/>
+  <!-- FT circle: center at row2/3 boundary y=245, r=56 -->
+  <!-- Upper solid half (in mid-range) -->
+  <path d="M 244,245 A 56,56 0 0,0 356,245" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="2"/>
+  <!-- Lower dashed half (in paint) -->
+  <path d="M 244,245 A 56,56 0 0,1 356,245" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="2" stroke-dasharray="6 4"/>
   <!-- Paint box -->
-  <rect x="200" y="0" width="200" height="154" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
-  <!-- cp / clp dividing line -->
-  <line x1="200" y1="77" x2="400" y2="77" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
-  <!-- FT circle: dashed upper half (in paint), solid lower half (in mid) -->
-  <path d="M 244,154 A 56,56 0 0,0 356,154" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2" stroke-dasharray="6 4"/>
-  <path d="M 244,154 A 56,56 0 0,1 356,154" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2"/>
-  <!-- 3PT arc: from corners at y=259, curving down to y=330 -->
-  <path d="M 100,259 A 315,315 0 1,1 500,259" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
-  <!-- Corner 3 vertical lines -->
-  <line x1="100" y1="259" x2="100" y2="400" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
-  <line x1="500" y1="259" x2="500" y2="400" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+  <rect x="200" y="245" width="200" height="155" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1.5"/>
+  <!-- cp/clp divider -->
+  <line x1="200" y1="322" x2="400" y2="322" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
+  <!-- Restricted area -->
+  <circle cx="300" cy="365" r="30" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <!-- Basket at bottom -->
+  <circle cx="300" cy="382" r="13" fill="none" stroke="#f07030" stroke-width="2.5"/>
+  <rect x="264" y="393" width="72" height="5" rx="1" fill="rgba(255,255,255,.2)"/>
 </svg>`;
 
 function buildChart(totals,isLog,wrapId){
   const wrap=document.getElementById(wrapId);if(!wrap)return;
   const zones=ZK.map(k=>{
     const{makes:m,attempts:a}=isLog?(pending[k]||{makes:0,attempts:0}):totals[k];
-    const hasPending=isLog&&pending[k];
-    const bg=isLog?(hasPending?zCol(m,a):'#1c2234'):zCol(m,a);
+    const bg=isLog?(pending[k]?zCol(m,a):'#1c2234'):zCol(m,a);
     const ev=isLog?`onclick="tap('${k}')" ontouchend="tapT(event,'${k}')"`:''
     const inner=a?`<span class="zpct">${Math.round(m/a*100)}%</span><span class="zma">${m}/${a}</span>`:(isLog?`<span class="zplus">+</span>`:`<span class="zma" style="opacity:.25">—</span>`);
     return`<div class="z" data-k="${k}" ${ev} style="background:${bg}">${inner}</div>`;
@@ -339,7 +362,11 @@ function renderStats(){
   document.getElementById('snext').disabled=sOff>=0;
   document.getElementById('spnav').style.display=sFilter==='alltime'?'none':'flex';
   buildSummary(t,'ssum');
-  const secs=[{label:'Paint',keys:['clp','cp','paint_left','paint_right']},{label:'Mid-Range',keys:['left_mid','lcm','rcm','right_mid']},{label:'3-Point',keys:['lc3','lw3','lt3','ct3','rt3','rc3']}];
+  const secs=[
+    {label:'Paint (near hoop)', keys:['clp','cp','paint_left','paint_right']},
+    {label:'Mid-Range',         keys:['left_mid','lcm','rcm','right_mid']},
+    {label:'3-Point',           keys:['lc3','lw3','ct3','rw3','rc3']},
+  ];
   document.getElementById('zlist').innerHTML=secs.map(s=>`<div class="slbl">${s.label}</div>`+s.keys.map(k=>{
     const z=ZS[k],{makes:m,attempts:a}=t[k],c=zColBright(m,a),ps=pStr(m,a);
     return`<div class="zr"><div class="zrc" style="background:${a?zCol(m,a):'var(--tdd)'}"></div><div class="zrn">${z.n}</div><div class="zrm">${a?m+'/'+a:'—'}</div><div class="zrp" style="color:${a?c:'var(--tdd)'}">${ps}</div><div class="zrt">${z.t}PT</div></div>`;
