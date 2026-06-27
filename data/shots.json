@@ -9,20 +9,12 @@
           "attempts": 22
         },
         "lw3": {
-          "makes": 10,
-          "attempts": 17
-        },
-        "lt3": {
-          "makes": 8,
-          "attempts": 11
+          "makes": 18,
+          "attempts": 28
         },
         "ct3": {
-          "makes": 9,
-          "attempts": 10
-        },
-        "rt3": {
-          "makes": 15,
-          "attempts": 33
+          "makes": 33,
+          "attempts": 96
         },
         "rc3": {
           "makes": 7,
@@ -53,12 +45,16 @@
           "attempts": 115
         },
         "clp": {
-          "makes": 33,
-          "attempts": 96
+          "makes": 9,
+          "attempts": 10
         },
         "paint_right": {
           "makes": 20,
           "attempts": 41
+        },
+        "rw3": {
+          "makes": 15,
+          "attempts": 33
         }
       }
     },
@@ -71,20 +67,12 @@
           "attempts": 66
         },
         "lw3": {
-          "makes": 33,
-          "attempts": 58
-        },
-        "lt3": {
-          "makes": 10,
-          "attempts": 19
+          "makes": 43,
+          "attempts": 77
         },
         "ct3": {
-          "makes": 10,
-          "attempts": 18
-        },
-        "rt3": {
-          "makes": 22,
-          "attempts": 38
+          "makes": 52,
+          "attempts": 118
         },
         "rc3": {
           "makes": 26,
@@ -115,12 +103,16 @@
           "attempts": 84
         },
         "clp": {
-          "makes": 52,
-          "attempts": 118
+          "makes": 10,
+          "attempts": 18
         },
         "paint_right": {
           "makes": 38,
           "attempts": 100
+        },
+        "rw3": {
+          "makes": 22,
+          "attempts": 38
         }
       }
     },
@@ -133,20 +125,12 @@
           "attempts": 19
         },
         "lw3": {
-          "makes": 12,
-          "attempts": 18
-        },
-        "lt3": {
-          "makes": 3,
-          "attempts": 3
+          "makes": 15,
+          "attempts": 21
         },
         "ct3": {
-          "makes": 3,
-          "attempts": 8
-        },
-        "rt3": {
-          "makes": 10,
-          "attempts": 20
+          "makes": 14,
+          "attempts": 38
         },
         "rc3": {
           "makes": 4,
@@ -177,12 +161,16 @@
           "attempts": 26
         },
         "clp": {
-          "makes": 14,
-          "attempts": 38
+          "makes": 3,
+          "attempts": 8
         },
         "paint_right": {
           "makes": 9,
           "attempts": 29
+        },
+        "rw3": {
+          "makes": 10,
+          "attempts": 20
         }
       }
     },
@@ -195,20 +183,12 @@
           "attempts": 41
         },
         "lw3": {
-          "makes": 16,
-          "attempts": 24
-        },
-        "lt3": {
-          "makes": 11,
-          "attempts": 13
+          "makes": 27,
+          "attempts": 37
         },
         "ct3": {
-          "makes": 4,
-          "attempts": 4
-        },
-        "rt3": {
-          "makes": 18,
-          "attempts": 27
+          "makes": 29,
+          "attempts": 75
         },
         "rc3": {
           "makes": 13,
@@ -239,12 +219,16 @@
           "attempts": 54
         },
         "clp": {
-          "makes": 29,
-          "attempts": 75
+          "makes": 4,
+          "attempts": 4
         },
         "paint_right": {
           "makes": 24,
           "attempts": 42
+        },
+        "rw3": {
+          "makes": 18,
+          "attempts": 27
         }
       }
     },
@@ -257,20 +241,12 @@
           "attempts": 10
         },
         "lw3": {
-          "makes": 11,
-          "attempts": 18
-        },
-        "lt3": {
-          "makes": 1,
-          "attempts": 2
+          "makes": 12,
+          "attempts": 20
         },
         "ct3": {
-          "makes": 2,
-          "attempts": 2
-        },
-        "rt3": {
-          "makes": 10,
-          "attempts": 19
+          "makes": 4,
+          "attempts": 18
         },
         "rc3": {
           "makes": 1,
@@ -301,12 +277,16 @@
           "attempts": 10
         },
         "clp": {
-          "makes": 4,
-          "attempts": 18
+          "makes": 2,
+          "attempts": 2
         },
         "paint_right": {
           "makes": 6,
           "attempts": 9
+        },
+        "rw3": {
+          "makes": 10,
+          "attempts": 19
         }
       }
     }
