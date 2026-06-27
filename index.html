@@ -232,26 +232,27 @@ const ZK=Object.keys(ZS);
 
 // Historical data (lw3 includes merged lt3; rw3 = former rt3)
 const HIST=[
+  // ct3=Top of Key 3PT, clp=Restricted (near basket). Was previously swapped — now corrected.
   {id:'aug2025',date:'2025-08-01',zones:{
-    clp:{makes:33,attempts:96},cp:{makes:54,attempts:115},paint_left:{makes:12,attempts:39},paint_right:{makes:20,attempts:41},
+    clp:{makes:9,attempts:10},cp:{makes:54,attempts:115},paint_left:{makes:12,attempts:39},paint_right:{makes:20,attempts:41},
     left_mid:{makes:24,attempts:62},lcm:{makes:5,attempts:8},rcm:{makes:5,attempts:8},right_mid:{makes:35,attempts:93},
-    lc3:{makes:12,attempts:22},lw3:{makes:18,attempts:28},ct3:{makes:9,attempts:10},rw3:{makes:15,attempts:33},rc3:{makes:7,attempts:13}}},
+    lc3:{makes:12,attempts:22},lw3:{makes:18,attempts:28},ct3:{makes:33,attempts:96},rw3:{makes:15,attempts:33},rc3:{makes:7,attempts:13}}},
   {id:'sep2025',date:'2025-09-01',zones:{
-    clp:{makes:52,attempts:118},cp:{makes:39,attempts:84},paint_left:{makes:48,attempts:97},paint_right:{makes:38,attempts:100},
+    clp:{makes:10,attempts:18},cp:{makes:39,attempts:84},paint_left:{makes:48,attempts:97},paint_right:{makes:38,attempts:100},
     left_mid:{makes:43,attempts:117},lcm:{makes:4,attempts:8},rcm:{makes:20,attempts:33},right_mid:{makes:45,attempts:110},
-    lc3:{makes:27,attempts:66},lw3:{makes:43,attempts:77},ct3:{makes:10,attempts:18},rw3:{makes:22,attempts:38},rc3:{makes:26,attempts:54}}},
+    lc3:{makes:27,attempts:66},lw3:{makes:43,attempts:77},ct3:{makes:52,attempts:118},rw3:{makes:22,attempts:38},rc3:{makes:26,attempts:54}}},
   {id:'oct2025',date:'2025-10-01',zones:{
-    clp:{makes:14,attempts:38},cp:{makes:11,attempts:26},paint_left:{makes:14,attempts:35},paint_right:{makes:9,attempts:29},
+    clp:{makes:3,attempts:8},cp:{makes:11,attempts:26},paint_left:{makes:14,attempts:35},paint_right:{makes:9,attempts:29},
     left_mid:{makes:17,attempts:39},lcm:{makes:0,attempts:0},rcm:{makes:1,attempts:1},right_mid:{makes:15,attempts:27},
-    lc3:{makes:6,attempts:19},lw3:{makes:15,attempts:21},ct3:{makes:3,attempts:8},rw3:{makes:10,attempts:20},rc3:{makes:4,attempts:20}}},
+    lc3:{makes:6,attempts:19},lw3:{makes:15,attempts:21},ct3:{makes:14,attempts:38},rw3:{makes:10,attempts:20},rc3:{makes:4,attempts:20}}},
   {id:'nov2025',date:'2025-11-01',zones:{
-    clp:{makes:29,attempts:75},cp:{makes:27,attempts:54},paint_left:{makes:14,attempts:40},paint_right:{makes:24,attempts:42},
+    clp:{makes:4,attempts:4},cp:{makes:27,attempts:54},paint_left:{makes:14,attempts:40},paint_right:{makes:24,attempts:42},
     left_mid:{makes:34,attempts:75},lcm:{makes:5,attempts:11},rcm:{makes:1,attempts:2},right_mid:{makes:38,attempts:76},
-    lc3:{makes:17,attempts:41},lw3:{makes:27,attempts:37},ct3:{makes:4,attempts:4},rw3:{makes:18,attempts:27},rc3:{makes:13,attempts:30}}},
+    lc3:{makes:17,attempts:41},lw3:{makes:27,attempts:37},ct3:{makes:29,attempts:75},rw3:{makes:18,attempts:27},rc3:{makes:13,attempts:30}}},
   {id:'mar2026',date:'2026-03-01',zones:{
-    clp:{makes:4,attempts:18},cp:{makes:5,attempts:10},paint_left:{makes:1,attempts:4},paint_right:{makes:6,attempts:9},
+    clp:{makes:2,attempts:2},cp:{makes:5,attempts:10},paint_left:{makes:1,attempts:4},paint_right:{makes:6,attempts:9},
     left_mid:{makes:17,attempts:35},lcm:{makes:0,attempts:1},rcm:{makes:1,attempts:2},right_mid:{makes:18,attempts:38},
-    lc3:{makes:6,attempts:10},lw3:{makes:12,attempts:20},ct3:{makes:2,attempts:2},rw3:{makes:10,attempts:19},rc3:{makes:1,attempts:1}}},
+    lc3:{makes:6,attempts:10},lw3:{makes:12,attempts:20},ct3:{makes:4,attempts:18},rw3:{makes:10,attempts:19},rc3:{makes:1,attempts:1}}},
 ];
 
 let D={sessions:[]},sha=null,pending={};
