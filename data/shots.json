@@ -1,0 +1,314 @@
+{
+  "sessions": [
+    {
+      "id": "aug2025",
+      "date": "2025-08-01",
+      "zones": {
+        "lc3": {
+          "makes": 12,
+          "attempts": 22
+        },
+        "lpm": {
+          "makes": 10,
+          "attempts": 17
+        },
+        "paint_ul": {
+          "makes": 8,
+          "attempts": 11
+        },
+        "paint_ur": {
+          "makes": 9,
+          "attempts": 10
+        },
+        "rpm": {
+          "makes": 15,
+          "attempts": 33
+        },
+        "rc3": {
+          "makes": 7,
+          "attempts": 13
+        },
+        "lwm": {
+          "makes": 24,
+          "attempts": 62
+        },
+        "paint_ll": {
+          "makes": 5,
+          "attempts": 8
+        },
+        "paint_lr": {
+          "makes": 5,
+          "attempts": 8
+        },
+        "rwm": {
+          "makes": 35,
+          "attempts": 93
+        },
+        "lw3": {
+          "makes": 12,
+          "attempts": 39
+        },
+        "ft": {
+          "makes": 54,
+          "attempts": 115
+        },
+        "ct3": {
+          "makes": 33,
+          "attempts": 96
+        },
+        "rw3": {
+          "makes": 20,
+          "attempts": 41
+        }
+      }
+    },
+    {
+      "id": "sep2025",
+      "date": "2025-09-01",
+      "zones": {
+        "lc3": {
+          "makes": 27,
+          "attempts": 66
+        },
+        "lpm": {
+          "makes": 33,
+          "attempts": 58
+        },
+        "paint_ul": {
+          "makes": 10,
+          "attempts": 19
+        },
+        "paint_ur": {
+          "makes": 10,
+          "attempts": 18
+        },
+        "rpm": {
+          "makes": 22,
+          "attempts": 38
+        },
+        "rc3": {
+          "makes": 26,
+          "attempts": 54
+        },
+        "lwm": {
+          "makes": 43,
+          "attempts": 117
+        },
+        "paint_ll": {
+          "makes": 4,
+          "attempts": 8
+        },
+        "paint_lr": {
+          "makes": 20,
+          "attempts": 33
+        },
+        "rwm": {
+          "makes": 45,
+          "attempts": 110
+        },
+        "lw3": {
+          "makes": 48,
+          "attempts": 97
+        },
+        "ft": {
+          "makes": 39,
+          "attempts": 84
+        },
+        "ct3": {
+          "makes": 52,
+          "attempts": 118
+        },
+        "rw3": {
+          "makes": 38,
+          "attempts": 100
+        }
+      }
+    },
+    {
+      "id": "oct2025",
+      "date": "2025-10-01",
+      "zones": {
+        "lc3": {
+          "makes": 6,
+          "attempts": 19
+        },
+        "lpm": {
+          "makes": 12,
+          "attempts": 18
+        },
+        "paint_ul": {
+          "makes": 3,
+          "attempts": 3
+        },
+        "paint_ur": {
+          "makes": 3,
+          "attempts": 8
+        },
+        "rpm": {
+          "makes": 10,
+          "attempts": 20
+        },
+        "rc3": {
+          "makes": 4,
+          "attempts": 20
+        },
+        "lwm": {
+          "makes": 17,
+          "attempts": 39
+        },
+        "paint_ll": {
+          "makes": 0,
+          "attempts": 0
+        },
+        "paint_lr": {
+          "makes": 1,
+          "attempts": 1
+        },
+        "rwm": {
+          "makes": 15,
+          "attempts": 27
+        },
+        "lw3": {
+          "makes": 14,
+          "attempts": 35
+        },
+        "ft": {
+          "makes": 11,
+          "attempts": 26
+        },
+        "ct3": {
+          "makes": 14,
+          "attempts": 38
+        },
+        "rw3": {
+          "makes": 9,
+          "attempts": 29
+        }
+      }
+    },
+    {
+      "id": "nov2025",
+      "date": "2025-11-01",
+      "zones": {
+        "lc3": {
+          "makes": 17,
+          "attempts": 41
+        },
+        "lpm": {
+          "makes": 16,
+          "attempts": 24
+        },
+        "paint_ul": {
+          "makes": 11,
+          "attempts": 13
+        },
+        "paint_ur": {
+          "makes": 4,
+          "attempts": 4
+        },
+        "rpm": {
+          "makes": 18,
+          "attempts": 27
+        },
+        "rc3": {
+          "makes": 13,
+          "attempts": 30
+        },
+        "lwm": {
+          "makes": 34,
+          "attempts": 75
+        },
+        "paint_ll": {
+          "makes": 5,
+          "attempts": 11
+        },
+        "paint_lr": {
+          "makes": 1,
+          "attempts": 2
+        },
+        "rwm": {
+          "makes": 38,
+          "attempts": 76
+        },
+        "lw3": {
+          "makes": 14,
+          "attempts": 40
+        },
+        "ft": {
+          "makes": 27,
+          "attempts": 54
+        },
+        "ct3": {
+          "makes": 29,
+          "attempts": 75
+        },
+        "rw3": {
+          "makes": 24,
+          "attempts": 42
+        }
+      }
+    },
+    {
+      "id": "mar2026",
+      "date": "2026-03-01",
+      "zones": {
+        "lc3": {
+          "makes": 6,
+          "attempts": 10
+        },
+        "lpm": {
+          "makes": 11,
+          "attempts": 18
+        },
+        "paint_ul": {
+          "makes": 1,
+          "attempts": 2
+        },
+        "paint_ur": {
+          "makes": 2,
+          "attempts": 2
+        },
+        "rpm": {
+          "makes": 10,
+          "attempts": 19
+        },
+        "rc3": {
+          "makes": 1,
+          "attempts": 1
+        },
+        "lwm": {
+          "makes": 17,
+          "attempts": 35
+        },
+        "paint_ll": {
+          "makes": 0,
+          "attempts": 1
+        },
+        "paint_lr": {
+          "makes": 1,
+          "attempts": 2
+        },
+        "rwm": {
+          "makes": 18,
+          "attempts": 38
+        },
+        "lw3": {
+          "makes": 1,
+          "attempts": 4
+        },
+        "ft": {
+          "makes": 5,
+          "attempts": 10
+        },
+        "ct3": {
+          "makes": 4,
+          "attempts": 18
+        },
+        "rw3": {
+          "makes": 6,
+          "attempts": 9
+        }
+      }
+    }
+  ]
+}
