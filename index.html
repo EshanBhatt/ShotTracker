@@ -53,7 +53,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
   grid-template-columns:repeat(6,1fr);
   grid-template-rows:1.2fr 1.2fr 1fr 1.4fr;
   gap:2px;background:var(--bg);border-radius:8px;overflow:hidden;
-  position:relative;width:100%;
+  position:relative;width:100%;height:290px;
 }
 .z[data-k="lc3"]     {grid-column:1;  grid-row:1/3}
 .z[data-k="lpm"]     {grid-column:2;  grid-row:1}
@@ -114,6 +114,22 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 .mbadd{padding:13px;background:var(--or);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
 .mbadd:active{background:#a04010}
 .empty{text-align:center;padding:24px 18px;color:var(--td);font-size:13px;line-height:1.7}
+.emo{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.emo.open{opacity:1;pointer-events:all}
+.ems{background:var(--s1);border-radius:20px 20px 0 0;padding:18px 0 calc(20px + env(safe-area-inset-bottom,0));width:100%;max-width:480px;max-height:80vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .22s cubic-bezier(.32,.72,0,1)}
+.emo.open .ems{transform:translateY(0)}
+.emh{padding:0 18px 12px;flex-shrink:0;border-bottom:1px solid var(--bdr)}
+.emtitle{font-size:15px;font-weight:800;margin-bottom:2px}.emsub{font-size:11px;color:var(--td)}
+.emlist{overflow-y:auto;flex:1;padding:8px 18px}
+.emrow{display:grid;grid-template-columns:1fr 80px 80px;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--bdr)}
+.emrow:last-child{border-bottom:none}
+.emzn{font-size:12px;font-weight:600}
+.emzn small{display:block;font-size:10px;color:var(--td);font-weight:400}
+.eminp{width:100%;padding:7px;background:var(--s2);border:1px solid var(--bdr);border-radius:7px;color:var(--t);font-size:15px;font-weight:700;text-align:center;outline:none;font-family:inherit;-webkit-appearance:none}
+.eminp:focus{border-color:var(--or)}
+.emfooter{padding:12px 18px 0;flex-shrink:0;border-top:1px solid var(--bdr);display:grid;grid-template-columns:1fr 2fr;gap:8px}
+.emcan{padding:12px;background:var(--s2);border:1px solid var(--bdr);border-radius:10px;color:var(--t);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+.emsav{padding:12px;background:var(--or);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
 </style>
 </head>
 <body>
@@ -394,7 +410,7 @@ function renderStats(){
   if(!recent.length)sh+='<p class="empty" style="padding:10px 0">No sessions yet.</p>';
   else recent.forEach(s=>{
     const m=ZK.reduce((a,k)=>a+(s.zones[k]?.makes||0),0),a=ZK.reduce((a,k)=>a+(s.zones[k]?.attempts||0),0),nz=Object.keys(s.zones).length;
-    sh+=`<div class="si"><div><div class="sid">${fmt(s.date)}</div><div class="sis">${nz} zone${nz!==1?'s':''} · ${m}/${a} ${a?'('+Math.round(m/a*100)+'%)':''}</div></div><button class="sidel" onclick="delSess('${s.id}')">🗑</button></div>`;
+    sh+=`<div class="si"><div><div class="sid">${fmt(s.date)}</div><div class="sis">${nz} zone${nz!==1?'s':''} · ${m}/${a} ${a?'('+Math.round(m/a*100)+'%)':''}</div></div><button class="sidel" onclick="editSess('${s.id}')" style="font-size:15px">✏️</button><button class="sidel" onclick="delSess('${s.id}')">🗑</button></div>`;
   });
   document.getElementById('sesslist').innerHTML=sh;
 }
@@ -426,7 +442,54 @@ function delP(k){delete pending[k];renderLog();}
 async function saveSess(){if(!Object.keys(pending).length)return;D.sessions.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),date:new Date().toISOString().slice(0,10),zones:{...pending}});pending={};renderLog();await push();renderAll();}
 function delSess(id){if(!confirm('Delete this session?'))return;D.sessions=D.sessions.filter(s=>s.id!==id);push();renderStats();}
 
+
+let editId = null;
+
+function editSess(id) {
+  const s = D.sessions.find(x => x.id === id);
+  if (!s) return;
+  editId = id;
+  document.getElementById('emtitle').textContent = 'Edit · ' + fmt(s.date);
+  document.getElementById('emlist').innerHTML = ZK.map(k => {
+    const z = ZS[k], v = s.zones[k] || {makes:0,attempts:0};
+    return `<div class="emrow">
+      <div class="emzn">${z.n}<small>${z.t}PT</small></div>
+      <input class="eminp" id="em_m_${k}" type="number" min="0" value="${v.attempts?v.makes:''}" placeholder="0" inputmode="numeric">
+      <input class="eminp" id="em_a_${k}" type="number" min="0" value="${v.attempts||''}" placeholder="0" inputmode="numeric">
+    </div>`;
+  }).join('') + '<div style="padding:4px 0;font-size:10px;color:var(--tdd);text-align:center">MAKES &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ATTEMPTS</div>';
+  document.getElementById('emo').classList.add('open');
+}
+
+function closeEdit() { document.getElementById('emo').classList.remove('open'); editId = null; }
+
+async function saveEdit() {
+  const s = D.sessions.find(x => x.id === editId);
+  if (!s) return;
+  ZK.forEach(k => {
+    const m = parseInt(document.getElementById('em_m_'+k)?.value)||0;
+    const a = parseInt(document.getElementById('em_a_'+k)?.value)||0;
+    if (a > 0) s.zones[k] = {makes: Math.min(m,a), attempts: a};
+    else delete s.zones[k];
+  });
+  closeEdit();
+  await push();
+  renderAll();
+}
+
+document.getElementById('emo').addEventListener('click', e => { if(e.target===document.getElementById('emo')) closeEdit(); });
+
 load();
 </script>
+<div class="emo" id="emo">
+  <div class="ems">
+    <div class="emh"><div class="mhdl"></div><div class="emtitle" id="emtitle">Edit Session</div><div class="emsub">Adjust makes / attempts for each zone</div></div>
+    <div class="emlist" id="emlist"></div>
+    <div class="emfooter">
+      <button class="emcan" onclick="closeEdit()">Cancel</button>
+      <button class="emsav" onclick="saveEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
