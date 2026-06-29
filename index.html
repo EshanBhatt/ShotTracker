@@ -410,7 +410,7 @@ function renderStats(){
   if(!recent.length)sh+='<p class="empty" style="padding:10px 0">No sessions yet.</p>';
   else recent.forEach(s=>{
     const m=ZK.reduce((a,k)=>a+(s.zones[k]?.makes||0),0),a=ZK.reduce((a,k)=>a+(s.zones[k]?.attempts||0),0),nz=Object.keys(s.zones).length;
-    sh+=`<div class="si"><div><div class="sid">${fmt(s.date)}</div><div class="sis">${nz} zone${nz!==1?'s':''} · ${m}/${a} ${a?'('+Math.round(m/a*100)+'%)':''}</div></div><button class="sidel" onclick="editSess('${s.id}')" style="font-size:15px">✏️</button><button class="sidel" onclick="delSess('${s.id}')">🗑</button></div>`;
+    sh+=`<div class="si"><div><div class="sid">${fmt(s.date)}</div><div class="sis">${nz} zone${nz!==1?'s':''} · ${m}/${a} ${a?'('+Math.round(m/a*100)+'%)':''}</div></div><button class="sidel" onclick="editSess('${s.id}')" style="background:none;border:1px solid var(--or);border-radius:6px;color:var(--or);cursor:pointer;font-size:11px;font-weight:700;padding:4px 8px;margin-right:4px;font-family:inherit">Edit</button><button class="sidel" onclick="delSess('${s.id}')">🗑</button></div>`;
   });
   document.getElementById('sesslist').innerHTML=sh;
 }
