@@ -410,7 +410,7 @@ function renderStats(){
   if(!recent.length)sh+='<p class="empty" style="padding:10px 0">No sessions yet.</p>';
   else recent.forEach(s=>{
     const m=ZK.reduce((a,k)=>a+(s.zones[k]?.makes||0),0),a=ZK.reduce((a,k)=>a+(s.zones[k]?.attempts||0),0),nz=Object.keys(s.zones).length;
-    sh+=`<div class="si"><div><div class="sid">${fmt(s.date)}</div><div class="sis">${nz} zone${nz!==1?'s':''} · ${m}/${a} ${a?'('+Math.round(m/a*100)+'%)':''}</div></div><button class="sidel" onclick="editSess('${s.id}')" style="background:none;border:1px solid var(--or);border-radius:6px;color:var(--or);cursor:pointer;font-size:11px;font-weight:700;padding:4px 8px;margin-right:4px;font-family:inherit">Edit</button><button class="sidel" onclick="delSess('${s.id}')">🗑</button></div>`;
+    sh+=`<div class="si" style="flex-direction:column;align-items:stretch;gap:8px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="sid">${fmt(s.date)}</div><div class="sis">${nz} zone${nz!==1?'s':''} · ${m}/${a} ${a?'('+Math.round(m/a*100)+'%)':''}</div></div></div><div style="display:flex;gap:8px"><button onclick="editSess('${s.id}')" style="flex:1;padding:9px;background:var(--or);border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Edit</button><button onclick="delSess('${s.id}')" style="padding:9px 14px;background:var(--s2);border:1px solid var(--bdr);border-radius:8px;color:var(--tdd);font-size:13px;cursor:pointer;font-family:inherit">Delete</button></div></div>`;
   });
   document.getElementById('sesslist').innerHTML=sh;
 }
