@@ -281,6 +281,11 @@ async function load(){
   try{
     const r=await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{headers:{Authorization:`token ${TOK}`,Accept:'application/vnd.github.v3+json'}});
     if(r.status===404){D={sessions:[...HIST]};setSS('ok','Seeding…');await push();renderAll();return;}
+    if(r.status===422){
+      // File exists but SHA is stale — re-fetch and retry
+      const rf=await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{headers:{Authorization:`token ${TOK}`,Accept:'application/vnd.github.v3+json'}});
+      if(rf.ok){const jf=await rf.json();sha=jf.sha;body.sha=sha;const r2=await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{method:'PUT',headers:{Authorization:`token ${TOK}`,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});if(r2.ok){sha=(await r2.json()).content.sha;setSS('ok','Saved ✓');return;}}
+    }
     if(!r.ok)throw r.status;
     const j=await r.json();sha=j.sha;
     D=JSON.parse(atob(j.content.replace(/\n/g,'')));
@@ -350,11 +355,12 @@ const OVERLAY = `<svg class="court-overlay" viewBox="0 0 600 400" preserveAspect
   <path d="M 240,200 A 60,60 0 0,0 360,200" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2" stroke-dasharray="6 4"/>
   <!-- FT circle — lower solid half (in FT zone, row 3) -->
   <path d="M 240,200 A 60,60 0 0,1 360,200" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2"/>
-  <!-- Corner 3 straight lines (baseline y=0 to arc junction y=200) -->
-  <line x1="100" y1="0" x2="100" y2="200" stroke="rgba(255,255,255,.18)" stroke-width="1.5"/>
-  <line x1="500" y1="0" x2="500" y2="200" stroke="rgba(255,255,255,.18)" stroke-width="1.5"/>
-  <!-- 3PT arc: from (100,200) curves DOWN to (300,287) to (500,200) -->
-  <path d="M 100,200 A 272,272 0 0,1 500,200" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
+  <!-- Corner 3 straight lines (short, at top near baseline) -->
+  <line x1="100" y1="0" x2="100" y2="100" stroke="rgba(255,255,255,.22)" stroke-width="1.5"/>
+  <line x1="500" y1="0" x2="500" y2="100" stroke="rgba(255,255,255,.22)" stroke-width="1.5"/>
+  <!-- 3PT arc: deep U-shape, from (100,100) through (300,350) to (500,100) -->
+  <!-- Center (300,145) r=205 — matches user-drawn arc position -->
+  <path d="M 100,100 A 205,205 0 0,1 500,100" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
   <!-- FT/CT3 divider (row 3/4 boundary at y=283) -->
   <line x1="200" y1="283" x2="400" y2="283" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
 </svg>`;
