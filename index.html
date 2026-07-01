@@ -228,6 +228,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
           <div class="li"><div class="ls" style="background:#f59e0b"></div>Mid-Range</div>
           <div class="li"><div class="ls" style="background:#f07030"></div>3-Point</div>
         </div>
+        <div id="tip-cat" style="font-size:11px;color:var(--tdd);padding:0 2px 4px">Tap a point to inspect</div>
 
         <div class="slbl" style="padding-top:16px">Shot Area Comparison</div>
         <div class="tchart"><svg id="areaChart" viewBox="0 0 600 170" preserveAspectRatio="none"></svg></div>
@@ -236,23 +237,28 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
           <div class="li"><div class="ls" style="background:#f59e0b"></div>Mid-Range</div>
           <div class="li"><div class="ls" style="background:#f07030"></div>3-Point</div>
         </div>
+        <div id="tip-area" style="font-size:11px;color:var(--tdd);padding:0 2px 4px">Tap a point to inspect</div>
 
         <div class="slbl" style="padding-top:16px">Individual Trends</div>
         <div class="mini-chart-card">
           <div class="mini-chart-head"><div class="mini-chart-title">Overall</div><div><span class="mini-chart-val" id="mcv-overall">—</span><span class="mini-chart-delta" id="mcd-overall"></span></div></div>
           <svg class="mini-chart-svg" id="mc-overall" viewBox="0 0 600 90" preserveAspectRatio="none"></svg>
+          <div id="tip-mc-overall" style="font-size:10px;color:var(--tdd);margin-top:2px">Tap a point</div>
         </div>
         <div class="mini-chart-card">
           <div class="mini-chart-head"><div class="mini-chart-title">Paint</div><div><span class="mini-chart-val" id="mcv-paint">—</span><span class="mini-chart-delta" id="mcd-paint"></span></div></div>
           <svg class="mini-chart-svg" id="mc-paint" viewBox="0 0 600 90" preserveAspectRatio="none"></svg>
+          <div id="tip-mc-paint" style="font-size:10px;color:var(--tdd);margin-top:2px">Tap a point</div>
         </div>
         <div class="mini-chart-card">
           <div class="mini-chart-head"><div class="mini-chart-title">Mid-Range</div><div><span class="mini-chart-val" id="mcv-mid">—</span><span class="mini-chart-delta" id="mcd-mid"></span></div></div>
           <svg class="mini-chart-svg" id="mc-mid" viewBox="0 0 600 90" preserveAspectRatio="none"></svg>
+          <div id="tip-mc-mid" style="font-size:10px;color:var(--tdd);margin-top:2px">Tap a point</div>
         </div>
         <div class="mini-chart-card">
           <div class="mini-chart-head"><div class="mini-chart-title">3-Point</div><div><span class="mini-chart-val" id="mcv-three">—</span><span class="mini-chart-delta" id="mcd-three"></span></div></div>
           <svg class="mini-chart-svg" id="mc-three" viewBox="0 0 600 90" preserveAspectRatio="none"></svg>
+          <div id="tip-mc-three" style="font-size:10px;color:var(--tdd);margin-top:2px">Tap a point</div>
         </div>
       </div>
       <div class="spark-sec">
@@ -300,7 +306,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
   </div>
 </div>
 <script>
-const BUILD_V='1782871287';
+const BUILD_V='1782872063';
 // Self-update check: Home Screen apps cache aggressively and don't auto-refresh.
 // On every launch, silently check if a newer build exists and force-reload if so.
 (function checkForUpdate(){
@@ -622,9 +628,26 @@ function monthlyBuckets(){
     const [pm,pa]=sum(paintKeys),[mm,ma]=sum(midKeys),[tm,ta]=sum(threeKeys);
     const oa=pa+ma+ta, om=pm+mm+tm;
     const [y,m]=mk.split('-');
-    const label=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+"'"+y.slice(2);
+    const label=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+' '+y.slice(2);
     return{key:mk,label,overall:oa?om/oa*100:null,paint:pa?pm/pa*100:null,mid:ma?mm/ma*100:null,three:ta?tm/ta*100:null};
   })};
+}
+
+function linreg(pts){
+  const n=pts.length;
+  if(n<2)return null;
+  let sx=0,sy=0,sxy=0,sxx=0;
+  pts.forEach(([x,y])=>{sx+=x;sy+=y;sxy+=x*y;sxx+=x*x;});
+  const den=n*sxx-sx*sx;
+  if(den===0)return null;
+  const slope=(n*sxy-sx*sy)/den;
+  return {slope,intercept:(sy-slope*sx)/n};
+}
+
+function showPt(tipId,label,val,color){
+  const el=document.getElementById(tipId);
+  if(!el)return;
+  el.innerHTML=`<span style="color:${color};font-weight:700">${label}</span> · ${Math.round(val)}%`;
 }
 
 function lineChartSVG(data, series, W, H, opts){
@@ -633,7 +656,7 @@ function lineChartSVG(data, series, W, H, opts){
   if(!data.length) return `<text x="${W/2}" y="${H/2}" fill="rgba(255,255,255,.3)" font-size="12" text-anchor="middle" font-family="Inter">No data yet</text>`;
   const n=data.length;
   const xf=i=> n===1?(padL+(W-padL-padR)/2):padL+i*(W-padL-padR)/(n-1);
-  const yf=v=> padT+(100-v)/100*(H-padT-padB);
+  const yf=v=> padT+(100-Math.max(0,Math.min(100,v)))/100*(H-padT-padB);
   let s='';
   if(opts.grid!==false){
     [0,25,50,75,100].forEach(v=>{
@@ -645,29 +668,56 @@ function lineChartSVG(data, series, W, H, opts){
     data.forEach((b,i)=>{s+=`<text x="${xf(i)}" y="${H-6}" fill="rgba(255,255,255,.35)" font-size="8" text-anchor="middle" font-family="Inter">${b.label}</text>`;});
   }
   series.forEach(ser=>{
-    let pts=[];
-    data.forEach((b,i)=>{if(b[ser.key]!=null)pts.push([xf(i),yf(b[ser.key])]);});
+    let pts=[], regPts=[];
+    data.forEach((b,i)=>{if(b[ser.key]!=null){pts.push([xf(i),yf(b[ser.key]),b.label,b[ser.key]]);regPts.push([i,b[ser.key]]);}});
+    // Trend/regression line (dashed, faded)
+    const reg=linreg(regPts);
+    if(reg){
+      const x0=regPts[0][0], x1=regPts[regPts.length-1][0];
+      const y0v=reg.slope*x0+reg.intercept, y1v=reg.slope*x1+reg.intercept;
+      s+=`<line x1="${xf(x0).toFixed(1)}" y1="${yf(y0v).toFixed(1)}" x2="${xf(x1).toFixed(1)}" y2="${yf(y1v).toFixed(1)}" stroke="${ser.color}" stroke-width="1.3" stroke-dasharray="4 3" opacity=".45"/>`;
+    }
+    // Connecting line
     if(pts.length>1){
       const d=pts.map((p,i)=>(i===0?'M':'L')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
       s+=`<path d="${d}" fill="none" stroke="${ser.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
     }
-    pts.forEach(p=>{s+=`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2.5" fill="${ser.color}"/>`;});
+    // Tappable dots
+    pts.forEach(p=>{
+      const tapAttr = opts.tipId ? ` onclick="showPt('${opts.tipId}','${p[2]}',${p[3]},'${ser.color}')" style="cursor:pointer"` : '';
+      const r = opts.tipId ? 6 : 2.5;
+      const visR = 2.5;
+      s+=`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${r}" fill="${opts.tipId?'transparent':ser.color}"${tapAttr}/>`;
+      if(opts.tipId) s+=`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${visR}" fill="${ser.color}" pointer-events="none"/>`;
+    });
   });
   return s;
+}
+
+const CAT_KEYS={
+  paint:['paint_ul','paint_ur','paint_ll','paint_lr'],
+  mid:['lpm','lwm','ft','rwm','rpm'],
+  three:['lc3','lw3','ct3','rw3','rc3'],
+};
+function allTimePct(catKey){
+  const t=rollup(D.sessions);
+  const keys = catKey==='overall' ? ZK : CAT_KEYS[catKey];
+  const [m,a]=keys.reduce((acc,k)=>[acc[0]+t[k].makes,acc[1]+t[k].attempts],[0,0]);
+  return a? m/a*100 : null;
 }
 
 function renderCatChart(){
   const {data}=monthlyBuckets();
   document.getElementById('catChart').innerHTML=lineChartSVG(data,[
     {key:'overall',color:'#e6e9f2'},{key:'paint',color:'#60a5fa'},{key:'mid',color:'#f59e0b'},{key:'three',color:'#f07030'}
-  ],600,170);
+  ],600,170,{tipId:'tip-cat'});
 }
 
 function renderAreaChart(){
   const {data}=monthlyBuckets();
   document.getElementById('areaChart').innerHTML=lineChartSVG(data,[
     {key:'paint',color:'#60a5fa'},{key:'mid',color:'#f59e0b'},{key:'three',color:'#f07030'}
-  ],600,170);
+  ],600,170,{tipId:'tip-area'});
 }
 
 function renderMiniCharts(){
@@ -680,13 +730,14 @@ function renderMiniCharts(){
   ];
   defs.forEach(d=>{
     const svgEl=document.getElementById('mc-'+d.id);
-    if(svgEl) svgEl.innerHTML=lineChartSVG(data,[{key:d.key,color:d.color}],600,90,{padT:8,padB:16,axisLabels:false});
+    if(svgEl) svgEl.innerHTML=lineChartSVG(data,[{key:d.key,color:d.color}],600,90,{padT:8,padB:16,axisLabels:false,tipId:'tip-mc-'+d.id});
     const valid=data.map(b=>b[d.key]).filter(v=>v!=null);
-    const last=valid.length?valid[valid.length-1]:null;
     const first=valid.length?valid[0]:null;
+    const last=valid.length?valid[valid.length-1]:null;
     const delta=(last!=null&&first!=null&&valid.length>1)?last-first:null;
+    const allTime=allTimePct(d.key);
     const vEl=document.getElementById('mcv-'+d.id);
-    if(vEl){vEl.textContent=last==null?'—':Math.round(last)+'%';vEl.style.color=d.color==='#e6e9f2'?'var(--t)':d.color;}
+    if(vEl){vEl.textContent=allTime==null?'—':Math.round(allTime)+'%';vEl.style.color=d.color==='#e6e9f2'?'var(--t)':d.color;}
     const dEl=document.getElementById('mcd-'+d.id);
     if(dEl){
       if(delta==null){dEl.textContent='';}
@@ -701,6 +752,7 @@ function renderSparklines(){
   if(!keys.length){wrap.innerHTML='<p class="empty" style="padding:10px 0">No data yet.</p>';return;}
   wrap.innerHTML=ZK.map(zk=>{
     const z=ZS[zk];
+    const labels=keys.map(mk=>{const [y,m]=mk.split('-');return['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+' '+y.slice(2);});
     const vals=keys.map(mk=>{const t=rollup(byMonth[mk]);const{makes:m,attempts:a}=t[zk];return a?m/a*100:null;});
     const valid=vals.map((v,i)=>({v,i})).filter(o=>o.v!=null);
     const last=valid.length?valid[valid.length-1].v:null;
@@ -709,14 +761,33 @@ function renderSparklines(){
     const color=last==null?'var(--tdd)':last>=50?'var(--or)':last>=35?'var(--bl)':'var(--rd)';
     const W=110,H=28,padX=3,padY=3,nn=vals.length;
     const xf=i=>nn===1?W/2:padX+i*(W-2*padX)/(nn-1);
-    const yf=v=>padY+(100-v)/100*(H-2*padY);
+    const yf=v=>padY+(100-Math.max(0,Math.min(100,v)))/100*(H-2*padY);
     let path='';
     valid.forEach((o,idx)=>{path+=(idx===0?'M':'L')+xf(o.i).toFixed(1)+','+yf(o.v).toFixed(1)+' ';});
-    let inner=valid.length>1?`<path d="${path.trim()}" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>`:'';
-    if(valid.length){const lp=valid[valid.length-1];inner+=`<circle cx="${xf(lp.i).toFixed(1)}" cy="${yf(lp.v).toFixed(1)}" r="2" fill="${color}"/>`;}
+    let inner='';
+    const reg=linreg(valid.map(o=>[o.i,o.v]));
+    if(reg && valid.length>1){
+      const i0=valid[0].i, i1=valid[valid.length-1].i;
+      const y0v=reg.slope*i0+reg.intercept, y1v=reg.slope*i1+reg.intercept;
+      inner+=`<line x1="${xf(i0).toFixed(1)}" y1="${yf(y0v).toFixed(1)}" x2="${xf(i1).toFixed(1)}" y2="${yf(y1v).toFixed(1)}" stroke="${color}" stroke-width="1" stroke-dasharray="3 2" opacity=".4"/>`;
+    }
+    if(valid.length>1) inner+=`<path d="${path.trim()}" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>`;
+    const tipId='tip-spark-'+zk;
+    valid.forEach(o=>{
+      inner+=`<circle cx="${xf(o.i).toFixed(1)}" cy="${yf(o.v).toFixed(1)}" r="6" fill="transparent" onclick="showPt('${tipId}','${labels[o.i]}',${o.v},'${color}')" style="cursor:pointer"/>`;
+      inner+=`<circle cx="${xf(o.i).toFixed(1)}" cy="${yf(o.v).toFixed(1)}" r="2" fill="${color}" pointer-events="none"/>`;
+    });
     const deltaStr=delta==null?'':(delta>=0?'+':'')+Math.round(delta)+'%';
     const deltaColor=delta==null?'var(--tdd)':delta>0?'var(--gr)':delta<0?'var(--rd)':'var(--td)';
-    return`<div class="spark-row"><div class="spark-name">${z.n}</div><svg class="spark-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${inner}</svg><div class="spark-val" style="color:${color}">${last==null?'—':Math.round(last)+'%'}</div><div class="spark-delta" style="color:${deltaColor}">${deltaStr}</div></div>`;
+    return`<div class="spark-row" style="flex-direction:column;align-items:stretch;gap:2px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="spark-name">${z.n}</div>
+        <svg class="spark-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${inner}</svg>
+        <div class="spark-val" style="color:${color}">${last==null?'—':Math.round(last)+'%'}</div>
+        <div class="spark-delta" style="color:${deltaColor}">${deltaStr}</div>
+      </div>
+      <div id="${tipId}" style="font-size:9px;color:var(--tdd);padding-left:0;min-height:11px">Tap a point</div>
+    </div>`;
   }).join('');
 }
 
