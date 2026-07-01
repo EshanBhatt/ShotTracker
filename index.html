@@ -114,6 +114,18 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 .mbadd{padding:13px;background:var(--or);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
 .mbadd:active{background:#a04010}
 .empty{text-align:center;padding:24px 18px;color:var(--td);font-size:13px;line-height:1.7}
+.trend-wrap{padding:10px 14px 4px}
+.tchart{width:100%;height:170px;background:var(--s1);border:1px solid var(--bdr);border-radius:10px;padding:8px 4px 4px;box-sizing:border-box}
+.tchart svg{width:100%;height:100%;display:block}
+.tlegend{display:flex;gap:10px;flex-wrap:wrap;padding:8px 2px 4px;font-size:10px;color:var(--td)}
+.spark-sec{padding:14px 14px 6px}
+.spark-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bdr)}
+.spark-row:last-child{border-bottom:none}
+.spark-name{flex:0 0 96px;font-size:11px;font-weight:600;color:var(--t);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.spark-svg{flex:1;height:28px;min-width:0}
+.spark-val{flex:0 0 38px;text-align:right;font-size:12px;font-weight:700}
+.spark-delta{flex:0 0 34px;text-align:right;font-size:10px;font-weight:600}
+
 .emo{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
 .emo.open{opacity:1;pointer-events:all}
 .ems{background:var(--s1);border-radius:20px 20px 0 0;padding:18px 0 calc(20px + env(safe-area-inset-bottom,0));width:100%;max-width:480px;max-height:80vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .22s cubic-bezier(.32,.72,0,1)}
@@ -171,19 +183,40 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
   </div>
   <div id="v-stats" class="view">
     <div class="sh"><h2>Statistics</h2></div>
-    <div class="ttabs" id="st">
-      <button class="tt" onclick="setF('monthly',this,'st')">Monthly</button>
-      <button class="tt" onclick="setF('yearly',this,'st')">Yearly</button>
-      <button class="tt on" onclick="setF('alltime',this,'st')">All Time</button>
+    <div class="ttabs" id="svtabs">
+      <button class="tt on" onclick="setView('breakdown',this)">Breakdown</button>
+      <button class="tt" onclick="setView('trends',this)">Trends</button>
     </div>
-    <div class="pnav" id="spnav" style="display:none">
-      <button class="pb" id="sprev" onclick="chP(-1,'s')">‹</button>
-      <span id="splbl">—</span>
-      <button class="pb" id="snext" onclick="chP(1,'s')">›</button>
+    <div id="breakdownWrap">
+      <div class="ttabs" id="st">
+        <button class="tt" onclick="setF('monthly',this,'st')">Monthly</button>
+        <button class="tt" onclick="setF('yearly',this,'st')">Yearly</button>
+        <button class="tt on" onclick="setF('alltime',this,'st')">All Time</button>
+      </div>
+      <div class="pnav" id="spnav" style="display:none">
+        <button class="pb" id="sprev" onclick="chP(-1,'s')">‹</button>
+        <span id="splbl">—</span>
+        <button class="pb" id="snext" onclick="chP(1,'s')">›</button>
+      </div>
+      <div class="srow" id="ssum" style="padding-top:8px"></div>
+      <div class="zlist" id="zlist"></div>
+      <div class="ss" id="sesslist"></div>
     </div>
-    <div class="srow" id="ssum" style="padding-top:8px"></div>
-    <div class="zlist" id="zlist"></div>
-    <div class="ss" id="sesslist"></div>
+    <div id="trendsWrap" style="display:none">
+      <div class="trend-wrap">
+        <div class="tchart"><svg id="catChart" viewBox="0 0 600 170" preserveAspectRatio="none"></svg></div>
+        <div class="tlegend">
+          <div class="li"><div class="ls" style="background:#e6e9f2"></div>Overall</div>
+          <div class="li"><div class="ls" style="background:#60a5fa"></div>Paint</div>
+          <div class="li"><div class="ls" style="background:#f59e0b"></div>Mid-Range</div>
+          <div class="li"><div class="ls" style="background:#f07030"></div>3-Point</div>
+        </div>
+      </div>
+      <div class="spark-sec">
+        <div class="slbl">Zone Trends (by month)</div>
+        <div id="sparkList"></div>
+      </div>
+    </div>
   </div>
 </div>
 <nav>
@@ -285,6 +318,7 @@ const HIST = [
 
 let D={sessions:[]}, sha=null, pending={};
 let cFilter='alltime', cOff=0, sFilter='alltime', sOff=0, av='court', mz=null;
+let statView='breakdown';
 
 async function load(){
   setSS('busy','Loading…');
@@ -496,6 +530,90 @@ async function saveEdit() {
 document.getElementById('emo')?.addEventListener('click', e => { if(e.target===document.getElementById('emo')) closeEdit(); });
 
 function localDateStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+
+function setView(v,btn){
+  statView=v;
+  document.querySelectorAll('#svtabs .tt').forEach(t=>t.classList.remove('on'));
+  if(btn)btn.classList.add('on');
+  document.getElementById('breakdownWrap').style.display = v==='breakdown'?'block':'none';
+  document.getElementById('trendsWrap').style.display = v==='trends'?'block':'none';
+  if(v==='trends') renderTrends();
+}
+
+function monthlyBuckets(){
+  const byMonth={};
+  D.sessions.forEach(s=>{
+    const mk=s.date.slice(0,7);
+    (byMonth[mk]=byMonth[mk]||[]).push(s);
+  });
+  const keys=Object.keys(byMonth).sort();
+  const paintKeys=['paint_ul','paint_ur','paint_ll','paint_lr'];
+  const midKeys=['lpm','lwm','ft','rwm','rpm'];
+  const threeKeys=['lc3','lw3','ct3','rw3','rc3'];
+  return {keys, byMonth, data: keys.map(mk=>{
+    const t=rollup(byMonth[mk]);
+    const sum=(ks)=>ks.reduce((a,k)=>[a[0]+t[k].makes,a[1]+t[k].attempts],[0,0]);
+    const [pm,pa]=sum(paintKeys),[mm,ma]=sum(midKeys),[tm,ta]=sum(threeKeys);
+    const oa=pa+ma+ta, om=pm+mm+tm;
+    const [y,m]=mk.split('-');
+    const label=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+"'"+y.slice(2);
+    return{key:mk,label,overall:oa?om/oa*100:null,paint:pa?pm/pa*100:null,mid:ma?mm/ma*100:null,three:ta?tm/ta*100:null};
+  })};
+}
+
+function renderCatChart(){
+  const {data}=monthlyBuckets();
+  const svg=document.getElementById('catChart');
+  if(!data.length){svg.innerHTML='<text x="300" y="85" fill="rgba(255,255,255,.3)" font-size="13" text-anchor="middle" font-family="Inter">No data yet</text>';return;}
+  const W=600,H=170,padL=26,padR=8,padT=10,padB=20;
+  const n=data.length;
+  const xf=i=> n===1?(padL+(W-padL-padR)/2):padL+i*(W-padL-padR)/(n-1);
+  const yf=v=> padT+(100-v)/100*(H-padT-padB);
+  let s='';
+  [0,25,50,75,100].forEach(v=>{
+    s+=`<line x1="${padL}" y1="${yf(v)}" x2="${W-padR}" y2="${yf(v)}" stroke="rgba(255,255,255,.08)" stroke-width="1"/>`;
+    s+=`<text x="${padL-5}" y="${yf(v)+3}" fill="rgba(255,255,255,.32)" font-size="8" text-anchor="end" font-family="Inter">${v}</text>`;
+  });
+  data.forEach((b,i)=>{s+=`<text x="${xf(i)}" y="${H-6}" fill="rgba(255,255,255,.35)" font-size="8" text-anchor="middle" font-family="Inter">${b.label}</text>`;});
+  [['overall','#e6e9f2'],['paint','#60a5fa'],['mid','#f59e0b'],['three','#f07030']].forEach(([key,color])=>{
+    let pts=[];
+    data.forEach((b,i)=>{if(b[key]!=null)pts.push([xf(i),yf(b[key])]);});
+    if(pts.length>1){
+      const d=pts.map((p,i)=>(i===0?'M':'L')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+      s+=`<path d="${d}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
+    }
+    pts.forEach(p=>{s+=`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2.5" fill="${color}"/>`;});
+  });
+  svg.innerHTML=s;
+}
+
+function renderSparklines(){
+  const {keys,byMonth}=monthlyBuckets();
+  const wrap=document.getElementById('sparkList');
+  if(!keys.length){wrap.innerHTML='<p class="empty" style="padding:10px 0">No data yet.</p>';return;}
+  wrap.innerHTML=ZK.map(zk=>{
+    const z=ZS[zk];
+    const vals=keys.map(mk=>{const t=rollup(byMonth[mk]);const{makes:m,attempts:a}=t[zk];return a?m/a*100:null;});
+    const valid=vals.map((v,i)=>({v,i})).filter(o=>o.v!=null);
+    const last=valid.length?valid[valid.length-1].v:null;
+    const prev=valid.length>1?valid[valid.length-2].v:null;
+    const delta=(last!=null&&prev!=null)?last-prev:null;
+    const color=last==null?'var(--tdd)':last>=50?'var(--or)':last>=35?'var(--bl)':'var(--rd)';
+    const W=110,H=28,padX=3,padY=3,nn=vals.length;
+    const xf=i=>nn===1?W/2:padX+i*(W-2*padX)/(nn-1);
+    const yf=v=>padY+(100-v)/100*(H-2*padY);
+    let path='';
+    valid.forEach((o,idx)=>{path+=(idx===0?'M':'L')+xf(o.i).toFixed(1)+','+yf(o.v).toFixed(1)+' ';});
+    let inner=valid.length>1?`<path d="${path.trim()}" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>`:'';
+    if(valid.length){const lp=valid[valid.length-1];inner+=`<circle cx="${xf(lp.i).toFixed(1)}" cy="${yf(lp.v).toFixed(1)}" r="2" fill="${color}"/>`;}
+    const deltaStr=delta==null?'':(delta>=0?'+':'')+Math.round(delta)+'%';
+    const deltaColor=delta==null?'var(--tdd)':delta>0?'var(--gr)':delta<0?'var(--rd)':'var(--td)';
+    return`<div class="spark-row"><div class="spark-name">${z.n}</div><svg class="spark-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${inner}</svg><div class="spark-val" style="color:${color}">${last==null?'—':Math.round(last)+'%'}</div><div class="spark-delta" style="color:${deltaColor}">${deltaStr}</div></div>`;
+  }).join('');
+}
+
+function renderTrends(){renderCatChart();renderSparklines();}
+
 load();
 </script>
 
