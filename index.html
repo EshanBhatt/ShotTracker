@@ -300,6 +300,23 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
   </div>
 </div>
 <script>
+const BUILD_V='1782871287';
+// Self-update check: Home Screen apps cache aggressively and don't auto-refresh.
+// On every launch, silently check if a newer build exists and force-reload if so.
+(function checkForUpdate(){
+  if (sessionStorage.getItem('st_justUpdated')) { sessionStorage.removeItem('st_justUpdated'); return; }
+  fetch('https://raw.githubusercontent.com/EshanBhatt/ShotTracker/main/data/version.txt?_=' + Date.now(), {cache:'no-store'})
+    .then(r=>r.text())
+    .then(v=>{
+      v=v.trim();
+      if(v && v!==BUILD_V){
+        sessionStorage.setItem('st_justUpdated','1');
+        location.href = location.origin + location.pathname + '?_=' + Date.now();
+      }
+    })
+    .catch(()=>{});
+})();
+
 const REPO='EshanBhatt/ShotTracker', FILE='data/shots.json';
 const TOK=['github_pat_11ANUBPFI0WwSQtn48cDY1_6VTmomAJvGJE','gIQyTgR7vUKnqxj6TdwQrUrVBGaFSLUBGTFGPEKLrHZZVga'].join('');
 
