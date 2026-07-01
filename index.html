@@ -306,7 +306,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
   </div>
 </div>
 <script>
-const BUILD_V='1782872527';
+const BUILD_V='1782872874';
 // Self-update check: Home Screen apps cache aggressively and don't auto-refresh.
 // On every launch, silently check if a newer build exists and force-reload if so.
 (function checkForUpdate(){
@@ -756,8 +756,8 @@ function renderSparklines(){
     const vals=keys.map(mk=>{const t=rollup(byMonth[mk]);const{makes:m,attempts:a}=t[zk];return a?m/a*100:null;});
     const valid=vals.map((v,i)=>({v,i})).filter(o=>o.v!=null);
     const lastMonthly=valid.length?valid[valid.length-1].v:null;
-    const prev=valid.length>1?valid[valid.length-2].v:null;
-    const delta=(lastMonthly!=null&&prev!=null)?lastMonthly-prev:null;
+    const firstMonthly=valid.length?valid[0].v:null;
+    const delta=(lastMonthly!=null&&firstMonthly!=null&&valid.length>1)?lastMonthly-firstMonthly:null;
     const allT=rollup(D.sessions)[zk];
     const last=allT.attempts?allT.makes/allT.attempts*100:null;
     const color=last==null?'var(--tdd)':last>=50?'var(--or)':last>=35?'var(--bl)':'var(--rd)';
