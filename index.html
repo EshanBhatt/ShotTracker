@@ -129,6 +129,13 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 .spark-svg{flex:1;height:28px;min-width:0}
 .spark-val{flex:0 0 38px;text-align:right;font-size:12px;font-weight:700}
 .spark-delta{flex:0 0 34px;text-align:right;font-size:10px;font-weight:600}
+.mini-chart-card{background:var(--s1);border:1px solid var(--bdr);border-radius:10px;padding:12px;margin-bottom:10px}
+.mini-chart-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.mini-chart-title{font-size:11px;font-weight:700;color:var(--td);text-transform:uppercase;letter-spacing:.4px}
+.mini-chart-val{font-size:19px;font-weight:800}
+.mini-chart-delta{font-size:11px;font-weight:700;margin-left:6px}
+.mini-chart-svg{width:100%;height:80px;display:block}
+
 
 .emo{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
 .emo.open{opacity:1;pointer-events:all}
@@ -213,12 +220,39 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
     </div>
     <div id="trendsWrap" style="display:none">
       <div class="trend-wrap">
+        <div class="slbl" style="padding-top:2px">All Categories</div>
         <div class="tchart"><svg id="catChart" viewBox="0 0 600 170" preserveAspectRatio="none"></svg></div>
         <div class="tlegend">
           <div class="li"><div class="ls" style="background:#e6e9f2"></div>Overall</div>
           <div class="li"><div class="ls" style="background:#60a5fa"></div>Paint</div>
           <div class="li"><div class="ls" style="background:#f59e0b"></div>Mid-Range</div>
           <div class="li"><div class="ls" style="background:#f07030"></div>3-Point</div>
+        </div>
+
+        <div class="slbl" style="padding-top:16px">Shot Area Comparison</div>
+        <div class="tchart"><svg id="areaChart" viewBox="0 0 600 170" preserveAspectRatio="none"></svg></div>
+        <div class="tlegend">
+          <div class="li"><div class="ls" style="background:#60a5fa"></div>Paint</div>
+          <div class="li"><div class="ls" style="background:#f59e0b"></div>Mid-Range</div>
+          <div class="li"><div class="ls" style="background:#f07030"></div>3-Point</div>
+        </div>
+
+        <div class="slbl" style="padding-top:16px">Individual Trends</div>
+        <div class="mini-chart-card">
+          <div class="mini-chart-head"><div class="mini-chart-title">Overall</div><div><span class="mini-chart-val" id="mcv-overall">—</span><span class="mini-chart-delta" id="mcd-overall"></span></div></div>
+          <svg class="mini-chart-svg" id="mc-overall" viewBox="0 0 600 90" preserveAspectRatio="none"></svg>
+        </div>
+        <div class="mini-chart-card">
+          <div class="mini-chart-head"><div class="mini-chart-title">Paint</div><div><span class="mini-chart-val" id="mcv-paint">—</span><span class="mini-chart-delta" id="mcd-paint"></span></div></div>
+          <svg class="mini-chart-svg" id="mc-paint" viewBox="0 0 600 90" preserveAspectRatio="none"></svg>
+        </div>
+        <div class="mini-chart-card">
+          <div class="mini-chart-head"><div class="mini-chart-title">Mid-Range</div><div><span class="mini-chart-val" id="mcv-mid">—</span><span class="mini-chart-delta" id="mcd-mid"></span></div></div>
+          <svg class="mini-chart-svg" id="mc-mid" viewBox="0 0 600 90" preserveAspectRatio="none"></svg>
+        </div>
+        <div class="mini-chart-card">
+          <div class="mini-chart-head"><div class="mini-chart-title">3-Point</div><div><span class="mini-chart-val" id="mcv-three">—</span><span class="mini-chart-delta" id="mcd-three"></span></div></div>
+          <svg class="mini-chart-svg" id="mc-three" viewBox="0 0 600 90" preserveAspectRatio="none"></svg>
         </div>
       </div>
       <div class="spark-sec">
@@ -576,30 +610,72 @@ function monthlyBuckets(){
   })};
 }
 
-function renderCatChart(){
-  const {data}=monthlyBuckets();
-  const svg=document.getElementById('catChart');
-  if(!data.length){svg.innerHTML='<text x="300" y="85" fill="rgba(255,255,255,.3)" font-size="13" text-anchor="middle" font-family="Inter">No data yet</text>';return;}
-  const W=600,H=170,padL=26,padR=8,padT=10,padB=20;
+function lineChartSVG(data, series, W, H, opts){
+  opts=opts||{};
+  const padL=opts.padL!=null?opts.padL:26, padR=opts.padR!=null?opts.padR:8, padT=opts.padT!=null?opts.padT:10, padB=opts.padB!=null?opts.padB:20;
+  if(!data.length) return `<text x="${W/2}" y="${H/2}" fill="rgba(255,255,255,.3)" font-size="12" text-anchor="middle" font-family="Inter">No data yet</text>`;
   const n=data.length;
   const xf=i=> n===1?(padL+(W-padL-padR)/2):padL+i*(W-padL-padR)/(n-1);
   const yf=v=> padT+(100-v)/100*(H-padT-padB);
   let s='';
-  [0,25,50,75,100].forEach(v=>{
-    s+=`<line x1="${padL}" y1="${yf(v)}" x2="${W-padR}" y2="${yf(v)}" stroke="rgba(255,255,255,.08)" stroke-width="1"/>`;
-    s+=`<text x="${padL-5}" y="${yf(v)+3}" fill="rgba(255,255,255,.32)" font-size="8" text-anchor="end" font-family="Inter">${v}</text>`;
-  });
-  data.forEach((b,i)=>{s+=`<text x="${xf(i)}" y="${H-6}" fill="rgba(255,255,255,.35)" font-size="8" text-anchor="middle" font-family="Inter">${b.label}</text>`;});
-  [['overall','#e6e9f2'],['paint','#60a5fa'],['mid','#f59e0b'],['three','#f07030']].forEach(([key,color])=>{
+  if(opts.grid!==false){
+    [0,25,50,75,100].forEach(v=>{
+      s+=`<line x1="${padL}" y1="${yf(v)}" x2="${W-padR}" y2="${yf(v)}" stroke="rgba(255,255,255,.08)" stroke-width="1"/>`;
+      if(opts.axisLabels!==false) s+=`<text x="${padL-5}" y="${yf(v)+3}" fill="rgba(255,255,255,.32)" font-size="8" text-anchor="end" font-family="Inter">${v}%</text>`;
+    });
+  }
+  if(opts.xLabels!==false){
+    data.forEach((b,i)=>{s+=`<text x="${xf(i)}" y="${H-6}" fill="rgba(255,255,255,.35)" font-size="8" text-anchor="middle" font-family="Inter">${b.label}</text>`;});
+  }
+  series.forEach(ser=>{
     let pts=[];
-    data.forEach((b,i)=>{if(b[key]!=null)pts.push([xf(i),yf(b[key])]);});
+    data.forEach((b,i)=>{if(b[ser.key]!=null)pts.push([xf(i),yf(b[ser.key])]);});
     if(pts.length>1){
       const d=pts.map((p,i)=>(i===0?'M':'L')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
-      s+=`<path d="${d}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
+      s+=`<path d="${d}" fill="none" stroke="${ser.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
     }
-    pts.forEach(p=>{s+=`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2.5" fill="${color}"/>`;});
+    pts.forEach(p=>{s+=`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2.5" fill="${ser.color}"/>`;});
   });
-  svg.innerHTML=s;
+  return s;
+}
+
+function renderCatChart(){
+  const {data}=monthlyBuckets();
+  document.getElementById('catChart').innerHTML=lineChartSVG(data,[
+    {key:'overall',color:'#e6e9f2'},{key:'paint',color:'#60a5fa'},{key:'mid',color:'#f59e0b'},{key:'three',color:'#f07030'}
+  ],600,170);
+}
+
+function renderAreaChart(){
+  const {data}=monthlyBuckets();
+  document.getElementById('areaChart').innerHTML=lineChartSVG(data,[
+    {key:'paint',color:'#60a5fa'},{key:'mid',color:'#f59e0b'},{key:'three',color:'#f07030'}
+  ],600,170);
+}
+
+function renderMiniCharts(){
+  const {data}=monthlyBuckets();
+  const defs=[
+    {key:'overall',color:'#e6e9f2',id:'overall'},
+    {key:'paint',color:'#60a5fa',id:'paint'},
+    {key:'mid',color:'#f59e0b',id:'mid'},
+    {key:'three',color:'#f07030',id:'three'},
+  ];
+  defs.forEach(d=>{
+    const svgEl=document.getElementById('mc-'+d.id);
+    if(svgEl) svgEl.innerHTML=lineChartSVG(data,[{key:d.key,color:d.color}],600,90,{padT:8,padB:16,axisLabels:false});
+    const valid=data.map(b=>b[d.key]).filter(v=>v!=null);
+    const last=valid.length?valid[valid.length-1]:null;
+    const first=valid.length?valid[0]:null;
+    const delta=(last!=null&&first!=null&&valid.length>1)?last-first:null;
+    const vEl=document.getElementById('mcv-'+d.id);
+    if(vEl){vEl.textContent=last==null?'—':Math.round(last)+'%';vEl.style.color=d.color==='#e6e9f2'?'var(--t)':d.color;}
+    const dEl=document.getElementById('mcd-'+d.id);
+    if(dEl){
+      if(delta==null){dEl.textContent='';}
+      else{dEl.textContent=(delta>=0?'+':'')+Math.round(delta)+'%';dEl.style.color=delta>0?'var(--gr)':delta<0?'var(--rd)':'var(--td)';}
+    }
+  });
 }
 
 function renderSparklines(){
@@ -627,7 +703,7 @@ function renderSparklines(){
   }).join('');
 }
 
-function renderTrends(){renderCatChart();renderSparklines();}
+function renderTrends(){renderCatChart();renderAreaChart();renderMiniCharts();renderSparklines();}
 
 load();
 </script>
