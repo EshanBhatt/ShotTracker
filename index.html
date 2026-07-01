@@ -455,7 +455,7 @@ document.getElementById('im')?.addEventListener('input',()=>{document.getElement
 document.getElementById('mo')?.addEventListener('click',e=>{if(e.target===document.getElementById('mo'))closeMo();});
 
 function delP(k){delete pending[k];renderLog();}
-async function saveSess(){if(!Object.keys(pending).length)return;D.sessions.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),date:new Date().toISOString().slice(0,10),zones:{...pending}});pending={};renderLog();await push();renderAll();}
+async function saveSess(){if(!Object.keys(pending).length)return;D.sessions.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),date:localDateStr(),zones:{...pending}});pending={};renderLog();await push();renderAll();}
 function delSess(id){if(!confirm('Delete this session?'))return;D.sessions=D.sessions.filter(s=>s.id!==id);push();renderStats();}
 
 
@@ -495,6 +495,7 @@ async function saveEdit() {
 
 document.getElementById('emo')?.addEventListener('click', e => { if(e.target===document.getElementById('emo')) closeEdit(); });
 
+function localDateStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 load();
 </script>
 
