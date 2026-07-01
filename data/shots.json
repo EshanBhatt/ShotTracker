@@ -309,6 +309,52 @@
           "attempts": 9
         }
       }
+    },
+    {
+      "id": "mr1et30vxp7i",
+      "date": "2026-07-01",
+      "zones": {
+        "paint_ur": {
+          "makes": 4,
+          "attempts": 5
+        },
+        "lc3": {
+          "makes": 1,
+          "attempts": 1
+        },
+        "lpm": {
+          "makes": 4,
+          "attempts": 11
+        },
+        "lwm": {
+          "makes": 5,
+          "attempts": 10
+        },
+        "paint_ul": {
+          "makes": 0,
+          "attempts": 1
+        },
+        "ft": {
+          "makes": 2,
+          "attempts": 2
+        },
+        "ct3": {
+          "makes": 1,
+          "attempts": 3
+        },
+        "lw3": {
+          "makes": 0,
+          "attempts": 3
+        },
+        "rpm": {
+          "makes": 4,
+          "attempts": 5
+        },
+        "rwm": {
+          "makes": 4,
+          "attempts": 13
+        }
+      }
     }
   ]
 }
