@@ -213,6 +213,16 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
   </div>
 </div>
 
+<div class="emo" id="emo">
+  <div class="ems">
+    <div class="emh"><div class="mhdl"></div><div class="emtitle" id="emtitle">Edit Session</div><div class="emsub">Adjust makes / attempts for each zone</div></div>
+    <div class="emlist" id="emlist"></div>
+    <div class="emfooter">
+      <button class="emcan" onclick="closeEdit()">Cancel</button>
+      <button class="emsav" onclick="saveEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
 <script>
 const REPO='EshanBhatt/ShotTracker', FILE='data/shots.json';
 const TOK=['github_pat_11ANUBPFI0WwSQtn48cDY1_6VTmomAJvGJE','gIQyTgR7vUKnqxj6TdwQrUrVBGaFSLUBGTFGPEKLrHZZVga'].join('');
@@ -441,8 +451,8 @@ function tapT(e,k){e.preventDefault();if(av==='log')openMo(k);}
 function openMo(k){mz=k;const z=ZS[k],p=pending[k];document.getElementById('mtitle').textContent=z.n+' · '+z.t+'PT';document.getElementById('im').value=p?p.makes:'';document.getElementById('ia').value=p?p.attempts:'';document.getElementById('mo').classList.add('open');setTimeout(()=>document.getElementById('im').focus(),350);}
 function closeMo(){document.getElementById('mo').classList.remove('open');mz=null;}
 function addZone(){const m=parseInt(document.getElementById('im').value)||0,a=parseInt(document.getElementById('ia').value)||0;if(!a){closeMo();return;}if(m>a){document.getElementById('im').style.borderColor='var(--rd)';return;}pending[mz]={makes:m,attempts:a};closeMo();renderLog();}
-document.getElementById('im').addEventListener('input',()=>{document.getElementById('im').style.borderColor='';});
-document.getElementById('mo').addEventListener('click',e=>{if(e.target===document.getElementById('mo'))closeMo();});
+document.getElementById('im')?.addEventListener('input',()=>{document.getElementById('im').style.borderColor='';});
+document.getElementById('mo')?.addEventListener('click',e=>{if(e.target===document.getElementById('mo'))closeMo();});
 
 function delP(k){delete pending[k];renderLog();}
 async function saveSess(){if(!Object.keys(pending).length)return;D.sessions.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),date:new Date().toISOString().slice(0,10),zones:{...pending}});pending={};renderLog();await push();renderAll();}
@@ -483,19 +493,10 @@ async function saveEdit() {
   renderAll();
 }
 
-document.getElementById('emo').addEventListener('click', e => { if(e.target===document.getElementById('emo')) closeEdit(); });
+document.getElementById('emo')?.addEventListener('click', e => { if(e.target===document.getElementById('emo')) closeEdit(); });
 
 load();
 </script>
-<div class="emo" id="emo">
-  <div class="ems">
-    <div class="emh"><div class="mhdl"></div><div class="emtitle" id="emtitle">Edit Session</div><div class="emsub">Adjust makes / attempts for each zone</div></div>
-    <div class="emlist" id="emlist"></div>
-    <div class="emfooter">
-      <button class="emcan" onclick="closeEdit()">Cancel</button>
-      <button class="emsav" onclick="saveEdit()">Save Changes</button>
-    </div>
-  </div>
-</div>
+
 </body>
 </html>
