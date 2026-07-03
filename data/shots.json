@@ -539,6 +539,24 @@
           "attempts": 8
         }
       }
+    },
+    {
+      "id": "mr5gjbmdiivn",
+      "date": "2026-07-03",
+      "zones": {
+        "rc3": {
+          "makes": 1,
+          "attempts": 2
+        },
+        "rw3": {
+          "makes": 0,
+          "attempts": 3
+        },
+        "lw3": {
+          "makes": 1,
+          "attempts": 1
+        }
+      }
     }
   ]
 }
