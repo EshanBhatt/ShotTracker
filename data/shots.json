@@ -601,6 +601,32 @@
           "attempts": 1
         }
       }
+    },
+    {
+      "id": "mrba02146pa9",
+      "date": "2026-07-07",
+      "zones": {
+        "rc3": {
+          "makes": 0,
+          "attempts": 2
+        },
+        "rw3": {
+          "makes": 1,
+          "attempts": 2
+        },
+        "ct3": {
+          "makes": 0,
+          "attempts": 2
+        },
+        "lw3": {
+          "makes": 0,
+          "attempts": 3
+        },
+        "lc3": {
+          "makes": 1,
+          "attempts": 4
+        }
+      }
     }
   ]
 }
