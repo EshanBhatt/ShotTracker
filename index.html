@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--bg:#0c0f16;--s1:#141820;--s2:#1c2030;--s3:#252840;--or:#f07030;--t:#e6e9f2;--td:#6b7592;--tdd:#323850;--bdr:#232840;--gr:#22c55e;--yw:#f59e0b;--rd:#ef4444;--bl:#60a5fa}
+:root{--bg:#ffffff;--s1:#f7f7f9;--s2:#eef0f3;--s3:#e4e6ea;--or:#f07030;--t:#15171c;--td:#71767f;--tdd:#c3c7ce;--bdr:#e5e7eb;--gr:#16a34a;--yw:#d97706;--rd:#dc2626;--bl:#2563eb}
 html,body{height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--t);font-family:'Inter',system-ui,sans-serif;max-width:480px;margin:0 auto;display:flex;flex-direction:column}
 header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--bdr);flex-shrink:0;background:var(--s1)}
@@ -78,8 +78,8 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
    cursor:pointer;-webkit-user-select:none;user-select:none;min-width:0;overflow:hidden;transition:filter .1s}
 .z:active{filter:brightness(1.3)!important}
 .zpct{font-size:clamp(11px,3.5vw,16px);font-weight:800;color:#fff;line-height:1.1;text-align:center}
-.zma{font-size:clamp(8px,2.2vw,11px);font-weight:500;color:rgba(255,255,255,.7);text-align:center;margin-top:2px}
-.zplus{font-size:clamp(16px,5vw,22px);font-weight:300;color:rgba(255,255,255,.3)}
+.zma{font-size:clamp(8px,2.2vw,11px);font-weight:500;color:rgba(255,255,255,.75);text-align:center;margin-top:2px}
+.zplus{font-size:clamp(16px,5vw,22px);font-weight:300;color:rgba(20,22,28,.3)}
 .court-overlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 
 .srow{display:flex;gap:6px;padding:6px 14px 8px}
@@ -223,7 +223,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
         <div class="slbl" style="padding-top:2px">All Categories</div>
         <div class="tchart"><svg id="catChart" viewBox="0 0 600 170" preserveAspectRatio="none"></svg></div>
         <div class="tlegend">
-          <div class="li"><div class="ls" style="background:#e6e9f2"></div>Overall</div>
+          <div class="li"><div class="ls" style="background:#20242c"></div>Overall</div>
           <div class="li"><div class="ls" style="background:#60a5fa"></div>Paint</div>
           <div class="li"><div class="ls" style="background:#f59e0b"></div>Mid-Range</div>
           <div class="li"><div class="ls" style="background:#f07030"></div>3-Point</div>
@@ -306,7 +306,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
   </div>
 </div>
 <script>
-const BUILD_V='1782872874';
+const BUILD_V='1783465931';
 // Self-update check: Home Screen apps cache aggressively and don't auto-refresh.
 // On every launch, silently check if a newer build exists and force-reload if so.
 (function checkForUpdate(){
@@ -426,7 +426,7 @@ function getSess(f,o){if(f==='alltime')return D.sessions;const k=getPeriod(f,o);
 function rollup(sessions){const r={};ZK.forEach(k=>r[k]={makes:0,attempts:0});sessions.forEach(s=>ZK.forEach(k=>{if(s.zones[k]){r[k].makes+=s.zones[k].makes;r[k].attempts+=s.zones[k].attempts;}}));return r;}
 
 function col(m,a){
-  if(!a)return'#555666';
+  if(!a)return'#e7e9ec';
   const p=m/a;
   if(p>=.70)return'#dc4010';
   if(p>=.60)return'#dd6030';
@@ -452,37 +452,37 @@ function e0(){const r={};ZK.forEach(k=>r[k]={makes:0,attempts:0});return r;}
 // FT circle: center(300,200), r=60
 const OVERLAY = `<svg class="court-overlay" viewBox="0 0 600 400" preserveAspectRatio="none">
   <!-- Backboard -->
-  <rect x="265" y="0" width="70" height="6" rx="1" fill="rgba(255,255,255,.2)"/>
+  <rect x="265" y="0" width="70" height="6" rx="1" fill="rgba(20,22,28,.2)"/>
   <!-- Basket -->
   <circle cx="300" cy="18" r="13" fill="none" stroke="#f07030" stroke-width="2.5"/>
   <!-- Restricted area arc (near basket) -->
-  <path d="M 268,52 A 32,32 0 0,0 332,52" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <path d="M 268,52 A 32,32 0 0,0 332,52" fill="none" stroke="rgba(20,22,28,.2)" stroke-width="1.5" stroke-dasharray="4 3"/>
   <!-- Paint box outline (rows 1-2, center cols) -->
-  <rect x="200" y="0" width="200" height="200" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1.5"/>
+  <rect x="200" y="0" width="200" height="200" fill="none" stroke="rgba(20,22,28,.18)" stroke-width="1.5"/>
   <!-- Paint upper/lower divider (row 1/2 boundary at y=100) -->
-  <line x1="200" y1="100" x2="400" y2="100" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
+  <line x1="200" y1="100" x2="400" y2="100" stroke="rgba(20,22,28,.12)" stroke-width="1"/>
   <!-- FT circle — upper dashed half (inside paint, row 2) -->
-  <path d="M 240,200 A 60,60 0 0,0 360,200" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2" stroke-dasharray="6 4"/>
+  <path d="M 240,200 A 60,60 0 0,0 360,200" fill="none" stroke="rgba(20,22,28,.28)" stroke-width="2" stroke-dasharray="6 4"/>
   <!-- FT circle — lower solid half (in FT zone, row 3) -->
-  <path d="M 240,200 A 60,60 0 0,1 360,200" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2"/>
+  <path d="M 240,200 A 60,60 0 0,1 360,200" fill="none" stroke="rgba(20,22,28,.28)" stroke-width="2"/>
   <!-- Corner 3 straight lines (short, at top near baseline) -->
-  <line x1="100" y1="0" x2="100" y2="100" stroke="rgba(255,255,255,.22)" stroke-width="1.5"/>
-  <line x1="500" y1="0" x2="500" y2="100" stroke="rgba(255,255,255,.22)" stroke-width="1.5"/>
+  <line x1="100" y1="0" x2="100" y2="100" stroke="rgba(20,22,28,.22)" stroke-width="1.5"/>
+  <line x1="500" y1="0" x2="500" y2="100" stroke="rgba(20,22,28,.22)" stroke-width="1.5"/>
   <!-- 3PT arc: deep U-shape, from (100,100) through (300,350) to (500,100) -->
   <!-- Center (300,145) r=205 — matches user-drawn arc position -->
-  <path d="M 100,100 A 205,205 0 0,1 500,100" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
+  <path d="M 100,100 A 205,205 0 0,1 500,100" fill="none" stroke="rgba(20,22,28,.25)" stroke-width="2"/>
   <!-- FT/CT3 divider (row 3/4 boundary at y=283) -->
-  <line x1="200" y1="283" x2="400" y2="283" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+  <line x1="200" y1="283" x2="400" y2="283" stroke="rgba(20,22,28,.08)" stroke-width="1"/>
 </svg>`;
 
 function buildChart(totals, isLog, wrapId){
   const wrap=document.getElementById(wrapId);if(!wrap)return;
   const zones=ZK.map(k=>{
     const{makes:m,attempts:a}=isLog?(pending[k]||{makes:0,attempts:0}):totals[k];
-    const bg=isLog?(pending[k]?col(m,a):'#1c2234'):col(m,a);
+    const bg=isLog?(pending[k]?col(m,a):'#eef0f3'):col(m,a);
     const ev=isLog?`onclick="tap('${k}')" ontouchend="tapT(event,'${k}')"`:''
     const inner=a?`<span class="zpct">${Math.round(m/a*100)}%</span><span class="zma">${m}/${a}</span>`
-                 :(isLog?`<span class="zplus">+</span>`:`<span class="zma" style="opacity:.25">—</span>`);
+                 :(isLog?`<span class="zplus" style="color:rgba(20,22,28,.3)">+</span>`:`<span class="zma" style="opacity:.35;color:rgba(20,22,28,.5)">—</span>`);
     return`<div class="z" data-k="${k}" ${ev} style="background:${bg}">${inner}</div>`;
   }).join('');
   wrap.innerHTML=`<div class="chart-grid">${zones}${OVERLAY}</div>`;
@@ -653,19 +653,19 @@ function showPt(tipId,label,val,color){
 function lineChartSVG(data, series, W, H, opts){
   opts=opts||{};
   const padL=opts.padL!=null?opts.padL:26, padR=opts.padR!=null?opts.padR:8, padT=opts.padT!=null?opts.padT:10, padB=opts.padB!=null?opts.padB:20;
-  if(!data.length) return `<text x="${W/2}" y="${H/2}" fill="rgba(255,255,255,.3)" font-size="12" text-anchor="middle" font-family="Inter">No data yet</text>`;
+  if(!data.length) return `<text x="${W/2}" y="${H/2}" fill="rgba(20,22,28,.3)" font-size="12" text-anchor="middle" font-family="Inter">No data yet</text>`;
   const n=data.length;
   const xf=i=> n===1?(padL+(W-padL-padR)/2):padL+i*(W-padL-padR)/(n-1);
   const yf=v=> padT+(100-Math.max(0,Math.min(100,v)))/100*(H-padT-padB);
   let s='';
   if(opts.grid!==false){
     [0,25,50,75,100].forEach(v=>{
-      s+=`<line x1="${padL}" y1="${yf(v)}" x2="${W-padR}" y2="${yf(v)}" stroke="rgba(255,255,255,.08)" stroke-width="1"/>`;
-      if(opts.axisLabels!==false) s+=`<text x="${padL-5}" y="${yf(v)+3}" fill="rgba(255,255,255,.32)" font-size="8" text-anchor="end" font-family="Inter">${v}%</text>`;
+      s+=`<line x1="${padL}" y1="${yf(v)}" x2="${W-padR}" y2="${yf(v)}" stroke="rgba(20,22,28,.08)" stroke-width="1"/>`;
+      if(opts.axisLabels!==false) s+=`<text x="${padL-5}" y="${yf(v)+3}" fill="rgba(20,22,28,.32)" font-size="8" text-anchor="end" font-family="Inter">${v}%</text>`;
     });
   }
   if(opts.xLabels!==false){
-    data.forEach((b,i)=>{s+=`<text x="${xf(i)}" y="${H-6}" fill="rgba(255,255,255,.35)" font-size="8" text-anchor="middle" font-family="Inter">${b.label}</text>`;});
+    data.forEach((b,i)=>{s+=`<text x="${xf(i)}" y="${H-6}" fill="rgba(20,22,28,.35)" font-size="8" text-anchor="middle" font-family="Inter">${b.label}</text>`;});
   }
   series.forEach(ser=>{
     let pts=[], regPts=[];
@@ -709,7 +709,7 @@ function allTimePct(catKey){
 function renderCatChart(){
   const {data}=monthlyBuckets();
   document.getElementById('catChart').innerHTML=lineChartSVG(data,[
-    {key:'overall',color:'#e6e9f2'},{key:'paint',color:'#60a5fa'},{key:'mid',color:'#f59e0b'},{key:'three',color:'#f07030'}
+    {key:'overall',color:'#20242c'},{key:'paint',color:'#60a5fa'},{key:'mid',color:'#f59e0b'},{key:'three',color:'#f07030'}
   ],600,170,{tipId:'tip-cat'});
 }
 
@@ -723,7 +723,7 @@ function renderAreaChart(){
 function renderMiniCharts(){
   const {data}=monthlyBuckets();
   const defs=[
-    {key:'overall',color:'#e6e9f2',id:'overall'},
+    {key:'overall',color:'#20242c',id:'overall'},
     {key:'paint',color:'#60a5fa',id:'paint'},
     {key:'mid',color:'#f59e0b',id:'mid'},
     {key:'three',color:'#f07030',id:'three'},
@@ -737,7 +737,7 @@ function renderMiniCharts(){
     const delta=(last!=null&&first!=null&&valid.length>1)?last-first:null;
     const allTime=allTimePct(d.key);
     const vEl=document.getElementById('mcv-'+d.id);
-    if(vEl){vEl.textContent=allTime==null?'—':Math.round(allTime)+'%';vEl.style.color=d.color==='#e6e9f2'?'var(--t)':d.color;}
+    if(vEl){vEl.textContent=allTime==null?'—':Math.round(allTime)+'%';vEl.style.color=d.color==='#20242c'?'var(--t)':d.color;}
     const dEl=document.getElementById('mcd-'+d.id);
     if(dEl){
       if(delta==null){dEl.textContent='';}
