@@ -627,6 +627,40 @@
           "attempts": 4
         }
       }
+    },
+    {
+      "id": "mre2ph41tr6k",
+      "date": "2026-07-09",
+      "zones": {
+        "lpm": {
+          "makes": 5,
+          "attempts": 9
+        },
+        "lwm": {
+          "makes": 5,
+          "attempts": 10
+        },
+        "ft": {
+          "makes": 3,
+          "attempts": 6
+        },
+        "rw3": {
+          "makes": 0,
+          "attempts": 1
+        },
+        "paint_ur": {
+          "makes": 1,
+          "attempts": 2
+        },
+        "rwm": {
+          "makes": 10,
+          "attempts": 17
+        },
+        "rpm": {
+          "makes": 5,
+          "attempts": 12
+        }
+      }
     }
   ]
 }
