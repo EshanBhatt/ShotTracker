@@ -190,6 +190,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
   <div id="v-log" class="view">
     <div class="lh"><h2>Log Session</h2><p>Tap zones to record shots</p></div>
     <div class="cw" id="lWrap"></div>
+    <div class="srow" id="lsum" style="display:none"></div>
     <div class="ps" id="pend" style="display:none">
       <div class="pt">Session Zones</div>
       <div class="pl" id="plist"></div>
@@ -306,7 +307,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
   </div>
 </div>
 <script>
-const BUILD_V='1783465931';
+const BUILD_V='1783736392';
 // Self-update check: Home Screen apps cache aggressively and don't auto-refresh.
 // On every launch, silently check if a newer build exists and force-reload if so.
 (function checkForUpdate(){
@@ -501,6 +502,15 @@ function renderLog(){
   const keys=Object.keys(pending);
   document.getElementById('pend').style.display=keys.length?'block':'none';
   document.getElementById('lempty').style.display=keys.length?'none':'block';
+  const lsum=document.getElementById('lsum');
+  if(keys.length){
+    const fake={sessions:[{date:'x',zones:pending}]};
+    const t=rollup(fake.sessions);
+    buildSum(t,'lsum');
+    lsum.style.display='flex';
+  } else {
+    lsum.style.display='none';
+  }
   if(keys.length)document.getElementById('plist').innerHTML=keys.map(k=>{
     const z=ZS[k],{makes:m,attempts:a}=pending[k];
     return`<div class="pi"><div class="pin">${z.n}</div><div class="pis">${m}/${a}</div><div class="pip" style="color:${colB(m,a)}">${Math.round(m/a*100)}%</div><button class="pid" onclick="delP('${k}')">×</button></div>`;
@@ -525,8 +535,34 @@ function renderStats(){
   let sh=`<div class="sst">${ss.length} Session${ss.length!==1?'s':''}</div>`;
   if(!recent.length)sh+='<p class="empty" style="padding:10px 0">No sessions yet.</p>';
   else recent.forEach(s=>{
-    const m=ZK.reduce((a,k)=>a+(s.zones[k]?.makes||0),0),a=ZK.reduce((a,k)=>a+(s.zones[k]?.attempts||0),0),nz=Object.keys(s.zones).length;
-    sh+=`<div class="si" style="flex-direction:column;align-items:stretch;gap:8px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="sid">${fmt(s.date)}</div><div class="sis">${nz} zone${nz!==1?'s':''} · ${m}/${a} ${a?'('+Math.round(m/a*100)+'%)':''}</div></div></div><div style="display:flex;gap:8px"><button onclick="editSess('${s.id}')" style="flex:1;padding:9px;background:var(--or);border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Edit</button><button onclick="delSess('${s.id}')" style="padding:9px 14px;background:var(--s2);border:1px solid var(--bdr);border-radius:8px;color:var(--tdd);font-size:13px;cursor:pointer;font-family:inherit">Delete</button></div></div>`;
+    const st=rollup([s]);
+    const tw=ZK.filter(k=>ZS[k].t==='2'),th=ZK.filter(k=>ZS[k].t==='3');
+    const sumK=keys=>keys.reduce((acc,k)=>[acc[0]+st[k].makes,acc[1]+st[k].attempts],[0,0]);
+    const [am,aa]=sumK(ZK),[tm,ta]=sumK(tw),[pm,pa]=sumK(th);
+    const nz=Object.keys(s.zones).length;
+    sh+=`<div class="si" style="flex-direction:column;align-items:stretch;gap:8px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div><div class="sid">${fmt(s.date)}</div><div class="sis">${nz} zone${nz!==1?'s':''}</div></div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <div style="flex:1;background:var(--s2);border-radius:7px;padding:6px 4px;text-align:center">
+          <div style="font-size:13px;font-weight:800">${pct(am,aa)}</div>
+          <div style="font-size:9px;color:var(--td);font-weight:600">ALL · ${aa?am+'/'+aa:'—'}</div>
+        </div>
+        <div style="flex:1;background:var(--s2);border-radius:7px;padding:6px 4px;text-align:center">
+          <div style="font-size:13px;font-weight:800;color:var(--bl)">${pct(tm,ta)}</div>
+          <div style="font-size:9px;color:var(--td);font-weight:600">2PT · ${ta?tm+'/'+ta:'—'}</div>
+        </div>
+        <div style="flex:1;background:var(--s2);border-radius:7px;padding:6px 4px;text-align:center">
+          <div style="font-size:13px;font-weight:800;color:var(--or)">${pct(pm,pa)}</div>
+          <div style="font-size:9px;color:var(--td);font-weight:600">3PT · ${pa?pm+'/'+pa:'—'}</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="editSess('${s.id}')" style="flex:1;padding:9px;background:var(--or);border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Edit</button>
+        <button onclick="delSess('${s.id}')" style="padding:9px 14px;background:var(--s2);border:1px solid var(--bdr);border-radius:8px;color:var(--tdd);font-size:13px;cursor:pointer;font-family:inherit">Delete</button>
+      </div>
+    </div>`;
   });
   document.getElementById('sesslist').innerHTML=sh;
 }
