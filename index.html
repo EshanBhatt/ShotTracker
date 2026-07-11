@@ -119,14 +119,14 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 .mbadd:active{background:#a04010}
 .empty{text-align:center;padding:24px 18px;color:var(--td);font-size:13px;line-height:1.7}
 .trend-wrap{padding:10px 14px 4px}
-.tchart{width:100%;height:170px;background:var(--s1);border:1px solid var(--bdr);border-radius:10px;padding:8px 4px 4px;box-sizing:border-box}
+.tchart{width:100%;height:260px;background:var(--s1);border:1px solid var(--bdr);border-radius:10px;padding:8px 4px 4px;box-sizing:border-box}
 .tchart svg{width:100%;height:100%;display:block}
 .tlegend{display:flex;gap:10px;flex-wrap:wrap;padding:8px 2px 4px;font-size:10px;color:var(--td)}
 .spark-sec{padding:14px 14px 6px}
 .spark-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bdr)}
 .spark-row:last-child{border-bottom:none}
 .spark-name{flex:0 0 96px;font-size:11px;font-weight:600;color:var(--t);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.spark-svg{flex:1;height:28px;min-width:0}
+.spark-svg{flex:1;height:46px;min-width:0}
 .spark-val{flex:0 0 38px;text-align:right;font-size:12px;font-weight:700}
 .spark-delta{flex:0 0 34px;text-align:right;font-size:10px;font-weight:600}
 .mini-chart-card{background:var(--s1);border:1px solid var(--bdr);border-radius:10px;padding:12px;margin-bottom:10px}
@@ -134,7 +134,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 .mini-chart-title{font-size:11px;font-weight:700;color:var(--td);text-transform:uppercase;letter-spacing:.4px}
 .mini-chart-val{font-size:19px;font-weight:800}
 .mini-chart-delta{font-size:11px;font-weight:700;margin-left:6px}
-.mini-chart-svg{width:100%;height:80px;display:block}
+.mini-chart-svg{width:100%;height:140px;display:block}
 
 
 .emo{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
@@ -222,7 +222,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
     <div id="trendsWrap" style="display:none">
       <div class="trend-wrap">
         <div class="slbl" style="padding-top:2px">All Categories</div>
-        <div class="tchart"><svg id="catChart" viewBox="0 0 600 170" preserveAspectRatio="none"></svg></div>
+        <div class="tchart"><svg id="catChart" viewBox="0 0 600 260" preserveAspectRatio="none"></svg></div>
         <div class="tlegend">
           <div class="li"><div class="ls" style="background:#20242c"></div>Overall</div>
           <div class="li"><div class="ls" style="background:#60a5fa"></div>Paint</div>
@@ -232,7 +232,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
         <div id="tip-cat" style="font-size:11px;color:var(--tdd);padding:0 2px 4px">Tap a point to inspect</div>
 
         <div class="slbl" style="padding-top:16px">Shot Area Comparison</div>
-        <div class="tchart"><svg id="areaChart" viewBox="0 0 600 170" preserveAspectRatio="none"></svg></div>
+        <div class="tchart"><svg id="areaChart" viewBox="0 0 600 260" preserveAspectRatio="none"></svg></div>
         <div class="tlegend">
           <div class="li"><div class="ls" style="background:#60a5fa"></div>Paint</div>
           <div class="li"><div class="ls" style="background:#f59e0b"></div>Mid-Range</div>
@@ -243,22 +243,22 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
         <div class="slbl" style="padding-top:16px">Individual Trends</div>
         <div class="mini-chart-card">
           <div class="mini-chart-head"><div class="mini-chart-title">Overall</div><div><span class="mini-chart-val" id="mcv-overall">—</span><span class="mini-chart-delta" id="mcd-overall"></span></div></div>
-          <svg class="mini-chart-svg" id="mc-overall" viewBox="0 0 600 90" preserveAspectRatio="none"></svg>
+          <svg class="mini-chart-svg" id="mc-overall" viewBox="0 0 600 140" preserveAspectRatio="none"></svg>
           <div id="tip-mc-overall" style="font-size:10px;color:var(--tdd);margin-top:2px">Tap a point</div>
         </div>
         <div class="mini-chart-card">
           <div class="mini-chart-head"><div class="mini-chart-title">Paint</div><div><span class="mini-chart-val" id="mcv-paint">—</span><span class="mini-chart-delta" id="mcd-paint"></span></div></div>
-          <svg class="mini-chart-svg" id="mc-paint" viewBox="0 0 600 90" preserveAspectRatio="none"></svg>
+          <svg class="mini-chart-svg" id="mc-paint" viewBox="0 0 600 140" preserveAspectRatio="none"></svg>
           <div id="tip-mc-paint" style="font-size:10px;color:var(--tdd);margin-top:2px">Tap a point</div>
         </div>
         <div class="mini-chart-card">
           <div class="mini-chart-head"><div class="mini-chart-title">Mid-Range</div><div><span class="mini-chart-val" id="mcv-mid">—</span><span class="mini-chart-delta" id="mcd-mid"></span></div></div>
-          <svg class="mini-chart-svg" id="mc-mid" viewBox="0 0 600 90" preserveAspectRatio="none"></svg>
+          <svg class="mini-chart-svg" id="mc-mid" viewBox="0 0 600 140" preserveAspectRatio="none"></svg>
           <div id="tip-mc-mid" style="font-size:10px;color:var(--tdd);margin-top:2px">Tap a point</div>
         </div>
         <div class="mini-chart-card">
           <div class="mini-chart-head"><div class="mini-chart-title">3-Point</div><div><span class="mini-chart-val" id="mcv-three">—</span><span class="mini-chart-delta" id="mcd-three"></span></div></div>
-          <svg class="mini-chart-svg" id="mc-three" viewBox="0 0 600 90" preserveAspectRatio="none"></svg>
+          <svg class="mini-chart-svg" id="mc-three" viewBox="0 0 600 140" preserveAspectRatio="none"></svg>
           <div id="tip-mc-three" style="font-size:10px;color:var(--tdd);margin-top:2px">Tap a point</div>
         </div>
       </div>
@@ -307,7 +307,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
   </div>
 </div>
 <script>
-const BUILD_V='1783736392';
+const BUILD_V='1783737616';
 // Self-update check: Home Screen apps cache aggressively and don't auto-refresh.
 // On every launch, silently check if a newer build exists and force-reload if so.
 (function checkForUpdate(){
@@ -746,14 +746,14 @@ function renderCatChart(){
   const {data}=monthlyBuckets();
   document.getElementById('catChart').innerHTML=lineChartSVG(data,[
     {key:'overall',color:'#20242c'},{key:'paint',color:'#60a5fa'},{key:'mid',color:'#f59e0b'},{key:'three',color:'#f07030'}
-  ],600,170,{tipId:'tip-cat'});
+  ],600,260,{tipId:'tip-cat'});
 }
 
 function renderAreaChart(){
   const {data}=monthlyBuckets();
   document.getElementById('areaChart').innerHTML=lineChartSVG(data,[
     {key:'paint',color:'#60a5fa'},{key:'mid',color:'#f59e0b'},{key:'three',color:'#f07030'}
-  ],600,170,{tipId:'tip-area'});
+  ],600,260,{tipId:'tip-area'});
 }
 
 function renderMiniCharts(){
@@ -766,7 +766,7 @@ function renderMiniCharts(){
   ];
   defs.forEach(d=>{
     const svgEl=document.getElementById('mc-'+d.id);
-    if(svgEl) svgEl.innerHTML=lineChartSVG(data,[{key:d.key,color:d.color}],600,90,{padT:8,padB:16,axisLabels:false,tipId:'tip-mc-'+d.id});
+    if(svgEl) svgEl.innerHTML=lineChartSVG(data,[{key:d.key,color:d.color}],600,140,{padT:10,padB:20,axisLabels:false,tipId:'tip-mc-'+d.id});
     const valid=data.map(b=>b[d.key]).filter(v=>v!=null);
     const first=valid.length?valid[0]:null;
     const last=valid.length?valid[valid.length-1]:null;
@@ -797,7 +797,7 @@ function renderSparklines(){
     const allT=rollup(D.sessions)[zk];
     const last=allT.attempts?allT.makes/allT.attempts*100:null;
     const color=last==null?'var(--tdd)':last>=50?'var(--or)':last>=35?'var(--bl)':'var(--rd)';
-    const W=110,H=28,padX=3,padY=3,nn=vals.length;
+    const W=110,H=46,padX=3,padY=4,nn=vals.length;
     const xf=i=>nn===1?W/2:padX+i*(W-2*padX)/(nn-1);
     const yf=v=>padY+(100-Math.max(0,Math.min(100,v)))/100*(H-2*padY);
     let path='';
