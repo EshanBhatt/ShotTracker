@@ -1051,6 +1051,44 @@
           "attempts": 3
         }
       }
+    },
+    {
+      "id": "mry9zy14h5w5",
+      "date": "2026-07-23",
+      "zones": {
+        "ft": {
+          "makes": 3,
+          "attempts": 4
+        },
+        "lc3": {
+          "makes": 2,
+          "attempts": 6
+        },
+        "rc3": {
+          "makes": 2,
+          "attempts": 6
+        },
+        "rw3": {
+          "makes": 2,
+          "attempts": 7
+        },
+        "ct3": {
+          "makes": 1,
+          "attempts": 3
+        },
+        "lw3": {
+          "makes": 0,
+          "attempts": 6
+        },
+        "paint_lr": {
+          "makes": 0,
+          "attempts": 1
+        },
+        "paint_ur": {
+          "makes": 1,
+          "attempts": 1
+        }
+      }
     }
   ]
 }
