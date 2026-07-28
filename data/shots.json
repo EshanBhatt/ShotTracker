@@ -1089,6 +1089,36 @@
           "attempts": 1
         }
       }
+    },
+    {
+      "id": "ms40ie05zaql",
+      "date": "2026-07-27",
+      "zones": {
+        "lpm": {
+          "makes": 6,
+          "attempts": 8
+        },
+        "lwm": {
+          "makes": 7,
+          "attempts": 16
+        },
+        "ft": {
+          "makes": 6,
+          "attempts": 9
+        },
+        "ct3": {
+          "makes": 2,
+          "attempts": 2
+        },
+        "rw3": {
+          "makes": 0,
+          "attempts": 4
+        },
+        "lw3": {
+          "makes": 0,
+          "attempts": 1
+        }
+      }
     }
   ]
 }
