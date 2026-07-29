@@ -249,6 +249,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
         <div class="tlegend">
           <div class="li"><div class="ls" style="background:#60a5fa"></div>Paint</div>
           <div class="li"><div class="ls" style="background:#f59e0b"></div>Mid-Range</div>
+          <div class="li"><div class="ls" style="background:#0d9488"></div>Free Throw</div>
           <div class="li"><div class="ls" style="background:#f07030"></div>3-Point</div>
         </div>
         <div id="tip-area" class="tiphint">Tap a point to inspect</div>
@@ -278,6 +279,11 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
           <div class="mini-chart-head"><div class="mini-chart-title">3-Point</div><div><span class="mini-chart-val" id="mcv-three">&mdash;</span><span class="mini-chart-delta" id="mcd-three"></span></div></div>
           <svg class="mini-chart-svg" id="mc-three" viewBox="0 0 600 140" preserveAspectRatio="none"></svg>
           <div id="tip-mc-three" class="tiphint">Tap a point</div>
+        </div>
+        <div class="mini-chart-card">
+          <div class="mini-chart-head"><div class="mini-chart-title">Free Throw Area</div><div><span class="mini-chart-val" id="mcv-ft">&mdash;</span><span class="mini-chart-delta" id="mcd-ft"></span></div></div>
+          <svg class="mini-chart-svg" id="mc-ft" viewBox="0 0 600 140" preserveAspectRatio="none"></svg>
+          <div id="tip-mc-ft" class="tiphint">Tap a point</div>
         </div>
       </div>
       <div class="spark-sec">
@@ -325,7 +331,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
   </div>
 </div>
 <script>
-const BUILD_V='1785299480';
+const BUILD_V='1785299704';
 // Self-update check: Home Screen apps cache aggressively and don't auto-refresh.
 // On every launch, silently check if a newer build exists and force-reload if so.
 (function checkForUpdate(){
@@ -577,10 +583,12 @@ function aggregate(sessions){
   const twoK=ZK.filter(k=>ZS[k].t==='2'), threeK=ZK.filter(k=>ZS[k].t==='3');
   const [fgm,fga]=S(ZK), [m2,a2]=S(twoK), [m3,a3]=S(threeK);
   const [mp,ap]=S(CAT.paint), [mm,am]=S(CAT.mid);
+  const [mft,aft]=S(['ft']);   // Free Throw Area — a subset of mid-range, also reported on its own
   const pts=2*m2+3*m3;
   return {t,fgm,fga,m2,a2,m3,a3,mp,ap,mm,am,pts,
     fg:fga?fgm/fga*100:null, p2:a2?m2/a2*100:null, p3:a3?m3/a3*100:null,
     ppaint:ap?mp/ap*100:null, pmid:am?mm/am*100:null,
+    mft,aft, pft:aft?mft/aft*100:null,
     efg:fga?(fgm+0.5*m3)/fga*100:null,        // effective FG% — weights 3s properly
     pps:fga?pts/fga:null,                      // points per shot
     rate3:fga?a3/fga*100:null};                // 3PA rate — shot selection
@@ -636,7 +644,7 @@ function renderOverview(){
     <div class="kpi-grid" style="margin-top:7px">
       ${kpi(f0(A.p2),'2PT',A.m2+'/'+A.a2,'var(--bl)')}
       ${kpi(f0(A.p3),'3PT',A.m3+'/'+A.a3,'var(--or)')}
-      ${kpi(Math.round(A.rate3)+'%','3PA RATE','of attempts')}
+      ${kpi(f0(A.pft),'FT AREA',A.mft+'/'+A.aft,'#0d9488')}
     </div>
   </div>
 
@@ -645,6 +653,9 @@ function renderOverview(){
     ${bar('Paint',A.ppaint,A.mp,A.ap,'#60a5fa')}
     ${bar('Mid-Range',A.pmid,A.mm,A.am,'#f59e0b')}
     ${bar('3-Point',A.p3,A.m3,A.a3,'#f07030')}
+    <div style="border-top:1px dashed var(--bdr);margin-top:6px;padding-top:2px"></div>
+    ${bar('Free Throw',A.pft,A.mft,A.aft,'#0d9488')}
+    <div class="tiphint" style="padding-top:2px">Free Throw Area is part of Mid-Range above, shown separately here.</div>
   </div>
 
   <div class="sec">
@@ -704,7 +715,21 @@ function renderZones(){
       <div class="split-v">${m}/${a}<br><span style="opacity:.7">${A.fga?Math.round(a/A.fga*100):0}% of&nbsp;FGA</span></div></div>`;
   }).join('');
 
+  const areaRow=(n,p,m,a,c,sub)=>`<div class="splitrow">
+      <div class="split-n"${sub?' style="padding-left:9px;border-left:2px solid '+c+'"':''}>${n}</div>
+      <div class="split-bar"><div class="split-fill" style="width:${p==null?0:Math.max(2,p)}%;background:${c}"></div></div>
+      <div class="split-p" style="color:${c}">${f0(p)}</div>
+      <div class="split-v">${m}/${a}<br><span style="opacity:.7">${A.fga?Math.round(a/A.fga*100):0}% of&nbsp;FGA</span></div></div>`;
+
   w.innerHTML=`
+  <div class="sec">
+    <div class="sec-h"><div class="sec-t">Shot Areas</div></div>
+    ${areaRow('Paint',A.ppaint,A.mp,A.ap,'#60a5fa')}
+    ${areaRow('Mid-Range',A.pmid,A.mm,A.am,'#f59e0b')}
+    ${areaRow('Free Throw',A.pft,A.mft,A.aft,'#0d9488',1)}
+    ${areaRow('3-Point',A.p3,A.m3,A.a3,'#f07030')}
+    <div class="tiphint" style="padding-top:2px">Free Throw Area is counted within Mid-Range.</div>
+  </div>
   <div class="sec">
     <div class="sec-h"><div class="sec-t">Zone Efficiency</div><div class="sec-n">ranked by pts/shot</div></div>
     ${ranked.map(rankRow).join('')}
@@ -789,7 +814,7 @@ function monthlyBuckets(){
     const [y,m]=mk.split('-');
     return {key:mk,
       label:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+' '+y.slice(2),
-      overall:A.fg, paint:A.ppaint, mid:A.pmid, three:A.p3, efg:A.efg, pps:A.pps, fga:A.fga};
+      overall:A.fg, paint:A.ppaint, mid:A.pmid, three:A.p3, ft:A.pft, efg:A.efg, pps:A.pps, fga:A.fga};
   })};
 }
 function linreg(pts){
@@ -886,7 +911,7 @@ function barChartSVG(data,key,color,W,H,tipId){
 }
 function allTimePct(catKey){
   const A=aggregate(D.sessions);
-  return catKey==='overall'?A.fg:catKey==='paint'?A.ppaint:catKey==='mid'?A.pmid:A.p3;
+  return catKey==='overall'?A.fg:catKey==='paint'?A.ppaint:catKey==='mid'?A.pmid:catKey==='ft'?A.pft:A.p3;
 }
 function renderCatChart(){
   const {data}=monthlyBuckets();
@@ -896,7 +921,7 @@ function renderCatChart(){
 function renderAreaChart(){
   const {data}=monthlyBuckets();
   document.getElementById('areaChart').innerHTML=lineChartSVG(data,
-    [{key:'paint',color:'#60a5fa'},{key:'mid',color:'#f59e0b'},{key:'three',color:'#f07030'}],600,260,{tipId:'tip-area'});
+    [{key:'paint',color:'#60a5fa'},{key:'mid',color:'#f59e0b'},{key:'ft',color:'#0d9488'},{key:'three',color:'#f07030'}],600,260,{tipId:'tip-area'});
 }
 function renderVolChart(){
   const {data}=monthlyBuckets();
@@ -908,7 +933,8 @@ function renderVolChart(){
 function renderMiniCharts(){
   const {data}=monthlyBuckets();
   [{key:'overall',color:'#20242c',id:'overall'},{key:'paint',color:'#60a5fa',id:'paint'},
-   {key:'mid',color:'#f59e0b',id:'mid'},{key:'three',color:'#f07030',id:'three'}].forEach(d=>{
+   {key:'mid',color:'#f59e0b',id:'mid'},{key:'three',color:'#f07030',id:'three'},
+   {key:'ft',color:'#0d9488',id:'ft'}].forEach(d=>{
     const el=document.getElementById('mc-'+d.id);
     if(el)el.innerHTML=lineChartSVG(data,[{key:d.key,color:d.color}],600,140,
       {padT:10,padB:18,padL:30,area:true,tipId:'tip-mc-'+d.id});
