@@ -54,10 +54,10 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 .cw{padding:4px 12px 6px}
 .chart-grid{
   display:grid;
-  grid-template-columns:repeat(6,1fr);
-  grid-template-rows:1.2fr 1.2fr 1fr 1.4fr;
+  grid-template-columns:7fr 14fr 8fr 8fr 14fr 7fr;
+  grid-template-rows:9.5fr 9.5fr 10fr 7fr;
   gap:2px;background:var(--bg);border-radius:8px;overflow:hidden;
-  position:relative;width:100%;height:290px;
+  position:relative;width:100%;aspect-ratio:58/36;
 }
 .z[data-k="lc3"]     {grid-column:1;  grid-row:1/3}
 .z[data-k="lpm"]     {grid-column:2;  grid-row:1}
@@ -307,7 +307,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
   </div>
 </div>
 <script>
-const BUILD_V='1783810243';
+const BUILD_V='1785295854';
 // Self-update check: Home Screen apps cache aggressively and don't auto-refresh.
 // On every launch, silently check if a newer build exists and force-reload if so.
 (function checkForUpdate(){
@@ -451,29 +451,26 @@ function e0(){const r={};ZK.forEach(k=>r[k]={makes:0,attempts:0});return r;}
 //   arc: M 100,200 A 272,272 0 0,1 500,200 (short CW)
 // Corner lines: x=100,500 from y=0 to y=200
 // FT circle: center(300,200), r=60
-const OVERLAY = `<svg class="court-overlay" viewBox="0 0 600 400" preserveAspectRatio="none">
-  <!-- Backboard -->
-  <rect x="265" y="0" width="70" height="6" rx="1" fill="rgba(20,22,28,.2)"/>
-  <!-- Basket -->
-  <circle cx="300" cy="18" r="13" fill="none" stroke="#f07030" stroke-width="2.5"/>
-  <!-- Restricted area arc (near basket) -->
-  <path d="M 268,52 A 32,32 0 0,0 332,52" fill="none" stroke="rgba(20,22,28,.2)" stroke-width="1.5" stroke-dasharray="4 3"/>
-  <!-- Paint box outline (rows 1-2, center cols) -->
-  <rect x="200" y="0" width="200" height="200" fill="none" stroke="rgba(20,22,28,.18)" stroke-width="1.5"/>
-  <!-- Paint upper/lower divider (row 1/2 boundary at y=100) -->
-  <line x1="200" y1="100" x2="400" y2="100" stroke="rgba(20,22,28,.12)" stroke-width="1"/>
-  <!-- FT circle — upper dashed half (inside paint, row 2) -->
-  <path d="M 240,200 A 60,60 0 0,0 360,200" fill="none" stroke="rgba(20,22,28,.28)" stroke-width="2" stroke-dasharray="6 4"/>
-  <!-- FT circle — lower solid half (in FT zone, row 3) -->
-  <path d="M 240,200 A 60,60 0 0,1 360,200" fill="none" stroke="rgba(20,22,28,.28)" stroke-width="2"/>
-  <!-- Corner 3 straight lines (short, at top near baseline) -->
-  <line x1="100" y1="0" x2="100" y2="100" stroke="rgba(20,22,28,.22)" stroke-width="1.5"/>
-  <line x1="500" y1="0" x2="500" y2="100" stroke="rgba(20,22,28,.22)" stroke-width="1.5"/>
-  <!-- 3PT arc: deep U-shape, from (100,100) through (300,350) to (500,100) -->
-  <!-- Center (300,145) r=205 — matches user-drawn arc position -->
-  <path d="M 100,100 A 205,205 0 1,0 500,100" fill="none" stroke="rgba(20,22,28,.25)" stroke-width="2"/>
-  <!-- FT/CT3 divider (row 3/4 boundary at y=283) -->
-  <line x1="200" y1="283" x2="400" y2="283" stroke="rgba(20,22,28,.08)" stroke-width="1"/>
+const OVERLAY = `<svg class="court-overlay" viewBox="-40 0 580 360" preserveAspectRatio="none">
+  <g fill="none" stroke="rgba(20,22,28,.30)" stroke-width="2.5" stroke-linecap="square">
+    <line x1="0" y1="0" x2="500" y2="0"/>
+    <line x1="0" y1="0" x2="0" y2="360"/>
+    <line x1="500" y1="0" x2="500" y2="360"/>
+    <rect x="170" y="0" width="160" height="190"/>
+    <path d="M 190,190 A 60,60 0 0,1 310,190"/>
+    <line x1="30" y1="0" x2="30" y2="142"/>
+    <line x1="470" y1="0" x2="470" y2="142"/>
+    <path d="M 30,142 A 237.5,237.5 0 0,0 470,142"/>
+  </g>
+  <g fill="none" stroke="rgba(20,22,28,.22)" stroke-width="2.5" stroke-dasharray="7 6">
+    <path d="M 190,190 A 60,60 0 0,0 310,190"/>
+  </g>
+  <g fill="none" stroke="rgba(20,22,28,.26)" stroke-width="2.5">
+    <path d="M 210,52.5 A 40,40 0 0,0 290,52.5"/>
+  </g>
+  <line x1="220" y1="40" x2="280" y2="40" stroke="rgba(20,22,28,.55)" stroke-width="5" stroke-linecap="round"/>
+  <line x1="250" y1="40" x2="250" y2="45" stroke="rgba(20,22,28,.45)" stroke-width="2.5"/>
+  <circle cx="250" cy="52.5" r="7.5" fill="none" stroke="#f07030" stroke-width="3"/>
 </svg>`;
 
 function buildChart(totals, isLog, wrapId){
