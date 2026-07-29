@@ -93,6 +93,41 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 .mbadd{padding:13px;background:var(--or);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
 .mbadd:active{background:#a04010}
 .empty{text-align:center;padding:24px 18px;color:var(--td);font-size:13px;line-height:1.7}
+.tiphint{font-size:10.5px;color:var(--tdd);padding:3px 2px 0}
+#periodBar{border-bottom:1px solid var(--bdr);padding-bottom:6px;margin-bottom:2px}
+.sec{padding:13px 14px 2px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:9px}
+.sec-t{font-size:10.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--td)}
+.sec-n{font-size:10px;color:var(--tdd);font-weight:600}
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.kpi{background:var(--s1);border:1px solid var(--bdr);border-radius:11px;padding:11px 6px;text-align:center}
+.kpi-v{font-size:22px;font-weight:800;line-height:1.05;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.kpi-l{font-size:8.5px;font-weight:800;letter-spacing:.5px;color:var(--td);text-transform:uppercase;margin-top:4px}
+.kpi-s{font-size:9.5px;color:var(--tdd);margin-top:2px;font-variant-numeric:tabular-nums}
+.splitrow{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--bdr)}
+.splitrow:last-child{border-bottom:none}
+.split-n{flex:0 0 72px;font-size:12px;font-weight:700}
+.split-bar{flex:1;height:9px;background:var(--s2);border-radius:5px;overflow:hidden}
+.split-fill{height:100%;border-radius:5px}
+.split-p{flex:0 0 40px;text-align:right;font-size:13.5px;font-weight:800;font-variant-numeric:tabular-nums}
+.split-v{flex:0 0 60px;text-align:right;font-size:10px;color:var(--tdd);font-variant-numeric:tabular-nums}
+.diet{display:flex;height:28px;border-radius:8px;overflow:hidden;border:1px solid var(--bdr)}
+.diet-seg{display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800;color:#fff;min-width:0}
+.diet-key{display:flex;gap:13px;margin-top:8px;flex-wrap:wrap}
+.zrank{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bdr)}
+.zrank:last-child{border-bottom:none}
+.zr-i{flex:0 0 16px;font-size:10px;font-weight:800;color:var(--tdd);font-variant-numeric:tabular-nums}
+.zr-n{flex:1;min-width:0;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.zr-bar{flex:0 0 56px;height:8px;background:var(--s2);border-radius:4px;overflow:hidden}
+.zr-bf{height:100%;border-radius:4px}
+.zr-p{flex:0 0 38px;text-align:right;font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums}
+.zr-v{flex:0 0 50px;text-align:right;font-size:9.5px;color:var(--tdd);font-variant-numeric:tabular-nums}
+.hc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hc{background:var(--s1);border:1px solid var(--bdr);border-radius:11px;padding:10px 11px}
+.hc-t{font-size:8.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;margin-bottom:7px}
+.hc-r{display:flex;justify-content:space-between;align-items:baseline;gap:6px;padding:3.5px 0;font-size:11px}
+.hc-r b{font-weight:800;font-variant-numeric:tabular-nums;flex-shrink:0}
+.hc-r span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .trend-wrap{padding:10px 14px 4px}
 .tchart{width:100%;height:260px;background:var(--s1);border:1px solid var(--bdr);border-radius:10px;padding:8px 4px 4px;box-sizing:border-box}
 .tchart svg{width:100%;height:100%;display:block}
@@ -176,69 +211,74 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
   <div id="v-stats" class="view">
     <div class="sh"><h2>Statistics</h2></div>
     <div class="ttabs" id="svtabs">
-      <button class="tt on" onclick="setView('breakdown',this)">Breakdown</button>
+      <button class="tt on" onclick="setView('overview',this)">Overview</button>
+      <button class="tt" onclick="setView('zones',this)">Zones</button>
       <button class="tt" onclick="setView('trends',this)">Trends</button>
+      <button class="tt" onclick="setView('sessions',this)">Sessions</button>
     </div>
-    <div id="breakdownWrap">
+    <div id="periodBar">
       <div class="ttabs" id="st">
         <button class="tt" onclick="setF('monthly',this,'st')">Monthly</button>
         <button class="tt" onclick="setF('yearly',this,'st')">Yearly</button>
         <button class="tt on" onclick="setF('alltime',this,'st')">All Time</button>
       </div>
       <div class="pnav" id="spnav" style="display:none">
-        <button class="pb" id="sprev" onclick="chP(-1,'s')">‹</button>
-        <span id="splbl">—</span>
-        <button class="pb" id="snext" onclick="chP(1,'s')">›</button>
+        <button class="pb" id="sprev" onclick="chP(-1,'s')">&lsaquo;</button>
+        <span id="splbl">&mdash;</span>
+        <button class="pb" id="snext" onclick="chP(1,'s')">&rsaquo;</button>
       </div>
-      <div class="srow" id="ssum" style="padding-top:8px"></div>
-      <div class="zlist" id="zlist"></div>
-      <div class="ss" id="sesslist"></div>
     </div>
-    <div id="trendsWrap" style="display:none">
-      <div class="trend-wrap">
-        <div class="slbl" style="padding-top:2px">All Categories</div>
-        <div class="tchart"><svg id="catChart" viewBox="0 0 600 260" preserveAspectRatio="none"></svg></div>
-        <div class="tlegend">
-          <div class="li"><div class="ls" style="background:#20242c"></div>Overall</div>
-          <div class="li"><div class="ls" style="background:#60a5fa"></div>Paint</div>
-          <div class="li"><div class="ls" style="background:#f59e0b"></div>Mid-Range</div>
-          <div class="li"><div class="ls" style="background:#f07030"></div>3-Point</div>
-        </div>
-        <div id="tip-cat" style="font-size:11px;color:var(--tdd);padding:0 2px 4px">Tap a point to inspect</div>
 
-        <div class="slbl" style="padding-top:16px">Shot Area Comparison</div>
+    <div id="ovWrap"></div>
+    <div id="znWrap" style="display:none"></div>
+    <div id="seWrap" style="display:none"><div class="ss" id="sesslist"></div></div>
+
+    <div id="trWrap" style="display:none">
+      <div class="trend-wrap">
+        <div class="sec-h" style="padding-top:6px"><div class="sec-t">Efficiency Over Time</div></div>
+        <div class="tchart"><svg id="effChart" viewBox="0 0 600 260" preserveAspectRatio="none"></svg></div>
+        <div class="tlegend">
+          <div class="li"><div class="ls" style="background:#20242c"></div>FG%</div>
+          <div class="li"><div class="ls" style="background:#7c3aed"></div>eFG%</div>
+        </div>
+        <div id="tip-eff" class="tiphint">Tap a point to inspect</div>
+
+        <div class="sec-h" style="padding-top:14px"><div class="sec-t">By Shot Area</div></div>
         <div class="tchart"><svg id="areaChart" viewBox="0 0 600 260" preserveAspectRatio="none"></svg></div>
         <div class="tlegend">
           <div class="li"><div class="ls" style="background:#60a5fa"></div>Paint</div>
           <div class="li"><div class="ls" style="background:#f59e0b"></div>Mid-Range</div>
           <div class="li"><div class="ls" style="background:#f07030"></div>3-Point</div>
         </div>
-        <div id="tip-area" style="font-size:11px;color:var(--tdd);padding:0 2px 4px">Tap a point to inspect</div>
+        <div id="tip-area" class="tiphint">Tap a point to inspect</div>
 
-        <div class="slbl" style="padding-top:16px">Individual Trends</div>
+        <div class="sec-h" style="padding-top:14px"><div class="sec-t">Shot Volume</div><div class="sec-n" id="volNote"></div></div>
+        <div class="tchart" style="height:170px"><svg id="volChart" viewBox="0 0 600 170" preserveAspectRatio="none"></svg></div>
+
+        <div class="sec-h" style="padding-top:14px"><div class="sec-t">Individual Trends</div></div>
         <div class="mini-chart-card">
-          <div class="mini-chart-head"><div class="mini-chart-title">Overall</div><div><span class="mini-chart-val" id="mcv-overall">—</span><span class="mini-chart-delta" id="mcd-overall"></span></div></div>
+          <div class="mini-chart-head"><div class="mini-chart-title">Overall</div><div><span class="mini-chart-val" id="mcv-overall">&mdash;</span><span class="mini-chart-delta" id="mcd-overall"></span></div></div>
           <svg class="mini-chart-svg" id="mc-overall" viewBox="0 0 600 140" preserveAspectRatio="none"></svg>
-          <div id="tip-mc-overall" style="font-size:10px;color:var(--tdd);margin-top:2px">Tap a point</div>
+          <div id="tip-mc-overall" class="tiphint">Tap a point</div>
         </div>
         <div class="mini-chart-card">
-          <div class="mini-chart-head"><div class="mini-chart-title">Paint</div><div><span class="mini-chart-val" id="mcv-paint">—</span><span class="mini-chart-delta" id="mcd-paint"></span></div></div>
+          <div class="mini-chart-head"><div class="mini-chart-title">Paint</div><div><span class="mini-chart-val" id="mcv-paint">&mdash;</span><span class="mini-chart-delta" id="mcd-paint"></span></div></div>
           <svg class="mini-chart-svg" id="mc-paint" viewBox="0 0 600 140" preserveAspectRatio="none"></svg>
-          <div id="tip-mc-paint" style="font-size:10px;color:var(--tdd);margin-top:2px">Tap a point</div>
+          <div id="tip-mc-paint" class="tiphint">Tap a point</div>
         </div>
         <div class="mini-chart-card">
-          <div class="mini-chart-head"><div class="mini-chart-title">Mid-Range</div><div><span class="mini-chart-val" id="mcv-mid">—</span><span class="mini-chart-delta" id="mcd-mid"></span></div></div>
+          <div class="mini-chart-head"><div class="mini-chart-title">Mid-Range</div><div><span class="mini-chart-val" id="mcv-mid">&mdash;</span><span class="mini-chart-delta" id="mcd-mid"></span></div></div>
           <svg class="mini-chart-svg" id="mc-mid" viewBox="0 0 600 140" preserveAspectRatio="none"></svg>
-          <div id="tip-mc-mid" style="font-size:10px;color:var(--tdd);margin-top:2px">Tap a point</div>
+          <div id="tip-mc-mid" class="tiphint">Tap a point</div>
         </div>
         <div class="mini-chart-card">
-          <div class="mini-chart-head"><div class="mini-chart-title">3-Point</div><div><span class="mini-chart-val" id="mcv-three">—</span><span class="mini-chart-delta" id="mcd-three"></span></div></div>
+          <div class="mini-chart-head"><div class="mini-chart-title">3-Point</div><div><span class="mini-chart-val" id="mcv-three">&mdash;</span><span class="mini-chart-delta" id="mcd-three"></span></div></div>
           <svg class="mini-chart-svg" id="mc-three" viewBox="0 0 600 140" preserveAspectRatio="none"></svg>
-          <div id="tip-mc-three" style="font-size:10px;color:var(--tdd);margin-top:2px">Tap a point</div>
+          <div id="tip-mc-three" class="tiphint">Tap a point</div>
         </div>
       </div>
       <div class="spark-sec">
-        <div class="slbl">Zone Trends (by month)</div>
+        <div class="sec-h"><div class="sec-t">Zone Trends</div><div class="sec-n">all-time % &middot; change</div></div>
         <div id="sparkList"></div>
       </div>
     </div>
@@ -282,7 +322,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
   </div>
 </div>
 <script>
-const BUILD_V='1785298525';
+const BUILD_V='1785299027';
 // Self-update check: Home Screen apps cache aggressively and don't auto-refresh.
 // On every launch, silently check if a newer build exists and force-reload if so.
 (function checkForUpdate(){
@@ -360,7 +400,7 @@ const HIST = [
 
 let D={sessions:[]}, sha=null, pending={};
 let cFilter='alltime', cOff=0, sFilter='alltime', sOff=0, av='court', mz=null;
-let statView='breakdown';
+let statView='overview';
 
 async function load(){
   setSS('busy','Loading…');
@@ -519,47 +559,186 @@ function renderLog(){
     return`<div class="pi"><div class="pin">${z.n}</div><div class="pis">${m}/${a}</div><div class="pip" style="color:${colB(m,a)}">${Math.round(m/a*100)}%</div><button class="pid" onclick="delP('${k}')">×</button></div>`;
   }).join('');
 }
+// ══════════════ ANALYTICS ENGINE ══════════════
+const CAT={paint:['paint_ul','paint_ur','paint_ll','paint_lr'],
+           mid:['lpm','lwm','ft','rwm','rpm'],
+           three:['lc3','lw3','ct3','rw3','rc3']};
+const SIDE={Left:['lc3','lpm','lwm','lw3','paint_ul','paint_ll'],
+            Middle:['ft','ct3'],
+            Right:['rc3','rpm','rwm','rw3','paint_ur','paint_lr']};
+
+// Every metric below is derived from the same makes/attempts data — nothing invented.
+function aggregate(sessions){
+  const t=rollup(sessions);
+  const S=ks=>ks.reduce((a,k)=>[a[0]+t[k].makes,a[1]+t[k].attempts],[0,0]);
+  const twoK=ZK.filter(k=>ZS[k].t==='2'), threeK=ZK.filter(k=>ZS[k].t==='3');
+  const [fgm,fga]=S(ZK), [m2,a2]=S(twoK), [m3,a3]=S(threeK);
+  const [mp,ap]=S(CAT.paint), [mm,am]=S(CAT.mid);
+  const pts=2*m2+3*m3;
+  return {t,fgm,fga,m2,a2,m3,a3,mp,ap,mm,am,pts,
+    fg:fga?fgm/fga*100:null, p2:a2?m2/a2*100:null, p3:a3?m3/a3*100:null,
+    ppaint:ap?mp/ap*100:null, pmid:am?mm/am*100:null,
+    efg:fga?(fgm+0.5*m3)/fga*100:null,        // effective FG% — weights 3s properly
+    pps:fga?pts/fga:null,                      // points per shot
+    rate3:fga?a3/fga*100:null};                // 3PA rate — shot selection
+}
+function zonePPS(m,a,k){return a?(ZS[k].t==='3'?3:2)*m/a:null;}
+function f1(v){return v==null?'\u2014':v.toFixed(2);}
+function f0(v){return v==null?'\u2014':Math.round(v)+'%';}
+
+// ══════════════ STATS DISPATCH ══════════════
 function renderStats(){
-  const ss=getSess(sFilter,sOff),t=rollup(ss);
   document.getElementById('splbl').textContent=getPLbl(sFilter,sOff);
   document.getElementById('snext').disabled=sOff>=0;
   document.getElementById('spnav').style.display=sFilter==='alltime'?'none':'flex';
-  buildSum(t,'ssum');
-  const secs=[
-    {label:'Paint',     keys:['paint_ul','paint_ur','paint_ll','paint_lr']},
-    {label:'Mid-Range', keys:['lpm','lwm','ft','rwm','rpm']},
-    {label:'3-Point',   keys:['lc3','lw3','ct3','rw3','rc3']},
-  ];
-  document.getElementById('zlist').innerHTML=secs.map(s=>`<div class="slbl">${s.label}</div>`+s.keys.map(k=>{
-    const z=ZS[k],{makes:m,attempts:a}=t[k],c=colB(m,a),p=pct(m,a);
-    return`<div class="zr"><div class="zrc" style="background:${a?col(m,a):'var(--tdd)'}"></div><div class="zrn">${z.n}</div><div class="zrm">${a?m+'/'+a:'—'}</div><div class="zrp" style="color:${a?c:'var(--tdd)'}">${p}</div><div class="zrt">${z.t}PT</div></div>`;
-  }).join('')).join('');
-  const recent=[...ss].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,12);
-  let sh=`<div class="sst">${ss.length} Session${ss.length!==1?'s':''}</div>`;
-  if(!recent.length)sh+='<p class="empty" style="padding:10px 0">No sessions yet.</p>';
+  document.getElementById('periodBar').style.display=statView==='trends'?'none':'block';
+  if(statView==='overview')      renderOverview();
+  else if(statView==='zones')    renderZones();
+  else if(statView==='trends')   renderTrends();
+  else if(statView==='sessions') renderSessions();
+}
+
+function renderOverview(){
+  const ss=getSess(sFilter,sOff), A=aggregate(ss);
+  const w=document.getElementById('ovWrap');
+  if(!A.fga){w.innerHTML='<p class="empty">No shots recorded for this period.</p>';return;}
+
+  const kpi=(v,l,s2,c)=>`<div class="kpi"><div class="kpi-v"${c?' style="color:'+c+'"':''}>${v}</div><div class="kpi-l">${l}</div><div class="kpi-s">${s2}</div></div>`;
+  const bar=(n,pctv,mk,at,c)=>{
+    const share=A.fga?at/A.fga*100:0;
+    return `<div class="splitrow"><div class="split-n">${n}</div>
+      <div class="split-bar"><div class="split-fill" style="width:${pctv==null?0:Math.max(2,pctv)}%;background:${c}"></div></div>
+      <div class="split-p" style="color:${c}">${f0(pctv)}</div>
+      <div class="split-v">${mk}/${at}<br><span style="opacity:.7">${Math.round(share)}% of&nbsp;FGA</span></div></div>`;
+  };
+
+  // shot diet — where the attempts actually come from
+  const seg=(a,c,lbl)=>{const p=A.fga?a/A.fga*100:0;return p<1?'':`<div class="diet-seg" style="width:${p}%;background:${c}">${p>=11?Math.round(p)+'%':''}</div>`;};
+
+  // zone leaders by efficiency, with a volume floor so 1/1 doesn't top the list
+  const minA=Math.max(6,Math.round(A.fga*0.03));
+  const ranked=ZK.map(k=>({k,n:ZS[k].n,m:A.t[k].makes,a:A.t[k].attempts,pps:zonePPS(A.t[k].makes,A.t[k].attempts,k)}))
+                 .filter(z=>z.a>=minA && z.pps!=null).sort((x,y)=>y.pps-x.pps);
+  const hot=ranked.slice(0,3), cold=ranked.slice(-3).reverse();
+  const hcRow=z=>`<div class="hc-r"><span>${z.n}</span><b>${f1(z.pps)}</b></div>`;
+
+  w.innerHTML=`
+  <div class="sec">
+    <div class="sec-h"><div class="sec-t">Shooting</div><div class="sec-n">${ss.length} session${ss.length!==1?'s':''}</div></div>
+    <div class="kpi-grid">
+      ${kpi(f0(A.fg),'FG%',A.fgm+'/'+A.fga)}
+      ${kpi(f0(A.efg),'eFG%','3s weighted','#7c3aed')}
+      ${kpi(f1(A.pps),'PTS / SHOT',A.pts+' pts','var(--or)')}
+    </div>
+    <div class="kpi-grid" style="margin-top:7px">
+      ${kpi(f0(A.p2),'2PT',A.m2+'/'+A.a2,'var(--bl)')}
+      ${kpi(f0(A.p3),'3PT',A.m3+'/'+A.a3,'var(--or)')}
+      ${kpi(Math.round(A.rate3)+'%','3PA RATE','of attempts')}
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><div class="sec-t">By Shot Area</div></div>
+    ${bar('Paint',A.ppaint,A.mp,A.ap,'#60a5fa')}
+    ${bar('Mid-Range',A.pmid,A.mm,A.am,'#f59e0b')}
+    ${bar('3-Point',A.p3,A.m3,A.a3,'#f07030')}
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><div class="sec-t">Shot Diet</div><div class="sec-n">${A.fga} attempts</div></div>
+    <div class="diet">${seg(A.ap,'#60a5fa')}${seg(A.am,'#f59e0b')}${seg(A.a3,'#f07030')}</div>
+    <div class="diet-key">
+      <div class="li"><div class="ls" style="background:#60a5fa"></div>Paint ${A.ap}</div>
+      <div class="li"><div class="ls" style="background:#f59e0b"></div>Mid ${A.am}</div>
+      <div class="li"><div class="ls" style="background:#f07030"></div>3PT ${A.a3}</div>
+    </div>
+  </div>
+
+  ${ranked.length?`<div class="sec" style="padding-bottom:20px">
+    <div class="sec-h"><div class="sec-t">Efficiency Leaders</div><div class="sec-n">pts/shot &middot; min ${minA} att</div></div>
+    <div class="hc-grid">
+      <div class="hc"><div class="hc-t" style="color:var(--or)">Most Efficient</div>${hot.map(hcRow).join('')}</div>
+      <div class="hc"><div class="hc-t" style="color:var(--bl)">Least Efficient</div>${cold.map(hcRow).join('')}</div>
+    </div>
+  </div>`:'<div style="height:20px"></div>'}`;
+}
+
+function renderZones(){
+  const ss=getSess(sFilter,sOff), A=aggregate(ss);
+  const w=document.getElementById('znWrap');
+  if(!A.fga){w.innerHTML='<p class="empty">No shots recorded for this period.</p>';return;}
+
+  const rows=ZK.map(k=>({k,n:ZS[k].n,t:ZS[k].t,m:A.t[k].makes,a:A.t[k].attempts,
+                         pct:A.t[k].attempts?A.t[k].makes/A.t[k].attempts*100:null,
+                         pps:zonePPS(A.t[k].makes,A.t[k].attempts,k)}));
+  const ranked=[...rows].filter(z=>z.a>0).sort((x,y)=>y.pps-x.pps);
+  const rankRow=(z,i)=>`<div class="zrank">
+      <div class="zr-i">${i+1}</div>
+      <div class="zr-n">${z.n}<span style="color:var(--tdd);font-weight:600;font-size:9.5px"> ${z.t}PT</span></div>
+      <div class="zr-bar"><div class="zr-bf" style="width:${Math.min(100,z.pps/1.6*100)}%;background:${col(z.m,z.a)}"></div></div>
+      <div class="zr-p">${f1(z.pps)}</div>
+      <div class="zr-v">${f0(z.pct)}<br><span style="opacity:.75">${z.m}/${z.a}</span></div>
+    </div>`;
+
+  // volume distribution
+  const volSorted=[...rows].filter(z=>z.a>0).sort((x,y)=>y.a-x.a);
+  const maxA=volSorted.length?volSorted[0].a:1;
+  const volRow=z=>`<div class="zrank">
+      <div class="zr-n" style="flex:0 0 96px">${z.n}</div>
+      <div class="zr-bar" style="flex:1"><div class="zr-bf" style="width:${z.a/maxA*100}%;background:var(--tdd)"></div></div>
+      <div class="zr-p" style="font-size:11.5px">${z.a}</div>
+      <div class="zr-v" style="flex:0 0 34px">${Math.round(z.a/A.fga*100)}%</div>
+    </div>`;
+
+  // court-side symmetry
+  const sideRows=Object.keys(SIDE).map(name=>{
+    const ks=SIDE[name];
+    const [m,a]=ks.reduce((acc,k)=>[acc[0]+A.t[k].makes,acc[1]+A.t[k].attempts],[0,0]);
+    const p=a?m/a*100:null;
+    return `<div class="splitrow"><div class="split-n">${name}</div>
+      <div class="split-bar"><div class="split-fill" style="width:${p==null?0:Math.max(2,p)}%;background:${a?col(m,a):'var(--tdd)'}"></div></div>
+      <div class="split-p">${f0(p)}</div>
+      <div class="split-v">${m}/${a}<br><span style="opacity:.7">${A.fga?Math.round(a/A.fga*100):0}% of&nbsp;FGA</span></div></div>`;
+  }).join('');
+
+  w.innerHTML=`
+  <div class="sec">
+    <div class="sec-h"><div class="sec-t">Zone Efficiency</div><div class="sec-n">ranked by pts/shot</div></div>
+    ${ranked.map(rankRow).join('')}
+  </div>
+  <div class="sec">
+    <div class="sec-h"><div class="sec-t">Court Balance</div><div class="sec-n">left / middle / right</div></div>
+    ${sideRows}
+  </div>
+  <div class="sec" style="padding-bottom:20px">
+    <div class="sec-h"><div class="sec-t">Shot Volume by Zone</div></div>
+    ${volSorted.map(volRow).join('')}
+  </div>`;
+}
+
+function renderSessions(){
+  const ss=getSess(sFilter,sOff);
+  const recent=[...ss].sort((a,b)=>b.date.localeCompare(a.date));
+  let sh=`<div class="sec-h" style="padding:12px 0 8px"><div class="sec-t">${ss.length} Session${ss.length!==1?'s':''}</div></div>`;
+  if(!recent.length) sh+='<p class="empty">No sessions in this period.</p>';
   else recent.forEach(s=>{
-    const st=rollup([s]);
-    const tw=ZK.filter(k=>ZS[k].t==='2'),th=ZK.filter(k=>ZS[k].t==='3');
-    const sumK=keys=>keys.reduce((acc,k)=>[acc[0]+st[k].makes,acc[1]+st[k].attempts],[0,0]);
-    const [am,aa]=sumK(ZK),[tm,ta]=sumK(tw),[pm,pa]=sumK(th);
+    const A=aggregate([s]);
     const nz=Object.keys(s.zones).length;
-    sh+=`<div class="si" style="flex-direction:column;align-items:stretch;gap:8px">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <div><div class="sid">${fmt(s.date)}</div><div class="sis">${nz} zone${nz!==1?'s':''}</div></div>
+    sh+=`<div class="si" style="flex-direction:column;align-items:stretch;gap:9px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <div><div class="sid">${fmt(s.date)}</div><div class="sis">${nz} zone${nz!==1?'s':''} &middot; ${A.pts} pts &middot; ${f1(A.pps)} pts/shot</div></div>
+        <div style="font-size:17px;font-weight:800;font-variant-numeric:tabular-nums">${f0(A.fg)}</div>
       </div>
       <div style="display:flex;gap:6px">
         <div style="flex:1;background:var(--s2);border-radius:7px;padding:6px 4px;text-align:center">
-          <div style="font-size:13px;font-weight:800">${pct(am,aa)}</div>
-          <div style="font-size:9px;color:var(--td);font-weight:600">ALL · ${aa?am+'/'+aa:'—'}</div>
-        </div>
+          <div style="font-size:13px;font-weight:800">${f0(A.fg)}</div>
+          <div style="font-size:9px;color:var(--td);font-weight:600">ALL &middot; ${A.fgm}/${A.fga}</div></div>
         <div style="flex:1;background:var(--s2);border-radius:7px;padding:6px 4px;text-align:center">
-          <div style="font-size:13px;font-weight:800;color:var(--bl)">${pct(tm,ta)}</div>
-          <div style="font-size:9px;color:var(--td);font-weight:600">2PT · ${ta?tm+'/'+ta:'—'}</div>
-        </div>
+          <div style="font-size:13px;font-weight:800;color:var(--bl)">${f0(A.p2)}</div>
+          <div style="font-size:9px;color:var(--td);font-weight:600">2PT &middot; ${A.m2}/${A.a2}</div></div>
         <div style="flex:1;background:var(--s2);border-radius:7px;padding:6px 4px;text-align:center">
-          <div style="font-size:13px;font-weight:800;color:var(--or)">${pct(pm,pa)}</div>
-          <div style="font-size:9px;color:var(--td);font-weight:600">3PT · ${pa?pm+'/'+pa:'—'}</div>
-        </div>
+          <div style="font-size:13px;font-weight:800;color:var(--or)">${f0(A.p3)}</div>
+          <div style="font-size:9px;color:var(--td);font-weight:600">3PT &middot; ${A.m3}/${A.a3}</div></div>
       </div>
       <div style="display:flex;gap:8px">
         <button onclick="editSess('${s.id}')" style="flex:1;padding:9px;background:var(--or);border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Edit</button>
@@ -569,14 +748,15 @@ function renderStats(){
   });
   document.getElementById('sesslist').innerHTML=sh;
 }
+
 function buildSum(t,id){
   const tw=ZK.filter(k=>ZS[k].t==='2'),th=ZK.filter(k=>ZS[k].t==='3');
   const sum=keys=>keys.reduce((a,k)=>[a[0]+t[k].makes,a[1]+t[k].attempts],[0,0]);
   const[am,aa]=sum(ZK),[tm,ta]=sum(tw),[pm,pa]=sum(th);
   document.getElementById(id).innerHTML=`
     <div class="sc"><div class="scp">${pct(am,aa)}</div><div class="scl">OVERALL</div><div class="scs">${aa?am+'/'+aa:'No shots'}</div></div>
-    <div class="sc"><div class="scp" style="color:var(--bl)">${pct(tm,ta)}</div><div class="scl">2-POINT</div><div class="scs">${ta?tm+'/'+ta:'—'}</div></div>
-    <div class="sc"><div class="scp" style="color:var(--or)">${pct(pm,pa)}</div><div class="scl">3-POINT</div><div class="scs">${pa?pm+'/'+pa:'—'}</div></div>`;
+    <div class="sc"><div class="scp" style="color:var(--bl)">${pct(tm,ta)}</div><div class="scl">2-POINT</div><div class="scs">${ta?tm+'/'+ta:'\u2014'}</div></div>
+    <div class="sc"><div class="scp" style="color:var(--or)">${pct(pm,pa)}</div><div class="scl">3-POINT</div><div class="scs">${pa?pm+'/'+pa:'\u2014'}</div></div>`;
 }
 function fmt(ds){const d=new Date(ds+'T12:00:00');return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
 function renderAll(){if(av==='court')renderCourt();else if(av==='log')renderLog();else if(av==='stats')renderStats();}
@@ -585,254 +765,207 @@ function sv(view){av=view;document.querySelectorAll('.view').forEach(v=>v.classL
 function setF(f,btn,tid){document.querySelectorAll('#'+tid+' .tt').forEach(t=>t.classList.remove('on'));btn.classList.add('on');if(tid==='ct'){cFilter=f;cOff=0;renderCourt();}else{sFilter=f;sOff=0;renderStats();}document.getElementById(tid==='ct'?'cpnav':'spnav').style.display=f==='alltime'?'none':'flex';}
 function chP(dir,w){if(w==='c'){cOff=Math.min(0,cOff+dir);renderCourt();}else{sOff=Math.min(0,sOff+dir);renderStats();}}
 
-function tap(k){if(av==='log')openMo(k);}
-function tapT(e,k){e.preventDefault();if(av==='log')openMo(k);}
-function openMo(k){mz=k;const z=ZS[k],p=pending[k];document.getElementById('mtitle').textContent=z.n+' · '+z.t+'PT';document.getElementById('im').value=p?p.makes:'';document.getElementById('ia').value=p?p.attempts:'';document.getElementById('mo').classList.add('open');setTimeout(()=>document.getElementById('im').focus(),350);}
-function closeMo(){document.getElementById('mo').classList.remove('open');mz=null;}
-function addZone(){const m=parseInt(document.getElementById('im').value)||0,a=parseInt(document.getElementById('ia').value)||0;if(!a){closeMo();return;}if(m>a){document.getElementById('im').style.borderColor='var(--rd)';return;}pending[mz]={makes:m,attempts:a};closeMo();renderLog();}
-document.getElementById('im')?.addEventListener('input',()=>{document.getElementById('im').style.borderColor='';});
-document.getElementById('mo')?.addEventListener('click',e=>{if(e.target===document.getElementById('mo'))closeMo();});
-
-function delP(k){delete pending[k];renderLog();}
-async function saveSess(){if(!Object.keys(pending).length)return;D.sessions.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),date:localDateStr(),zones:{...pending}});pending={};renderLog();await push();renderAll();}
-function delSess(id){if(!confirm('Delete this session?'))return;D.sessions=D.sessions.filter(s=>s.id!==id);push();renderStats();}
-
-
-let editId = null;
-
-function editSess(id) {
-  const s = D.sessions.find(x => x.id === id);
-  if (!s) return;
-  editId = id;
-  document.getElementById('emtitle').textContent = 'Edit · ' + fmt(s.date);
-  document.getElementById('emlist').innerHTML = ZK.map(k => {
-    const z = ZS[k], v = s.zones[k] || {makes:0,attempts:0};
-    return `<div class="emrow">
-      <div class="emzn">${z.n}<small>${z.t}PT</small></div>
-      <input class="eminp" id="em_m_${k}" type="number" min="0" value="${v.attempts?v.makes:''}" placeholder="0" inputmode="numeric">
-      <input class="eminp" id="em_a_${k}" type="number" min="0" value="${v.attempts||''}" placeholder="0" inputmode="numeric">
-    </div>`;
-  }).join('') + '<div style="padding:4px 0;font-size:10px;color:var(--tdd);text-align:center">MAKES &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ATTEMPTS</div>';
-  document.getElementById('emo').classList.add('open');
-}
-
-function closeEdit() { document.getElementById('emo').classList.remove('open'); editId = null; }
-
-async function saveEdit() {
-  const s = D.sessions.find(x => x.id === editId);
-  if (!s) return;
-  ZK.forEach(k => {
-    const m = parseInt(document.getElementById('em_m_'+k)?.value)||0;
-    const a = parseInt(document.getElementById('em_a_'+k)?.value)||0;
-    if (a > 0) s.zones[k] = {makes: Math.min(m,a), attempts: a};
-    else delete s.zones[k];
-  });
-  closeEdit();
-  await push();
-  renderAll();
-}
-
-document.getElementById('emo')?.addEventListener('click', e => { if(e.target===document.getElementById('emo')) closeEdit(); });
-
-async function manualRefresh(){
-  const btn=document.getElementById('rbtn');
-  btn.classList.add('spin');
-  await load();
-  setTimeout(()=>btn.classList.remove('spin'),700);
-}
-function localDateStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-
 function setView(v,btn){
   statView=v;
   document.querySelectorAll('#svtabs .tt').forEach(t=>t.classList.remove('on'));
   if(btn)btn.classList.add('on');
-  document.getElementById('breakdownWrap').style.display = v==='breakdown'?'block':'none';
-  document.getElementById('trendsWrap').style.display = v==='trends'?'block':'none';
-  if(v==='trends') renderTrends();
+  document.getElementById('ovWrap').style.display=v==='overview'?'block':'none';
+  document.getElementById('znWrap').style.display=v==='zones'?'block':'none';
+  document.getElementById('trWrap').style.display=v==='trends'?'block':'none';
+  document.getElementById('seWrap').style.display=v==='sessions'?'block':'none';
+  renderStats();
 }
 
+// ══════════════ CHART ENGINE ══════════════
 function monthlyBuckets(){
   const byMonth={};
-  D.sessions.forEach(s=>{
-    const mk=s.date.slice(0,7);
-    (byMonth[mk]=byMonth[mk]||[]).push(s);
-  });
+  D.sessions.forEach(s=>{const mk=s.date.slice(0,7);(byMonth[mk]=byMonth[mk]||[]).push(s);});
   const keys=Object.keys(byMonth).sort();
-  const paintKeys=['paint_ul','paint_ur','paint_ll','paint_lr'];
-  const midKeys=['lpm','lwm','ft','rwm','rpm'];
-  const threeKeys=['lc3','lw3','ct3','rw3','rc3'];
   return {keys, byMonth, data: keys.map(mk=>{
-    const t=rollup(byMonth[mk]);
-    const sum=(ks)=>ks.reduce((a,k)=>[a[0]+t[k].makes,a[1]+t[k].attempts],[0,0]);
-    const [pm,pa]=sum(paintKeys),[mm,ma]=sum(midKeys),[tm,ta]=sum(threeKeys);
-    const oa=pa+ma+ta, om=pm+mm+tm;
+    const A=aggregate(byMonth[mk]);
     const [y,m]=mk.split('-');
-    const label=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+' '+y.slice(2);
-    return{key:mk,label,overall:oa?om/oa*100:null,paint:pa?pm/pa*100:null,mid:ma?mm/ma*100:null,three:ta?tm/ta*100:null};
+    return {key:mk,
+      label:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+' '+y.slice(2),
+      overall:A.fg, paint:A.ppaint, mid:A.pmid, three:A.p3, efg:A.efg, pps:A.pps, fga:A.fga};
   })};
 }
-
 function linreg(pts){
-  const n=pts.length;
-  if(n<2)return null;
+  const n=pts.length; if(n<2)return null;
   let sx=0,sy=0,sxy=0,sxx=0;
   pts.forEach(([x,y])=>{sx+=x;sy+=y;sxy+=x*y;sxx+=x*x;});
-  const den=n*sxx-sx*sx;
-  if(den===0)return null;
+  const den=n*sxx-sx*sx; if(den===0)return null;
   const slope=(n*sxy-sx*sy)/den;
   return {slope,intercept:(sy-slope*sx)/n};
 }
-
-function showPt(tipId,label,val,color){
-  const el=document.getElementById(tipId);
-  if(!el)return;
-  el.innerHTML=`<span style="color:${color};font-weight:700">${label}</span> · ${Math.round(val)}%`;
+function showPt(tipId,label,val,color,unit){
+  const el=document.getElementById(tipId); if(!el)return;
+  el.innerHTML=`<span style="color:${color};font-weight:800">${label}</span> &middot; ${val}${unit||'%'}`;
 }
-
+// Auto-fit the y-axis to the data so real movement is visible
+function niceDomain(vals){
+  const v=vals.filter(x=>x!=null);
+  if(!v.length)return [0,100];
+  let lo=Math.min(...v), hi=Math.max(...v);
+  if(hi-lo<10){const mid=(hi+lo)/2;lo=mid-6;hi=mid+6;}
+  const p=(hi-lo)*0.15;
+  lo=Math.max(0,Math.floor((lo-p)/5)*5);
+  hi=Math.ceil((hi+p)/5)*5;
+  if(hi<=lo)hi=lo+10;
+  return [lo,hi];
+}
 function lineChartSVG(data, series, W, H, opts){
   opts=opts||{};
-  const padL=opts.padL!=null?opts.padL:26, padR=opts.padR!=null?opts.padR:8, padT=opts.padT!=null?opts.padT:10, padB=opts.padB!=null?opts.padB:20;
-  if(!data.length) return `<text x="${W/2}" y="${H/2}" fill="rgba(20,22,28,.3)" font-size="12" text-anchor="middle" font-family="Inter">No data yet</text>`;
-  const n=data.length;
+  const padL=opts.padL!=null?opts.padL:34, padR=opts.padR!=null?opts.padR:12,
+        padT=opts.padT!=null?opts.padT:12, padB=opts.padB!=null?opts.padB:22;
+  if(!data.length) return `<text x="${W/2}" y="${H/2}" fill="rgba(20,22,28,.3)" font-size="13" text-anchor="middle" font-family="Inter,sans-serif">No data yet</text>`;
+  const n=data.length, unit=opts.unit!=null?opts.unit:'%';
+  let allv=[]; series.forEach(sr=>data.forEach(b=>{if(b[sr.key]!=null)allv.push(b[sr.key]);}));
+  const [lo,hi]=opts.domain||niceDomain(allv);
   const xf=i=> n===1?(padL+(W-padL-padR)/2):padL+i*(W-padL-padR)/(n-1);
-  const yf=v=> padT+(100-Math.max(0,Math.min(100,v)))/100*(H-padT-padB);
+  const yf=v=> padT+(hi-Math.max(lo,Math.min(hi,v)))/(hi-lo)*(H-padT-padB);
   let s='';
-  if(opts.grid!==false){
-    [0,25,50,75,100].forEach(v=>{
-      s+=`<line x1="${padL}" y1="${yf(v)}" x2="${W-padR}" y2="${yf(v)}" stroke="rgba(20,22,28,.08)" stroke-width="1"/>`;
-      if(opts.axisLabels!==false) s+=`<text x="${padL-5}" y="${yf(v)+3}" fill="rgba(20,22,28,.32)" font-size="8" text-anchor="end" font-family="Inter">${v}%</text>`;
-    });
+  const T=4;
+  for(let i=0;i<=T;i++){
+    const v=lo+(hi-lo)*i/T, y=yf(v);
+    s+=`<line x1="${padL}" y1="${y.toFixed(1)}" x2="${W-padR}" y2="${y.toFixed(1)}" stroke="rgba(20,22,28,.07)" stroke-width="1"/>`;
+    if(opts.axisLabels!==false)
+      s+=`<text x="${padL-6}" y="${(y+3.5).toFixed(1)}" fill="rgba(20,22,28,.36)" font-size="9.5" text-anchor="end" font-family="Inter,sans-serif">${unit==='%'?Math.round(v):v.toFixed(1)}${unit}</text>`;
   }
   if(opts.xLabels!==false){
-    data.forEach((b,i)=>{s+=`<text x="${xf(i)}" y="${H-6}" fill="rgba(20,22,28,.35)" font-size="8" text-anchor="middle" font-family="Inter">${b.label}</text>`;});
+    const step=Math.max(1,Math.ceil(n/6));
+    data.forEach((b,i)=>{ if(i%step===0||i===n-1)
+      s+=`<text x="${xf(i).toFixed(1)}" y="${H-6}" fill="rgba(20,22,28,.4)" font-size="9.5" text-anchor="middle" font-family="Inter,sans-serif">${b.label}</text>`;});
   }
-  series.forEach(ser=>{
-    let pts=[], regPts=[];
-    data.forEach((b,i)=>{if(b[ser.key]!=null){pts.push([xf(i),yf(b[ser.key]),b.label,b[ser.key]]);regPts.push([i,b[ser.key]]);}});
-    // Trend/regression line (dashed, faded)
-    const reg=linreg(regPts);
-    if(reg){
-      const x0=regPts[0][0], x1=regPts[regPts.length-1][0];
-      const y0v=reg.slope*x0+reg.intercept, y1v=reg.slope*x1+reg.intercept;
-      s+=`<line x1="${xf(x0).toFixed(1)}" y1="${yf(y0v).toFixed(1)}" x2="${xf(x1).toFixed(1)}" y2="${yf(y1v).toFixed(1)}" stroke="${ser.color}" stroke-width="1.3" stroke-dasharray="4 3" opacity=".45"/>`;
+  series.forEach(sr=>{
+    let pts=[],reg=[];
+    data.forEach((b,i)=>{if(b[sr.key]!=null){pts.push([xf(i),yf(b[sr.key]),b.label,b[sr.key]]);reg.push([i,b[sr.key]]);}});
+    if(!pts.length)return;
+    if(opts.area&&pts.length>1){
+      s+=`<path d="M ${pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' L ')} L ${pts[pts.length-1][0].toFixed(1)},${H-padB} L ${pts[0][0].toFixed(1)},${H-padB} Z" fill="${sr.color}" opacity=".09"/>`;
     }
-    // Connecting line
-    if(pts.length>1){
-      const d=pts.map((p,i)=>(i===0?'M':'L')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
-      s+=`<path d="${d}" fill="none" stroke="${ser.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
+    const r=linreg(reg);
+    if(r&&reg.length>1){
+      const x0=reg[0][0],x1=reg[reg.length-1][0];
+      s+=`<line x1="${xf(x0).toFixed(1)}" y1="${yf(r.slope*x0+r.intercept).toFixed(1)}" x2="${xf(x1).toFixed(1)}" y2="${yf(r.slope*x1+r.intercept).toFixed(1)}" stroke="${sr.color}" stroke-width="1.4" stroke-dasharray="5 4" opacity=".45"/>`;
     }
-    // Tappable dots
+    if(pts.length>1)
+      s+=`<path d="${pts.map((p,i)=>(i===0?'M':'L')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')}" fill="none" stroke="${sr.color}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`;
     pts.forEach(p=>{
-      const tapAttr = opts.tipId ? ` onclick="showPt('${opts.tipId}','${p[2]}',${p[3]},'${ser.color}')" style="cursor:pointer"` : '';
-      const r = opts.tipId ? 6 : 2.5;
-      const visR = 2.5;
-      s+=`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${r}" fill="${opts.tipId?'transparent':ser.color}"${tapAttr}/>`;
-      if(opts.tipId) s+=`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${visR}" fill="${ser.color}" pointer-events="none"/>`;
+      const val=unit==='%'?Math.round(p[3]):p[3].toFixed(2);
+      if(opts.tipId)
+        s+=`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="10" fill="transparent" onclick="showPt('${opts.tipId}','${p[2]}',${JSON.stringify(val)},'${sr.color}','${unit}')" style="cursor:pointer"/>`;
+      s+=`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.2" fill="#fff" stroke="${sr.color}" stroke-width="2.2" pointer-events="none"/>`;
     });
   });
   return s;
 }
-
-const CAT_KEYS={
-  paint:['paint_ul','paint_ur','paint_ll','paint_lr'],
-  mid:['lpm','lwm','ft','rwm','rpm'],
-  three:['lc3','lw3','ct3','rw3','rc3'],
-};
-function allTimePct(catKey){
-  const t=rollup(D.sessions);
-  const keys = catKey==='overall' ? ZK : CAT_KEYS[catKey];
-  const [m,a]=keys.reduce((acc,k)=>[acc[0]+t[k].makes,acc[1]+t[k].attempts],[0,0]);
-  return a? m/a*100 : null;
+function barChartSVG(data,key,color,W,H){
+  if(!data.length)return '';
+  const padL=34,padR=12,padT=12,padB=22,n=data.length;
+  const max=Math.max(...data.map(b=>b[key]||0))||1;
+  const bw=(W-padL-padR)/n*0.62;
+  let s='';
+  for(let i=0;i<=2;i++){
+    const v=max*i/2, y=padT+(1-i/2)*(H-padT-padB);
+    s+=`<line x1="${padL}" y1="${y.toFixed(1)}" x2="${W-padR}" y2="${y.toFixed(1)}" stroke="rgba(20,22,28,.07)" stroke-width="1"/>`;
+    s+=`<text x="${padL-6}" y="${(y+3.5).toFixed(1)}" fill="rgba(20,22,28,.36)" font-size="9.5" text-anchor="end" font-family="Inter,sans-serif">${Math.round(v)}</text>`;
+  }
+  data.forEach((b,i)=>{
+    const cx=padL+(i+0.5)*(W-padL-padR)/n;
+    const h=(b[key]||0)/max*(H-padT-padB);
+    s+=`<rect x="${(cx-bw/2).toFixed(1)}" y="${(H-padB-h).toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(0,h).toFixed(1)}" rx="3" fill="${color}" opacity=".85"/>`;
+    const step=Math.max(1,Math.ceil(n/6));
+    if(i%step===0||i===n-1)
+      s+=`<text x="${cx.toFixed(1)}" y="${H-6}" fill="rgba(20,22,28,.4)" font-size="9.5" text-anchor="middle" font-family="Inter,sans-serif">${b.label}</text>`;
+  });
+  return s;
 }
-
+function allTimePct(catKey){
+  const A=aggregate(D.sessions);
+  return catKey==='overall'?A.fg:catKey==='paint'?A.ppaint:catKey==='mid'?A.pmid:A.p3;
+}
 function renderCatChart(){
   const {data}=monthlyBuckets();
-  document.getElementById('catChart').innerHTML=lineChartSVG(data,[
-    {key:'overall',color:'#20242c'},{key:'paint',color:'#60a5fa'},{key:'mid',color:'#f59e0b'},{key:'three',color:'#f07030'}
-  ],600,260,{tipId:'tip-cat'});
+  document.getElementById('effChart').innerHTML=lineChartSVG(data,
+    [{key:'overall',color:'#20242c'},{key:'efg',color:'#7c3aed'}],600,260,{tipId:'tip-eff'});
 }
-
 function renderAreaChart(){
   const {data}=monthlyBuckets();
-  document.getElementById('areaChart').innerHTML=lineChartSVG(data,[
-    {key:'paint',color:'#60a5fa'},{key:'mid',color:'#f59e0b'},{key:'three',color:'#f07030'}
-  ],600,260,{tipId:'tip-area'});
+  document.getElementById('areaChart').innerHTML=lineChartSVG(data,
+    [{key:'paint',color:'#60a5fa'},{key:'mid',color:'#f59e0b'},{key:'three',color:'#f07030'}],600,260,{tipId:'tip-area'});
 }
-
+function renderVolChart(){
+  const {data}=monthlyBuckets();
+  document.getElementById('volChart').innerHTML=barChartSVG(data,'fga','#94a3b8',600,170);
+  const tot=data.reduce((a,b)=>a+(b.fga||0),0);
+  const el=document.getElementById('volNote');
+  if(el)el.textContent=tot?tot+' attempts total':'';
+}
 function renderMiniCharts(){
   const {data}=monthlyBuckets();
-  const defs=[
-    {key:'overall',color:'#20242c',id:'overall'},
-    {key:'paint',color:'#60a5fa',id:'paint'},
-    {key:'mid',color:'#f59e0b',id:'mid'},
-    {key:'three',color:'#f07030',id:'three'},
-  ];
-  defs.forEach(d=>{
-    const svgEl=document.getElementById('mc-'+d.id);
-    if(svgEl) svgEl.innerHTML=lineChartSVG(data,[{key:d.key,color:d.color}],600,140,{padT:10,padB:20,axisLabels:false,tipId:'tip-mc-'+d.id});
+  [{key:'overall',color:'#20242c',id:'overall'},{key:'paint',color:'#60a5fa',id:'paint'},
+   {key:'mid',color:'#f59e0b',id:'mid'},{key:'three',color:'#f07030',id:'three'}].forEach(d=>{
+    const el=document.getElementById('mc-'+d.id);
+    if(el)el.innerHTML=lineChartSVG(data,[{key:d.key,color:d.color}],600,140,
+      {padT:10,padB:18,padL:30,area:true,tipId:'tip-mc-'+d.id});
     const valid=data.map(b=>b[d.key]).filter(v=>v!=null);
-    const first=valid.length?valid[0]:null;
-    const last=valid.length?valid[valid.length-1]:null;
+    const first=valid.length?valid[0]:null,last=valid.length?valid[valid.length-1]:null;
     const delta=(last!=null&&first!=null&&valid.length>1)?last-first:null;
-    const allTime=allTimePct(d.key);
-    const vEl=document.getElementById('mcv-'+d.id);
-    if(vEl){vEl.textContent=allTime==null?'—':Math.round(allTime)+'%';vEl.style.color=d.color==='#20242c'?'var(--t)':d.color;}
-    const dEl=document.getElementById('mcd-'+d.id);
-    if(dEl){
-      if(delta==null){dEl.textContent='';}
-      else{dEl.textContent=(delta>=0?'+':'')+Math.round(delta)+'%';dEl.style.color=delta>0?'var(--gr)':delta<0?'var(--rd)':'var(--td)';}
-    }
+    const at=allTimePct(d.key);
+    const v=document.getElementById('mcv-'+d.id);
+    if(v){v.textContent=f0(at);v.style.color=d.color==='#20242c'?'var(--t)':d.color;}
+    const dl=document.getElementById('mcd-'+d.id);
+    if(dl){ if(delta==null){dl.textContent='';}
+      else{dl.textContent=(delta>=0?'+':'')+Math.round(delta)+'%';
+           dl.style.color=delta>0?'var(--gr)':delta<0?'var(--rd)':'var(--td)';}}
   });
 }
-
 function renderSparklines(){
   const {keys,byMonth}=monthlyBuckets();
   const wrap=document.getElementById('sparkList');
   if(!keys.length){wrap.innerHTML='<p class="empty" style="padding:10px 0">No data yet.</p>';return;}
+  const allT=rollup(D.sessions);
+  const labels=keys.map(mk=>{const[y,m]=mk.split('-');return['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+' '+y.slice(2);});
   wrap.innerHTML=ZK.map(zk=>{
     const z=ZS[zk];
-    const labels=keys.map(mk=>{const [y,m]=mk.split('-');return['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+' '+y.slice(2);});
     const vals=keys.map(mk=>{const t=rollup(byMonth[mk]);const{makes:m,attempts:a}=t[zk];return a?m/a*100:null;});
     const valid=vals.map((v,i)=>({v,i})).filter(o=>o.v!=null);
-    const lastMonthly=valid.length?valid[valid.length-1].v:null;
-    const firstMonthly=valid.length?valid[0].v:null;
-    const delta=(lastMonthly!=null&&firstMonthly!=null&&valid.length>1)?lastMonthly-firstMonthly:null;
-    const allT=rollup(D.sessions)[zk];
-    const last=allT.attempts?allT.makes/allT.attempts*100:null;
+    const lastM=valid.length?valid[valid.length-1].v:null, firstM=valid.length?valid[0].v:null;
+    const delta=(lastM!=null&&firstM!=null&&valid.length>1)?lastM-firstM:null;
+    const at=allT[zk], last=at.attempts?at.makes/at.attempts*100:null;
     const color=last==null?'var(--tdd)':last>=50?'var(--or)':last>=35?'var(--bl)':'var(--rd)';
     const W=110,H=46,padX=3,padY=4,nn=vals.length;
     const xf=i=>nn===1?W/2:padX+i*(W-2*padX)/(nn-1);
-    const yf=v=>padY+(100-Math.max(0,Math.min(100,v)))/100*(H-2*padY);
-    let path='';
-    valid.forEach((o,idx)=>{path+=(idx===0?'M':'L')+xf(o.i).toFixed(1)+','+yf(o.v).toFixed(1)+' ';});
+    const lows=valid.map(o=>o.v);
+    const dlo=lows.length?Math.max(0,Math.min(...lows)-6):0, dhi=lows.length?Math.min(100,Math.max(...lows)+6):100;
+    const yf=v=>padY+(dhi-Math.max(dlo,Math.min(dhi,v)))/((dhi-dlo)||1)*(H-2*padY);
     let inner='';
-    const reg=linreg(valid.map(o=>[o.i,o.v]));
-    if(reg && valid.length>1){
-      const i0=valid[0].i, i1=valid[valid.length-1].i;
-      const y0v=reg.slope*i0+reg.intercept, y1v=reg.slope*i1+reg.intercept;
-      inner+=`<line x1="${xf(i0).toFixed(1)}" y1="${yf(y0v).toFixed(1)}" x2="${xf(i1).toFixed(1)}" y2="${yf(y1v).toFixed(1)}" stroke="${color}" stroke-width="1" stroke-dasharray="3 2" opacity=".4"/>`;
+    const r=linreg(valid.map(o=>[o.i,o.v]));
+    if(r&&valid.length>1){
+      const i0=valid[0].i,i1=valid[valid.length-1].i;
+      inner+=`<line x1="${xf(i0).toFixed(1)}" y1="${yf(r.slope*i0+r.intercept).toFixed(1)}" x2="${xf(i1).toFixed(1)}" y2="${yf(r.slope*i1+r.intercept).toFixed(1)}" stroke="${color}" stroke-width="1" stroke-dasharray="3 2" opacity=".4"/>`;
     }
-    if(valid.length>1) inner+=`<path d="${path.trim()}" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>`;
+    if(valid.length>1)
+      inner+=`<path d="${valid.map((o,i)=>(i===0?'M':'L')+xf(o.i).toFixed(1)+','+yf(o.v).toFixed(1)).join(' ')}" fill="none" stroke="${color}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>`;
     const tipId='tip-spark-'+zk;
     valid.forEach(o=>{
-      inner+=`<circle cx="${xf(o.i).toFixed(1)}" cy="${yf(o.v).toFixed(1)}" r="6" fill="transparent" onclick="showPt('${tipId}','${labels[o.i]}',${o.v},'${color}')" style="cursor:pointer"/>`;
+      inner+=`<circle cx="${xf(o.i).toFixed(1)}" cy="${yf(o.v).toFixed(1)}" r="7" fill="transparent" onclick="showPt('${tipId}','${labels[o.i]}',${Math.round(o.v)},'${color}','%')" style="cursor:pointer"/>`;
       inner+=`<circle cx="${xf(o.i).toFixed(1)}" cy="${yf(o.v).toFixed(1)}" r="2" fill="${color}" pointer-events="none"/>`;
     });
-    const deltaStr=delta==null?'':(delta>=0?'+':'')+Math.round(delta)+'%';
-    const deltaColor=delta==null?'var(--tdd)':delta>0?'var(--gr)':delta<0?'var(--rd)':'var(--td)';
-    return`<div class="spark-row" style="flex-direction:column;align-items:stretch;gap:2px">
+    const ds=delta==null?'':(delta>=0?'+':'')+Math.round(delta)+'%';
+    const dc=delta==null?'var(--tdd)':delta>0?'var(--gr)':delta<0?'var(--rd)':'var(--td)';
+    return `<div class="spark-row" style="flex-direction:column;align-items:stretch;gap:2px">
       <div style="display:flex;align-items:center;gap:10px">
         <div class="spark-name">${z.n}</div>
         <svg class="spark-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${inner}</svg>
-        <div class="spark-val" style="color:${color}">${last==null?'—':Math.round(last)+'%'}</div>
-        <div class="spark-delta" style="color:${deltaColor}">${deltaStr}</div>
+        <div class="spark-val" style="color:${color}">${f0(last)}</div>
+        <div class="spark-delta" style="color:${dc}">${ds}</div>
       </div>
-      <div id="${tipId}" style="font-size:9px;color:var(--tdd);padding-left:0;min-height:11px">Tap a point</div>
+      <div id="${tipId}" class="tiphint" style="font-size:9px;min-height:11px">Tap a point</div>
     </div>`;
   }).join('');
 }
-
-function renderTrends(){renderCatChart();renderAreaChart();renderMiniCharts();renderSparklines();}
+function renderTrends(){renderCatChart();renderAreaChart();renderVolChart();renderMiniCharts();renderSparklines();}
 
 load();
 </script>
