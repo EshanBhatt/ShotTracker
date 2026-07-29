@@ -94,6 +94,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 .mbadd:active{background:#a04010}
 .empty{text-align:center;padding:24px 18px;color:var(--td);font-size:13px;line-height:1.7}
 .tiphint{font-size:10.5px;color:var(--tdd);padding:3px 2px 0}
+.tipval{display:inline-block;background:var(--s2);border-radius:6px;padding:2px 7px;font-size:11px;font-weight:700;color:var(--t)}
 #periodBar{border-bottom:1px solid var(--bdr);padding-bottom:6px;margin-bottom:2px}
 .sec{padding:13px 14px 2px}
 .sec-h{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:9px}
@@ -254,8 +255,10 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
 
         <div class="sec-h" style="padding-top:14px"><div class="sec-t">Shot Volume</div><div class="sec-n" id="volNote"></div></div>
         <div class="tchart" style="height:170px"><svg id="volChart" viewBox="0 0 600 170" preserveAspectRatio="none"></svg></div>
+        <div id="tip-vol" class="tiphint">Tap a bar to inspect</div>
 
-        <div class="sec-h" style="padding-top:14px"><div class="sec-t">Individual Trends</div></div>
+        <div class="sec-h" style="padding-top:14px"><div class="sec-t">Individual Trends</div><div class="sec-n">big % = all-time</div></div>
+        <div class="tiphint" style="padding:0 2px 8px;line-height:1.5">Dashed line is the best-fit trend across every month. The badge shows that same trend&rsquo;s total change &mdash; not just first vs. last month.</div>
         <div class="mini-chart-card">
           <div class="mini-chart-head"><div class="mini-chart-title">Overall</div><div><span class="mini-chart-val" id="mcv-overall">&mdash;</span><span class="mini-chart-delta" id="mcd-overall"></span></div></div>
           <svg class="mini-chart-svg" id="mc-overall" viewBox="0 0 600 140" preserveAspectRatio="none"></svg>
@@ -278,7 +281,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
         </div>
       </div>
       <div class="spark-sec">
-        <div class="sec-h"><div class="sec-t">Zone Trends</div><div class="sec-n">all-time % &middot; change</div></div>
+        <div class="sec-h"><div class="sec-t">Zone Trends</div><div class="sec-n">all-time % &middot; trend</div></div>
         <div id="sparkList"></div>
       </div>
     </div>
@@ -322,7 +325,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
   </div>
 </div>
 <script>
-const BUILD_V='1785299027';
+const BUILD_V='1785299480';
 // Self-update check: Home Screen apps cache aggressively and don't auto-refresh.
 // On every launch, silently check if a newer build exists and force-reload if so.
 (function checkForUpdate(){
@@ -799,7 +802,7 @@ function linreg(pts){
 }
 function showPt(tipId,label,val,color,unit){
   const el=document.getElementById(tipId); if(!el)return;
-  el.innerHTML=`<span style="color:${color};font-weight:800">${label}</span> &middot; ${val}${unit||'%'}`;
+  el.innerHTML=`<span class="tipval"><span style="color:${color}">&#9679;</span> ${label} &middot; ${val}${unit||'%'}</span>`;
 }
 // Auto-fit the y-axis to the data so real movement is visible
 function niceDomain(vals){
@@ -853,13 +856,13 @@ function lineChartSVG(data, series, W, H, opts){
     pts.forEach(p=>{
       const val=unit==='%'?Math.round(p[3]):p[3].toFixed(2);
       if(opts.tipId)
-        s+=`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="10" fill="transparent" onclick="showPt('${opts.tipId}','${p[2]}',${JSON.stringify(val)},'${sr.color}','${unit}')" style="cursor:pointer"/>`;
+        s+=`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="16" fill="transparent" onclick="showPt('${opts.tipId}','${p[2]}',${JSON.stringify(val)},'${sr.color}','${unit}')" style="cursor:pointer"/>`;
       s+=`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.2" fill="#fff" stroke="${sr.color}" stroke-width="2.2" pointer-events="none"/>`;
     });
   });
   return s;
 }
-function barChartSVG(data,key,color,W,H){
+function barChartSVG(data,key,color,W,H,tipId){
   if(!data.length)return '';
   const padL=34,padR=12,padT=12,padB=22,n=data.length;
   const max=Math.max(...data.map(b=>b[key]||0))||1;
@@ -874,6 +877,7 @@ function barChartSVG(data,key,color,W,H){
     const cx=padL+(i+0.5)*(W-padL-padR)/n;
     const h=(b[key]||0)/max*(H-padT-padB);
     s+=`<rect x="${(cx-bw/2).toFixed(1)}" y="${(H-padB-h).toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(0,h).toFixed(1)}" rx="3" fill="${color}" opacity=".85"/>`;
+    if(tipId) s+=`<rect x="${(cx-(W-padL-padR)/n/2).toFixed(1)}" y="${padT}" width="${((W-padL-padR)/n).toFixed(1)}" height="${(H-padT-padB).toFixed(1)}" fill="transparent" onclick="showPt('${tipId}','${b.label}',${b[key]||0},'#64748b',' attempts')" style="cursor:pointer"/>`;
     const step=Math.max(1,Math.ceil(n/6));
     if(i%step===0||i===n-1)
       s+=`<text x="${cx.toFixed(1)}" y="${H-6}" fill="rgba(20,22,28,.4)" font-size="9.5" text-anchor="middle" font-family="Inter,sans-serif">${b.label}</text>`;
@@ -896,7 +900,7 @@ function renderAreaChart(){
 }
 function renderVolChart(){
   const {data}=monthlyBuckets();
-  document.getElementById('volChart').innerHTML=barChartSVG(data,'fga','#94a3b8',600,170);
+  document.getElementById('volChart').innerHTML=barChartSVG(data,'fga','#94a3b8',600,170,'tip-vol');
   const tot=data.reduce((a,b)=>a+(b.fga||0),0);
   const el=document.getElementById('volNote');
   if(el)el.textContent=tot?tot+' attempts total':'';
@@ -908,16 +912,19 @@ function renderMiniCharts(){
     const el=document.getElementById('mc-'+d.id);
     if(el)el.innerHTML=lineChartSVG(data,[{key:d.key,color:d.color}],600,140,
       {padT:10,padB:18,padL:30,area:true,tipId:'tip-mc-'+d.id});
-    const valid=data.map(b=>b[d.key]).filter(v=>v!=null);
-    const first=valid.length?valid[0]:null,last=valid.length?valid[valid.length-1]:null;
-    const delta=(last!=null&&first!=null&&valid.length>1)?last-first:null;
+    // Delta = change implied by the fitted trend line across the whole span,
+    // so the badge always agrees with the dashed trend line on the chart.
+    const ipts=[]; data.forEach((b,i)=>{if(b[d.key]!=null)ipts.push([i,b[d.key]]);});
+    const rg=linreg(ipts);
+    const delta=(rg&&ipts.length>1)?rg.slope*(ipts[ipts.length-1][0]-ipts[0][0]):null;
     const at=allTimePct(d.key);
     const v=document.getElementById('mcv-'+d.id);
     if(v){v.textContent=f0(at);v.style.color=d.color==='#20242c'?'var(--t)':d.color;}
     const dl=document.getElementById('mcd-'+d.id);
     if(dl){ if(delta==null){dl.textContent='';}
-      else{dl.textContent=(delta>=0?'+':'')+Math.round(delta)+'%';
-           dl.style.color=delta>0?'var(--gr)':delta<0?'var(--rd)':'var(--td)';}}
+      else{const rd=Math.round(delta);
+           dl.innerHTML=(rd>0?'&#9650; ':rd<0?'&#9660; ':'')+(rd>0?'+':'')+rd+'% <span style="font-weight:600;opacity:.6">trend</span>';
+           dl.style.color=rd>0?'var(--gr)':rd<0?'var(--rd)':'var(--td)';}}
   });
 }
 function renderSparklines(){
@@ -930,8 +937,8 @@ function renderSparklines(){
     const z=ZS[zk];
     const vals=keys.map(mk=>{const t=rollup(byMonth[mk]);const{makes:m,attempts:a}=t[zk];return a?m/a*100:null;});
     const valid=vals.map((v,i)=>({v,i})).filter(o=>o.v!=null);
-    const lastM=valid.length?valid[valid.length-1].v:null, firstM=valid.length?valid[0].v:null;
-    const delta=(lastM!=null&&firstM!=null&&valid.length>1)?lastM-firstM:null;
+    const rgS=linreg(valid.map(o=>[o.i,o.v]));
+    const delta=(rgS&&valid.length>1)?rgS.slope*(valid[valid.length-1].i-valid[0].i):null;
     const at=allT[zk], last=at.attempts?at.makes/at.attempts*100:null;
     const color=last==null?'var(--tdd)':last>=50?'var(--or)':last>=35?'var(--bl)':'var(--rd)';
     const W=110,H=46,padX=3,padY=4,nn=vals.length;
@@ -949,11 +956,12 @@ function renderSparklines(){
       inner+=`<path d="${valid.map((o,i)=>(i===0?'M':'L')+xf(o.i).toFixed(1)+','+yf(o.v).toFixed(1)).join(' ')}" fill="none" stroke="${color}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>`;
     const tipId='tip-spark-'+zk;
     valid.forEach(o=>{
-      inner+=`<circle cx="${xf(o.i).toFixed(1)}" cy="${yf(o.v).toFixed(1)}" r="7" fill="transparent" onclick="showPt('${tipId}','${labels[o.i]}',${Math.round(o.v)},'${color}','%')" style="cursor:pointer"/>`;
+      inner+=`<circle cx="${xf(o.i).toFixed(1)}" cy="${yf(o.v).toFixed(1)}" r="11" fill="transparent" onclick="showPt('${tipId}','${labels[o.i]}',${Math.round(o.v)},'${color}','%')" style="cursor:pointer"/>`;
       inner+=`<circle cx="${xf(o.i).toFixed(1)}" cy="${yf(o.v).toFixed(1)}" r="2" fill="${color}" pointer-events="none"/>`;
     });
-    const ds=delta==null?'':(delta>=0?'+':'')+Math.round(delta)+'%';
-    const dc=delta==null?'var(--tdd)':delta>0?'var(--gr)':delta<0?'var(--rd)':'var(--td)';
+    const dR=delta==null?null:Math.round(delta);
+    const ds=dR==null?'':(dR>0?'\u25B2':dR<0?'\u25BC':'')+(dR>0?'+':'')+dR+'%';
+    const dc=dR==null?'var(--tdd)':dR>0?'var(--gr)':dR<0?'var(--rd)':'var(--td)';
     return `<div class="spark-row" style="flex-direction:column;align-items:stretch;gap:2px">
       <div style="display:flex;align-items:center;gap:10px">
         <div class="spark-name">${z.n}</div>
