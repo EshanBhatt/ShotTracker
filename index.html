@@ -331,7 +331,7 @@ nav{display:flex;border-top:1px solid var(--bdr);background:var(--s1);flex-shrin
   </div>
 </div>
 <script>
-const BUILD_V='1785299704';
+const BUILD_V='1785550714';
 // Self-update check: Home Screen apps cache aggressively and don't auto-refresh.
 // On every launch, silently check if a newer build exists and force-reload if so.
 (function checkForUpdate(){
@@ -1000,6 +1000,63 @@ function renderSparklines(){
   }).join('');
 }
 function renderTrends(){renderCatChart();renderAreaChart();renderVolChart();renderMiniCharts();renderSparklines();}
+
+function tap(k){if(av==='log')openMo(k);}
+function tapT(e,k){e.preventDefault();if(av==='log')openMo(k);}
+function openMo(k){mz=k;const z=ZS[k],p=pending[k];document.getElementById('mtitle').textContent=z.n+' · '+z.t+'PT';document.getElementById('im').value=p?p.makes:'';document.getElementById('ia').value=p?p.attempts:'';document.getElementById('mo').classList.add('open');setTimeout(()=>document.getElementById('im').focus(),350);}
+function closeMo(){document.getElementById('mo').classList.remove('open');mz=null;}
+function addZone(){const m=parseInt(document.getElementById('im').value)||0,a=parseInt(document.getElementById('ia').value)||0;if(!a){closeMo();return;}if(m>a){document.getElementById('im').style.borderColor='var(--rd)';return;}pending[mz]={makes:m,attempts:a};closeMo();renderLog();}
+document.getElementById('im')?.addEventListener('input',()=>{document.getElementById('im').style.borderColor='';});
+document.getElementById('mo')?.addEventListener('click',e=>{if(e.target===document.getElementById('mo'))closeMo();});
+
+function delP(k){delete pending[k];renderLog();}
+async function saveSess(){if(!Object.keys(pending).length)return;D.sessions.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),date:localDateStr(),zones:{...pending}});pending={};renderLog();await push();renderAll();}
+function delSess(id){if(!confirm('Delete this session?'))return;D.sessions=D.sessions.filter(s=>s.id!==id);push();renderStats();}
+
+
+let editId = null;
+
+function editSess(id) {
+  const s = D.sessions.find(x => x.id === id);
+  if (!s) return;
+  editId = id;
+  document.getElementById('emtitle').textContent = 'Edit · ' + fmt(s.date);
+  document.getElementById('emlist').innerHTML = ZK.map(k => {
+    const z = ZS[k], v = s.zones[k] || {makes:0,attempts:0};
+    return `<div class="emrow">
+      <div class="emzn">${z.n}<small>${z.t}PT</small></div>
+      <input class="eminp" id="em_m_${k}" type="number" min="0" value="${v.attempts?v.makes:''}" placeholder="0" inputmode="numeric">
+      <input class="eminp" id="em_a_${k}" type="number" min="0" value="${v.attempts||''}" placeholder="0" inputmode="numeric">
+    </div>`;
+  }).join('') + '<div style="padding:4px 0;font-size:10px;color:var(--tdd);text-align:center">MAKES &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ATTEMPTS</div>';
+  document.getElementById('emo').classList.add('open');
+}
+
+function closeEdit() { document.getElementById('emo').classList.remove('open'); editId = null; }
+
+async function saveEdit() {
+  const s = D.sessions.find(x => x.id === editId);
+  if (!s) return;
+  ZK.forEach(k => {
+    const m = parseInt(document.getElementById('em_m_'+k)?.value)||0;
+    const a = parseInt(document.getElementById('em_a_'+k)?.value)||0;
+    if (a > 0) s.zones[k] = {makes: Math.min(m,a), attempts: a};
+    else delete s.zones[k];
+  });
+  closeEdit();
+  await push();
+  renderAll();
+}
+
+document.getElementById('emo')?.addEventListener('click', e => { if(e.target===document.getElementById('emo')) closeEdit(); });
+
+async function manualRefresh(){
+  const btn=document.getElementById('rbtn');
+  btn.classList.add('spin');
+  await load();
+  setTimeout(()=>btn.classList.remove('spin'),700);
+}
+function localDateStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 
 load();
 </script>
