@@ -1219,6 +1219,20 @@
           "attempts": 3
         }
       }
+    },
+    {
+      "id": "ms9rc7ki2uu3",
+      "date": "2026-07-31",
+      "zones": {
+        "paint_ur": {
+          "makes": 2,
+          "attempts": 2
+        },
+        "paint_ll": {
+          "makes": 1,
+          "attempts": 1
+        }
+      }
     }
   ]
 }
