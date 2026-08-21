@@ -1571,6 +1571,20 @@
           "attempts": 4
         }
       }
+    },
+    {
+      "id": "mt27c92nsiwj",
+      "date": "2026-08-20",
+      "zones": {
+        "paint_ul": {
+          "makes": 1,
+          "attempts": 1
+        },
+        "paint_ur": {
+          "makes": 1,
+          "attempts": 1
+        }
+      }
     }
   ]
 }
