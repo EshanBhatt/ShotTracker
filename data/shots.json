@@ -1665,6 +1665,20 @@
           "attempts": 9
         }
       }
+    },
+    {
+      "id": "mt650ch8wu51",
+      "date": "2026-08-23",
+      "zones": {
+        "ft": {
+          "makes": 2,
+          "attempts": 3
+        },
+        "rc3": {
+          "makes": 0,
+          "attempts": 1
+        }
+      }
     }
   ]
 }
