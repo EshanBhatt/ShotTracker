@@ -1635,6 +1635,36 @@
           "attempts": 1
         }
       }
+    },
+    {
+      "id": "mt64yqxrhxql",
+      "date": "2026-08-23",
+      "zones": {
+        "rw3": {
+          "makes": 1,
+          "attempts": 3
+        },
+        "paint_ul": {
+          "makes": 1,
+          "attempts": 1
+        },
+        "lw3": {
+          "makes": 0,
+          "attempts": 1
+        },
+        "rpm": {
+          "makes": 6,
+          "attempts": 13
+        },
+        "paint_ll": {
+          "makes": 0,
+          "attempts": 1
+        },
+        "lwm": {
+          "makes": 5,
+          "attempts": 9
+        }
+      }
     }
   ]
 }
