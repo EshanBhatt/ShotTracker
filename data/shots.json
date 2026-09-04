@@ -1797,6 +1797,44 @@
           "attempts": 3
         }
       }
+    },
+    {
+      "id": "mtnkns0pvhng",
+      "date": "2026-09-04",
+      "zones": {
+        "rpm": {
+          "makes": 5,
+          "attempts": 8
+        },
+        "rwm": {
+          "makes": 4,
+          "attempts": 8
+        },
+        "ft": {
+          "makes": 8,
+          "attempts": 16
+        },
+        "lwm": {
+          "makes": 6,
+          "attempts": 12
+        },
+        "lpm": {
+          "makes": 4,
+          "attempts": 6
+        },
+        "ct3": {
+          "makes": 1,
+          "attempts": 2
+        },
+        "lc3": {
+          "makes": 0,
+          "attempts": 3
+        },
+        "rc3": {
+          "makes": 1,
+          "attempts": 2
+        }
+      }
     }
   ]
 }
