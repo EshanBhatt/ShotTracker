@@ -1977,6 +1977,36 @@
           "attempts": 4
         }
       }
+    },
+    {
+      "id": "mu3bv6d3cs1b",
+      "date": "2026-09-15",
+      "zones": {
+        "lpm": {
+          "makes": 4,
+          "attempts": 6
+        },
+        "lwm": {
+          "makes": 4,
+          "attempts": 6
+        },
+        "rc3": {
+          "makes": 1,
+          "attempts": 5
+        },
+        "lc3": {
+          "makes": 0,
+          "attempts": 4
+        },
+        "ct3": {
+          "makes": 1,
+          "attempts": 1
+        },
+        "rw3": {
+          "makes": 0,
+          "attempts": 1
+        }
+      }
     }
   ]
 }
