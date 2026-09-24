@@ -2007,6 +2007,56 @@
           "attempts": 1
         }
       }
+    },
+    {
+      "id": "mueum6zfetk9",
+      "date": "2026-09-22",
+      "zones": {
+        "rpm": {
+          "makes": 4,
+          "attempts": 5
+        },
+        "rwm": {
+          "makes": 14,
+          "attempts": 17
+        },
+        "ft": {
+          "makes": 6,
+          "attempts": 9
+        },
+        "paint_ur": {
+          "makes": 3,
+          "attempts": 4
+        },
+        "lwm": {
+          "makes": 6,
+          "attempts": 10
+        },
+        "lpm": {
+          "makes": 5,
+          "attempts": 9
+        },
+        "rw3": {
+          "makes": 2,
+          "attempts": 6
+        },
+        "rc3": {
+          "makes": 0,
+          "attempts": 1
+        },
+        "ct3": {
+          "makes": 0,
+          "attempts": 1
+        },
+        "lw3": {
+          "makes": 0,
+          "attempts": 1
+        },
+        "lc3": {
+          "makes": 0,
+          "attempts": 1
+        }
+      }
     }
   ]
 }
