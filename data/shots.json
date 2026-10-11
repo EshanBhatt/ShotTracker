@@ -2057,6 +2057,56 @@
           "attempts": 1
         }
       }
+    },
+    {
+      "id": "mv3755pqhvm0",
+      "date": "2026-10-10",
+      "zones": {
+        "lpm": {
+          "makes": 4,
+          "attempts": 9
+        },
+        "lwm": {
+          "makes": 4,
+          "attempts": 13
+        },
+        "rpm": {
+          "makes": 4,
+          "attempts": 10
+        },
+        "paint_ur": {
+          "makes": 3,
+          "attempts": 5
+        },
+        "paint_lr": {
+          "makes": 0,
+          "attempts": 1
+        },
+        "rwm": {
+          "makes": 4,
+          "attempts": 12
+        },
+        "ft": {
+          "makes": 4,
+          "attempts": 10
+        },
+        "rc3": {
+          "makes": 1,
+          "attempts": 1
+        },
+        "rw3": {
+          "makes": 2,
+          "attempts": 2
+        },
+        "lw3": {
+          "makes": 0,
+          "attempts": 2
+        },
+        "lc3": {
+          "makes": 1,
+          "attempts": 1
+        }
+      }
     }
   ]
 }
