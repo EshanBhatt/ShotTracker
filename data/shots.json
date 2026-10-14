@@ -2153,6 +2153,48 @@
           "attempts": 2
         }
       }
+    },
+    {
+      "id": "mv7dkp9n7bj9",
+      "date": "2026-10-13",
+      "zones": {
+        "rc3": {
+          "makes": 0,
+          "attempts": 2
+        },
+        "lw3": {
+          "makes": 0,
+          "attempts": 1
+        },
+        "lpm": {
+          "makes": 4,
+          "attempts": 10
+        },
+        "lwm": {
+          "makes": 4,
+          "attempts": 10
+        },
+        "ft": {
+          "makes": 4,
+          "attempts": 11
+        },
+        "rwm": {
+          "makes": 5,
+          "attempts": 8
+        },
+        "rpm": {
+          "makes": 5,
+          "attempts": 8
+        },
+        "paint_ur": {
+          "makes": 1,
+          "attempts": 1
+        },
+        "lc3": {
+          "makes": 1,
+          "attempts": 1
+        }
+      }
     }
   ]
 }
