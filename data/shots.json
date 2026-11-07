@@ -2403,6 +2403,56 @@
           "attempts": 4
         }
       }
+    },
+    {
+      "id": "mw5r6ew4fid7",
+      "date": "2026-11-06",
+      "zones": {
+        "rwm": {
+          "makes": 7,
+          "attempts": 11
+        },
+        "rpm": {
+          "makes": 5,
+          "attempts": 7
+        },
+        "ft": {
+          "makes": 5,
+          "attempts": 10
+        },
+        "lwm": {
+          "makes": 6,
+          "attempts": 9
+        },
+        "paint_ur": {
+          "makes": 3,
+          "attempts": 3
+        },
+        "paint_ul": {
+          "makes": 3,
+          "attempts": 4
+        },
+        "paint_lr": {
+          "makes": 1,
+          "attempts": 1
+        },
+        "rc3": {
+          "makes": 1,
+          "attempts": 4
+        },
+        "ct3": {
+          "makes": 0,
+          "attempts": 1
+        },
+        "lpm": {
+          "makes": 8,
+          "attempts": 16
+        },
+        "lw3": {
+          "makes": 1,
+          "attempts": 2
+        }
+      }
     }
   ]
 }
